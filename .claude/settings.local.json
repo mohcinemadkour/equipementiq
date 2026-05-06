@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(.\\\\.venv\\\\Scripts\\\\python.exe -m pip install --upgrade pip setuptools wheel)",
+      "PowerShell(.\\\\.venv\\\\Scripts\\\\python.exe -m pytest tests/test_config.py -v)",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Get-ChildItem .venv\\\\Lib\\\\site-packages -Directory | Measure-Object; Get-ChildItem .venv\\\\install.log; if \\(\\(Get-Item .venv\\\\install.log\\).Length -gt 0\\) { Get-Content .venv\\\\install.log -Tail 40 } else { 'install.log is empty' })"
+    ]
+  }
+}
