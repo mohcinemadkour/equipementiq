@@ -75,21 +75,47 @@ Subsystem codes (10): SPN, AXS, TCS, CLS, LUB, HYD, CNC, ELC, VIB, THM.
 Severity levels (8): CRITICAL, MAJOR, SERIOUS, MODERATE, MINOR, WARNING, NOTICE, ADVISORY.
 Machines: M01, M02, M03. Fault categories: tool_wear (34), spindle_bearing_fault (20), actuator_fault (8), chatter_vibration (7), process_anomaly (1).
 
-## Repository layout (target)
+## Repository layout (current state)
 
+### Phase 1 ✅
 ```
-ingestion/    # 3 ingesters + chunking.py + validate_collections.py
+data/                         # Bosch dataset (already present)
+├── pdfs/                     # 6 technical PDFs
+├── error_docs/               # 96 error code JSONs
+└── processed/                # Complaints CSV + error catalogues
+```
+
+### Phase 2 ✅
+```
+ingestion/
+├── __init__.py
+├── chunking.py               # Token-aware splitting (512/64 tokens, DR-001)
+├── config.py                 # YAML loader (NFR-MAINT-003)
+├── ingest_mechanical.py      # PDFs → mechanical_collection (6 DOC-EIQ PDFs)
+├── ingest_software.py        # JSONs → software_collection (96 error codes)
+├── ingest_support.py         # CSV → support_collection (150 complaints, PII masked)
+└── validate_collections.py   # Post-ingestion validation checks
+
+tests/
+├── __init__.py
+├── test_config.py            # 3 tests: config loading, error handling, types
+└── test_ingestion.py         # 27 tests: chunking, embeddings, isolation, metadata, PII
+
+config.yaml                  # Central configuration (FRD §2.3, all tunables)
+requirements.txt             # Python dependencies
+PHASE_2_CHECKLIST.md         # Pre-merge validation checklist
+.gitignore                   # Git ignore rules
+```
+
+### Phase 3–5 (⬜ Next)
+```
 agents/       # base_agent.py + 3 domain agents
 orchestrator/ # state.py, intent_classifier.py, synthesiser.py, graph.py
 evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
 feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
 prompts/      # versioned .txt files — NEVER inline LLM prompts in code (NFR-MAINT-002)
 ui/           # app.py (demo), eval_dashboard.py
-tests/        # test_orchestrator, test_agents, test_evaluation, test_feedback
-scripts/      # one-shot data generation (already exists)
-config.yaml
-requirements.txt
-.env.example
+.env.example  # Example env vars template
 ```
 
 ## Hard rules (do not violate)
@@ -124,5 +150,12 @@ LANGCHAIN_PROJECT=equipmentiq
 ## Phase status
 
 - **Phase 1 — Data**: ✅ complete (PDFs, error JSONs, complaints, Bosch backbone all on disk)
-- **Phase 2 — Ingestion**: ⬜ next
-- **Phases 3–5**: ⬜ Agents/Orchestrator → Evaluation → Feedback/UI
+- **Phase 2 — Ingestion**: ✅ complete ([sprint-1] f3f56ff)
+  - 3 ingesters (mechanical PDFs, software error codes, support complaints)
+  - Collection validation script
+  - 30/30 unit tests passing
+  - All DR-001..007 and NFR-SEC/MAINT requirements verified
+  - PII masking (NFR-SEC-002) on customer phone/email/contact before logging
+- **Phase 3 — Agents/Orchestrator**: ⬜ next (base_agent.py, 3 domain agents, LangGraph orchestrator)
+- **Phase 4 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
+- **Phase 5 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
