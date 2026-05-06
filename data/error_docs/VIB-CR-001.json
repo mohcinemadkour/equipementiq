@@ -1,0 +1,85 @@
+{
+  "error_code": "VIB-CR-001",
+  "title": "Vibration \u2014 ISO Zone D \u2014 Machine Stop",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Vibration RMS exceeds ISO 10816-3 Zone D limit (11.2 mm/s). X={val}, Y={val2}, Z={val3} mm/s. Crest factor P063={val4}. Kurtosis P064={val5}. Machine stopped.",
+  "probable_cause": "Catastrophic bearing failure, tool breakage, workpiece ejection, or structure loosening.",
+  "diagnostic_steps": [
+    "Do not restart until vibration source identified",
+    "Check spindle for mechanical damage",
+    "Inspect machine bed levelling",
+    "Verify workpiece is still clamped",
+    "Check foundation bolts"
+  ],
+  "remedy": "Identify and repair vibration source before restart. Full machine inspection required.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P064",
+      "pid": 64,
+      "name": "Kurtosis Index",
+      "unit": "-",
+      "normal_min": 2.5,
+      "normal_max": 5.0,
+      "critical_min": 0,
+      "critical_max": 25.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-001",
+    "AXS-CR-001",
+    "VIB-MJ-001"
+  ],
+  "sample_observations": []
+}

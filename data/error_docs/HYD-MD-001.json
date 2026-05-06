@@ -1,0 +1,36 @@
+{
+  "error_code": "HYD-MD-001",
+  "title": "Hydraulic Pressure \u2014 Minor Drift",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Hydraulic System",
+  "mid": 138,
+  "fault_category": "actuator_fault",
+  "description": "Hydraulic pressure P050 = {val} bar. Drifted {val2} bar below nominal setpoint over last 24 hours.",
+  "probable_cause": "Minor internal leakage or relief valve creep.",
+  "diagnostic_steps": [
+    "Re-check relief valve setting",
+    "Monitor for continued drift"
+  ],
+  "remedy": "Adjust relief valve if within range. Log and monitor.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P050",
+      "pid": 50,
+      "name": "Hydraulic System Pressure",
+      "unit": "bar",
+      "normal_min": 60,
+      "normal_max": 80,
+      "critical_min": 40,
+      "critical_max": 100,
+      "subsystem": "HYD"
+    }
+  ],
+  "related_codes": [
+    "HYD-MJ-001"
+  ],
+  "sample_observations": []
+}

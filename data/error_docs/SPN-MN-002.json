@@ -1,0 +1,38 @@
+{
+  "error_code": "SPN-MN-002",
+  "title": "Spindle Motor Temperature \u2014 Elevated",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Spindle motor temperature P003 = {val} \u00b0C. Within normal range but {val2} \u00b0C above 30-day average for same duty cycle.",
+  "probable_cause": "Slight cooling degradation or increased duty cycle.",
+  "diagnostic_steps": [
+    "Check air filter cleanliness",
+    "Verify coolant flow to motor if liquid-cooled",
+    "Compare ambient P070 to historical"
+  ],
+  "remedy": "Clean filters at next shift break. Monitor trend.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-001",
+    "THM-WN-070"
+  ],
+  "sample_observations": []
+}

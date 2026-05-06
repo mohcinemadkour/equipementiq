@@ -1,0 +1,89 @@
+{
+  "error_code": "VIB-AD-001",
+  "title": "Vibration Baseline Update",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "process_anomaly",
+  "description": "Vibration baseline recalculated from last 30-day dataset. New baseline: X={val}, Y={val2}, Z={val3} mm/s.",
+  "probable_cause": "Automatic monthly baseline update.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 2.001,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 1.44,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP02",
+      "primary_value": 1.819,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 1.097,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP02",
+      "primary_value": 1.747,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    }
+  ]
+}

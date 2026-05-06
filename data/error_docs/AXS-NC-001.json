@@ -1,0 +1,89 @@
+{
+  "error_code": "AXS-NC-001",
+  "title": "Axis Position \u2014 Reference Established",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "process_anomaly",
+  "description": "All axes homed successfully. X={val}, Y={val2}, Z={val3} mm from machine zero. Reference position confirmed.",
+  "probable_cause": "Normal machine homing cycle complete.",
+  "diagnostic_steps": [],
+  "remedy": "No action required. Machine ready for operation.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P010",
+      "pid": 10,
+      "name": "X-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P011",
+      "pid": 11,
+      "name": "Y-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P012",
+      "pid": 12,
+      "name": "Z-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": -0.007,
+      "primary_param_unit": "mm",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": -0.006,
+      "primary_param_unit": "mm",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": -0.007,
+      "primary_param_unit": "mm",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": -0.003,
+      "primary_param_unit": "mm",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": -0.0,
+      "primary_param_unit": "mm",
+      "source": "synthetic_normal"
+    }
+  ]
+}

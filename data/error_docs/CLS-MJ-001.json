@@ -1,0 +1,58 @@
+{
+  "error_code": "CLS-MJ-001",
+  "title": "Coolant Overtemperature",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant temperature P031 = {val} \u00b0C, above major threshold (40 \u00b0C). Flow rate P030 = {val2} L/min. Thermal control of cutting zone compromised.",
+  "probable_cause": "Chiller unit failure, high ambient temperature, excessive heat load from cutting, or inadequate coolant tank volume.",
+  "diagnostic_steps": [
+    "Check chiller unit operation",
+    "Verify coolant tank volume is adequate",
+    "Inspect heat exchanger for fouling",
+    "Reduce cutting parameters to lower heat generation"
+  ],
+  "remedy": "Restore chiller operation. Clean heat exchanger. Allow coolant to cool before resuming heavy cuts.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P031",
+      "pid": 31,
+      "name": "Coolant Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "CLS"
+    },
+    {
+      "param_id": "P030",
+      "pid": 30,
+      "name": "Coolant Flow Rate",
+      "unit": "L/min",
+      "normal_min": 15,
+      "normal_max": 40,
+      "critical_min": 5,
+      "critical_max": 50,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [
+    "CLS-CR-001",
+    "THM-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP00",
+      "primary_value": 40.483,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

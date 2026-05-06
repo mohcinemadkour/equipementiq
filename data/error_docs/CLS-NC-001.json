@@ -1,0 +1,67 @@
+{
+  "error_code": "CLS-NC-001",
+  "title": "Coolant Temperature Stabilised",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant temperature P031 = {val} \u00b0C. Within optimal range. Thermal equilibrium reached after {val2} minutes warm-up.",
+  "probable_cause": "Normal start-up thermal stabilisation.",
+  "diagnostic_steps": [],
+  "remedy": "No action required. Machine ready for production.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P031",
+      "pid": 31,
+      "name": "Coolant Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 18.145,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP04",
+      "primary_value": 17.126,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 23.351,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 19.887,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 22.359,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

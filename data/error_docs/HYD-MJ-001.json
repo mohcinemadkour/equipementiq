@@ -1,0 +1,52 @@
+{
+  "error_code": "HYD-MJ-001",
+  "title": "Hydraulic Pressure \u2014 Low",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Hydraulic System",
+  "mid": 138,
+  "fault_category": "actuator_fault",
+  "description": "Hydraulic pressure P050 = {val} bar, below minimum operating pressure ({val2} bar). Workholding and ATC clamp functions may be unreliable.",
+  "probable_cause": "Pump wear, pressure relief valve stuck open, or internal leak in hydraulic circuit.",
+  "diagnostic_steps": [
+    "Check pump outlet pressure with calibrated gauge",
+    "Listen for pump bypass noise",
+    "Inspect hydraulic hoses and fittings for leaks",
+    "Check oil level in reservoir",
+    "Verify relief valve setting"
+  ],
+  "remedy": "Replace pump if output pressure confirmed low. Set relief valve to correct pressure. Repair leaks.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P050",
+      "pid": 50,
+      "name": "Hydraulic System Pressure",
+      "unit": "bar",
+      "normal_min": 60,
+      "normal_max": 80,
+      "critical_min": 40,
+      "critical_max": 100,
+      "subsystem": "HYD"
+    },
+    {
+      "param_id": "P051",
+      "pid": 51,
+      "name": "Hydraulic Oil Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 30,
+      "normal_max": 55,
+      "critical_min": 20,
+      "critical_max": 70,
+      "subsystem": "HYD"
+    }
+  ],
+  "related_codes": [
+    "TCS-MJ-001",
+    "HYD-SR-001",
+    "HYD-CR-phantom"
+  ],
+  "sample_observations": []
+}

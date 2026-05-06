@@ -1,0 +1,67 @@
+{
+  "error_code": "ELC-AD-001",
+  "title": "UPS Battery \u2014 Fully Charged",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "process_anomaly",
+  "description": "UPS battery at {val}% capacity. Backup time: {val2} minutes.",
+  "probable_cause": "Status advisory.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P093",
+      "pid": 93,
+      "name": "UPS Battery Level",
+      "unit": "%",
+      "normal_min": 80,
+      "normal_max": 100,
+      "critical_min": 20,
+      "critical_max": 100,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 86.5,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 82.9,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 82.8,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP02",
+      "primary_value": 87.9,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": 87.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

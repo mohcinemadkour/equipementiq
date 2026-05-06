@@ -1,0 +1,58 @@
+{
+  "error_code": "AXS-MN-001",
+  "title": "Servo Current \u2014 Minor Variance",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Servo current on {val}-axis shows {val2}% variance vs. baseline on identical move profile. No limit exceeded.",
+  "probable_cause": "Normal mechanical variation or minor lubrication change.",
+  "diagnostic_steps": [
+    "Monitor for 24 hours",
+    "Review lubrication log"
+  ],
+  "remedy": "Log and monitor.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P013",
+      "pid": 13,
+      "name": "X-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P014",
+      "pid": 14,
+      "name": "Y-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P015",
+      "pid": 15,
+      "name": "Z-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 22,
+      "critical_min": 0,
+      "critical_max": 30,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "AXS-SR-002"
+  ],
+  "sample_observations": []
+}

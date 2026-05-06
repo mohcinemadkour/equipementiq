@@ -1,0 +1,69 @@
+{
+  "error_code": "HYD-WN-001",
+  "title": "Hydraulic Pump \u2014 Scheduled Service Due",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Hydraulic System",
+  "mid": 138,
+  "fault_category": "process_anomaly",
+  "description": "Hydraulic pump has accumulated {val} operating hours since last service. Service interval is {val2} hours.",
+  "probable_cause": "Normal maintenance interval.",
+  "diagnostic_steps": [],
+  "remedy": "Schedule hydraulic system service per MAINT-HYD-001.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P052",
+      "pid": 52,
+      "name": "Hydraulic Pump Flow",
+      "unit": "L/min",
+      "normal_min": 20,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 40,
+      "subsystem": "HYD"
+    }
+  ],
+  "related_codes": [
+    "HYD-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 29.873,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 29.334,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 30.547,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 27.711,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 32.082,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    }
+  ]
+}

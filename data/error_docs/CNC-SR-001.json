@@ -1,0 +1,39 @@
+{
+  "error_code": "CNC-SR-001",
+  "title": "CNC CPU Load \u2014 High",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "actuator_fault",
+  "description": "CNC CPU load P080 = {val}% sustained over last {val2} minutes. May cause motion interpolation jitter if load exceeds 90%.",
+  "probable_cause": "Complex NC program with many small blocks, excessive macro execution, or background task conflict.",
+  "diagnostic_steps": [
+    "Check number of active background tasks",
+    "Review NC program block density",
+    "Disable unnecessary data logging during critical cuts",
+    "Check for DNC streaming vs. stored program"
+  ],
+  "remedy": "Optimise NC program (increase minimum arc chord tolerance). Use stored program instead of DNC stream.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P080",
+      "pid": 80,
+      "name": "CNC CPU Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "CNC-CR-001",
+    "CNC-MD-011"
+  ],
+  "sample_observations": []
+}

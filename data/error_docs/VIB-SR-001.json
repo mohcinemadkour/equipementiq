@@ -1,0 +1,98 @@
+{
+  "error_code": "VIB-SR-001",
+  "title": "Vibration \u2014 ISO Zone B Upper \u2014 Elevated",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "chatter_vibration",
+  "description": "Vibration RMS = {val} mm/s on {val2}-axis. At upper boundary of ISO Zone B (4.5\u20137.1 mm/s). Acceptable for limited operation but not long-term.",
+  "probable_cause": "Moderate tool wear, fixture loosening, or minor bearing degradation.",
+  "diagnostic_steps": [
+    "Inspect tool condition",
+    "Check fixture clamping",
+    "Review spindle speed vs stability lobe",
+    "Measure bearing temperature"
+  ],
+  "remedy": "Inspect and replace tool. Re-verify fixture. Monitor for further increase.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "VIB-MJ-001",
+    "SPN-SR-003",
+    "AXS-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP03",
+      "primary_value": 4.595,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 4.355,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 3.889,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 3.947,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 4.499,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

@@ -1,0 +1,128 @@
+# EquipmentIQ — Industrial Predictive Maintenance RAG
+
+Multi-agent RAG over the **VMC-3000 Vertical Machining Centre** fleet. Three specialised agents, one LangGraph orchestrator, three isolated ChromaDB collections, RAGAS + LLM-as-Judge evaluation, Streamlit demo. Grounded in the **Bosch CNC Machining Dataset** (CC-BY-4.0, 1,702 recordings, 70 real fault events).
+
+Spec of record: `docs/EquipmentIQ_FRD.docx`. Read it for any requirement detail; this file is a working summary, not the source of truth.
+
+## The three agents (strict isolation)
+
+| Agent | Collection | Source | FR group |
+|---|---|---|---|
+| **Mechanical** | `mechanical_collection` | 6 PDFs in `data/pdfs/` (DOC-EIQ-001..006) | FR-MECH-001..007 |
+| **Software / Error Code** | `software_collection` | 96 JSONs in `data/error_docs/` | FR-SOFT-001..007 |
+| **Customer Support** | `support_collection` | `data/processed/customer_complaints.csv` (150 cases) | FR-SUPP-001..008 |
+
+DR-005: **collections are strictly isolated** — no cross-collection retrieval without explicit orchestrator authorisation (CROSS_DOMAIN node only).
+
+## Orchestration contract
+
+- Intent classifier returns `{domain: mechanical|software|support|cross_domain, confidence: 0..1, reasoning}`.
+- `confidence >= 0.80` → single agent. `< 0.80` → CROSS_DOMAIN parallel retrieval (asyncio.gather or LangGraph parallel nodes).
+- Routing is via deterministic LangGraph `conditional_edges`, **not** LLM-driven.
+- Out-of-scope: if all retrieved chunks have cosine similarity `< 0.4`, return a structured "insufficient context" response — never synthesise unsupported answers.
+- `AgentState` TypedDict carries: `query, domain, confidence, agent_results, merged_context, final_answer, citations, eval_scores, feedback`.
+- Sliding 5-turn conversation window injected into synthesis prompt.
+
+## Tech stack (locked by FRD §2.3)
+
+- **Generation LLM**: `claude-sonnet-4-20250514`
+- **Judge LLM**: separate Claude instance, same model, different prompt
+- **Embeddings**: OpenAI `text-embedding-3-small` (1536 dims)
+- **Vector store**: ChromaDB, local persistent (`chroma_db/`, gitignored)
+- **Reranker**: `cross-encoder/ms-marco-MiniLM-L-6-v2`
+- **Orchestration**: LangGraph StateGraph
+- **Eval**: RAGAS + custom metrics (NDCG@5, Hit@5, MRR)
+- **Tracing**: LangSmith
+- **UI**: Streamlit
+- **Feedback storage**: **SQLite** (FRD specifies PostgreSQL but no local PG → see `memory/feedback_store_sqlite.md`)
+
+## Tunable parameters (centralise in `config.yaml`, NFR-MAINT-003)
+
+```yaml
+chunk_size: 512            # DR-001
+chunk_overlap: 64          # DR-001
+top_k_retrieval: 8         # FR-MECH-002 — pre-rerank
+top_k_final: 5             # post-rerank
+mmr_lambda: 0.5            # FR-MECH-007
+intent_confidence_threshold: 0.80   # FR-ORCH-002
+oos_similarity_floor: 0.4           # FR-ORCH-007
+eval_sampling_rate: 0.10            # 10–15% online sampling
+```
+
+Never hardcode these — read from `config.yaml`.
+
+## Data layout (actual, not FRD Table 20)
+
+```
+data/
+├── pdfs/                              # 6 DOC-EIQ-*.pdf — Mechanical Agent source
+├── error_docs/                        # 96 per-code JSONs — Software Agent source
+└── processed/
+    ├── bosch_backbone.csv             # 1,702 rows, 32 vibration features
+    ├── bosch_features.csv
+    ├── customer_complaints.csv        # 150 cases — Support Agent source
+    ├── customer_complaints.json
+    ├── error_code_catalogue.csv       # 96 codes
+    ├── error_code_master.json         # full structured DB w/ parameters
+    ├── error_observations.csv         # 520 p-value observations (147 anchored to real Bosch faults)
+    ├── fault_events.csv               # 70 real Bosch fault events
+    └── dataset_summary.json
+```
+
+**Note**: FRD Table 20 shows these CSVs at `data/` root. Actual layout uses `data/processed/`. Ingestion code paths must reflect the actual layout.
+
+Subsystem codes (10): SPN, AXS, TCS, CLS, LUB, HYD, CNC, ELC, VIB, THM.
+Severity levels (8): CRITICAL, MAJOR, SERIOUS, MODERATE, MINOR, WARNING, NOTICE, ADVISORY.
+Machines: M01, M02, M03. Fault categories: tool_wear (34), spindle_bearing_fault (20), actuator_fault (8), chatter_vibration (7), process_anomaly (1).
+
+## Repository layout (target)
+
+```
+ingestion/    # 3 ingesters + chunking.py + validate_collections.py
+agents/       # base_agent.py + 3 domain agents
+orchestrator/ # state.py, intent_classifier.py, synthesiser.py, graph.py
+evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
+feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
+prompts/      # versioned .txt files — NEVER inline LLM prompts in code (NFR-MAINT-002)
+ui/           # app.py (demo), eval_dashboard.py
+tests/        # test_orchestrator, test_agents, test_evaluation, test_feedback
+scripts/      # one-shot data generation (already exists)
+config.yaml
+requirements.txt
+.env.example
+```
+
+## Hard rules (do not violate)
+
+- **No cross-collection reads** outside the orchestrator's CROSS_DOMAIN node (DR-005).
+- **No inline prompts**. All LLM prompts live in `prompts/*.txt` and are loaded by name (NFR-MAINT-002).
+- **No PII in LangSmith traces**. Mask name/phone/email fields in complaint records before logging (NFR-SEC-002).
+- **No API keys in source, logs, or UI**. Read from env (NFR-SEC-001).
+- **No hallucinated part numbers**. If `EIQ-*` part number isn't in retrieved context, say it's not available (FR-MECH-004).
+- **Diagnostic steps as numbered procedure**, never narrative paragraphs (FR-SOFT-005).
+- **Cite source_document + chunk_id** in every answer; admit uncertainty when context is thin (FR-ORCH-006).
+- **Trust internal data; validate at boundaries only**. Don't add defensive fallbacks for shapes the FRD already guarantees.
+
+## Acceptance gates (production deploy is blocked until these pass)
+
+- NDCG@5 ≥ 0.70 per agent on the 90-query golden set (AC-001)
+- Hit@5 ≥ 0.85 per agent (AC-002)
+- RAGAS Faithfulness ≥ 0.80 on 50-query sample (AC-003)
+- Intent routing ≥ 95% on 40 labelled test queries (AC-004)
+- Single-agent P95 ≤ 10 s, cross-domain P95 ≤ 20 s (AC-008, NFR-PERF-001/002)
+
+## Required env vars
+
+```
+ANTHROPIC_API_KEY=
+OPENAI_API_KEY=
+LANGCHAIN_API_KEY=
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_PROJECT=equipmentiq
+```
+
+## Phase status
+
+- **Phase 1 — Data**: ✅ complete (PDFs, error JSONs, complaints, Bosch backbone all on disk)
+- **Phase 2 — Ingestion**: ⬜ next
+- **Phases 3–5**: ⬜ Agents/Orchestrator → Evaluation → Feedback/UI

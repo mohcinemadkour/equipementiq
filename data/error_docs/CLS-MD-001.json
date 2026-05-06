@@ -1,0 +1,38 @@
+{
+  "error_code": "CLS-MD-001",
+  "title": "Coolant Tank Level \u2014 Low",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant tank level P033 = {val}%. Below recommended operating level (25%). Machine will halt at 5%.",
+  "probable_cause": "Coolant consumption exceeds refill rate, or evaporation/drag-out.",
+  "diagnostic_steps": [
+    "Check refractometer for coolant concentration",
+    "Inspect for leaks",
+    "Review coolant consumption log"
+  ],
+  "remedy": "Top up coolant tank. Check concentration and adjust. Investigate consumption rate if elevated.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P033",
+      "pid": 33,
+      "name": "Coolant Tank Level",
+      "unit": "%",
+      "normal_min": 20,
+      "normal_max": 100,
+      "critical_min": 5,
+      "critical_max": 100,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [
+    "CLS-CR-001",
+    "CLS-WN-001"
+  ],
+  "sample_observations": []
+}

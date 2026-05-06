@@ -1,0 +1,78 @@
+{
+  "error_code": "CNC-NC-001",
+  "title": "CNC System \u2014 Normal Operation",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "process_anomaly",
+  "description": "CNC controller operating normally. CPU P080={val}%, memory P081={val2}%. All axes enabled.",
+  "probable_cause": "Status notification.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P080",
+      "pid": 80,
+      "name": "CNC CPU Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    },
+    {
+      "param_id": "P081",
+      "pid": 81,
+      "name": "CNC Memory Usage",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 80,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 30.1,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 30.6,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP02",
+      "primary_value": 17.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 7.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 12.0,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

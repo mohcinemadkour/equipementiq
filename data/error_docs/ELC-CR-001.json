@@ -1,0 +1,51 @@
+{
+  "error_code": "ELC-CR-001",
+  "title": "DC Bus Undervoltage \u2014 All Drives Disabled",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "actuator_fault",
+  "description": "DC bus voltage P090 = {val} V, below minimum {val2} V. All servo and spindle drives disabled. Main supply P091 = {val3} V.",
+  "probable_cause": "Main supply phase loss, incoming fuse blown, or DC bus capacitor failure.",
+  "diagnostic_steps": [
+    "Check main incoming supply voltage at isolator",
+    "Measure all three phases for balance",
+    "Inspect main fuses and circuit breakers",
+    "Check DC bus capacitor bank for bulging"
+  ],
+  "remedy": "Restore supply. Replace fuse if blown. Capacitor replacement requires qualified electrician.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P090",
+      "pid": 90,
+      "name": "DC Bus Voltage",
+      "unit": "V",
+      "normal_min": 560,
+      "normal_max": 620,
+      "critical_min": 480,
+      "critical_max": 680,
+      "subsystem": "ELC"
+    },
+    {
+      "param_id": "P091",
+      "pid": 91,
+      "name": "Main Supply Voltage",
+      "unit": "V",
+      "normal_min": 380,
+      "normal_max": 420,
+      "critical_min": 340,
+      "critical_max": 440,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [
+    "AXS-CR-002",
+    "SPN-CR-002",
+    "ELC-MJ-001"
+  ],
+  "sample_observations": []
+}

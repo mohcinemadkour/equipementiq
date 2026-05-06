@@ -1,0 +1,99 @@
+{
+  "error_code": "SPN-MJ-001",
+  "title": "Spindle Motor Overtemperature",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Spindle motor winding temperature P003 = {val} \u00b0C exceeds major threshold (85 \u00b0C). Thermal model predicts critical threshold (95 \u00b0C) in <15 minutes at current load.",
+  "probable_cause": "Cooling fan failure, blocked air filter, excessive duty cycle, or degraded motor winding insulation.",
+  "diagnostic_steps": [
+    "Check spindle cooling fan rotation",
+    "Inspect and clean air filter on motor housing",
+    "Verify coolant-through-spindle flow if equipped",
+    "Reduce spindle load P002 by lowering feed rate",
+    "Check ambient temperature P070"
+  ],
+  "remedy": "Replace cooling fan motor. Clean filters. If repeated, check motor insulation class and compare to duty cycle.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-002",
+    "THM-WN-070",
+    "SPN-MN-006"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 86.234,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 83.917,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 83.969,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 88.884,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP04",
+      "primary_value": 88.839,
+      "primary_param_unit": "\u00b0C",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

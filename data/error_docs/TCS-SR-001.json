@@ -1,0 +1,50 @@
+{
+  "error_code": "TCS-SR-001",
+  "title": "ATC Cycle Time \u2014 Degraded",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "actuator_fault",
+  "description": "ATC arm cycle time P022 = {val} s, exceeds nominal {val2} s by >20%. Clamp pressure P021 = {val3} bar.",
+  "probable_cause": "ATC cylinder seal wear, lubrication degradation, or magazine drive motor wear.",
+  "diagnostic_steps": [
+    "Run 5 consecutive ATC cycles and log P022",
+    "Check ATC lubrication grease condition",
+    "Measure air cylinder actuation force",
+    "Inspect magazine drive gearbox"
+  ],
+  "remedy": "Grease ATC arm pivot. If cycle time continues degrading, replace ATC cylinder seals.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P022",
+      "pid": 22,
+      "name": "ATC Arm Cycle Time",
+      "unit": "s",
+      "normal_min": 3.5,
+      "normal_max": 6.0,
+      "critical_min": 0,
+      "critical_max": 10,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P021",
+      "pid": 21,
+      "name": "Tool Clamp Pressure",
+      "unit": "bar",
+      "normal_min": 55,
+      "normal_max": 75,
+      "critical_min": 40,
+      "critical_max": 80,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "TCS-MJ-001",
+    "TCS-MD-001"
+  ],
+  "sample_observations": []
+}

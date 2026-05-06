@@ -1,0 +1,73 @@
+{
+  "error_code": "ELC-WN-001",
+  "title": "DC Bus \u2014 Minor Voltage Ripple Detected",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "process_anomaly",
+  "description": "DC bus voltage P090 shows increased ripple: peak-to-peak = {val} V (limit 15 V). Mean voltage {val2} V within spec.",
+  "probable_cause": "Aging DC bus capacitors or increased regenerative energy.",
+  "diagnostic_steps": [
+    "Measure capacitance of DC bus capacitors",
+    "Check for excessive regenerative braking events"
+  ],
+  "remedy": "Monitor. Plan capacitor inspection at next scheduled maintenance.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P090",
+      "pid": 90,
+      "name": "DC Bus Voltage",
+      "unit": "V",
+      "normal_min": 560,
+      "normal_max": 620,
+      "critical_min": 480,
+      "critical_max": 680,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [
+    "ELC-CR-001",
+    "ELC-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 598.286,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 604.119,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 594.91,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 597.532,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 609.383,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    }
+  ]
+}

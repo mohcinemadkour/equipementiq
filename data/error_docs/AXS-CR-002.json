@@ -1,0 +1,62 @@
+{
+  "error_code": "AXS-CR-002",
+  "title": "Servo Drive Hardware Fault \u2014 Axis Disabled",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Servo drive reports hardware fault on axis. Drive has disabled output stage. P013={val}A (X), P014={val2}A (Y), P015={val3}A (Z).",
+  "probable_cause": "IGBT overcurrent, DC bus undervoltage, or drive internal fault.",
+  "diagnostic_steps": [
+    "Check drive status display for specific sub-code",
+    "Measure DC bus voltage P090",
+    "Inspect drive power connections",
+    "Check motor phase resistance balance"
+  ],
+  "remedy": "Replace faulted drive. Verify motor winding integrity before re-enabling.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P013",
+      "pid": 13,
+      "name": "X-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P014",
+      "pid": 14,
+      "name": "Y-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P015",
+      "pid": 15,
+      "name": "Z-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 22,
+      "critical_min": 0,
+      "critical_max": 30,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "ELC-CR-001",
+    "AXS-CR-001",
+    "SPN-CR-002"
+  ],
+  "sample_observations": []
+}

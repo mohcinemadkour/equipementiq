@@ -1,0 +1,38 @@
+{
+  "error_code": "LUB-SR-001",
+  "title": "Lubrication Oil Level \u2014 Low",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "actuator_fault",
+  "description": "Lubrication oil reservoir level P041 = {val}%. Below recommended level (25%). Lube interval may be affected. Machine will stop at 10%.",
+  "probable_cause": "Normal oil consumption or minor leak.",
+  "diagnostic_steps": [
+    "Check for oil leaks at guide covers",
+    "Verify lube cycle interval setting",
+    "Check oil type matches specification"
+  ],
+  "remedy": "Top up reservoir with correct oil grade. Inspect for leaks.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P041",
+      "pid": 41,
+      "name": "Lubrication Oil Level",
+      "unit": "%",
+      "normal_min": 25,
+      "normal_max": 100,
+      "critical_min": 10,
+      "critical_max": 100,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [
+    "LUB-CR-001",
+    "LUB-MD-001"
+  ],
+  "sample_observations": []
+}

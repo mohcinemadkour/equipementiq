@@ -1,0 +1,96 @@
+{
+  "error_code": "AXS-CR-001",
+  "title": "Axis Following Error \u2014 Emergency Stop",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Axis following error P016 = {val} mm exceeds emergency stop threshold (2.0 mm). All axes halted. Position integrity cannot be guaranteed. P010={val2}, P011={val3}, P012={val4} mm.",
+  "probable_cause": "Drive fault, ball screw failure, axis collision, or encoder loss.",
+  "diagnostic_steps": [
+    "Do not move axes until cause identified",
+    "Check all servo drive status LEDs",
+    "Verify no mechanical obstruction on axis",
+    "Inspect ball screw for damage",
+    "Check encoder feedback signal integrity"
+  ],
+  "remedy": "Identify faulted axis. Repair mechanical cause. Re-home all axes before resuming.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P016",
+      "pid": 16,
+      "name": "Axis Following Error",
+      "unit": "mm",
+      "normal_min": 0,
+      "normal_max": 0.05,
+      "critical_min": 0,
+      "critical_max": 2.0,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P010",
+      "pid": 10,
+      "name": "X-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P011",
+      "pid": 11,
+      "name": "Y-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P012",
+      "pid": 12,
+      "name": "Z-Axis Position Error",
+      "unit": "mm",
+      "normal_min": -0.01,
+      "normal_max": 0.01,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "AXS-MJ-001",
+    "AXS-MJ-002",
+    "CNC-CR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 1.553,
+      "primary_param_unit": "mm",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP12",
+      "primary_value": 1.565,
+      "primary_param_unit": "mm",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 1.427,
+      "primary_param_unit": "mm",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

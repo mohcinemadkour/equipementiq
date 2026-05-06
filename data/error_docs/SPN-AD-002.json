@@ -1,0 +1,67 @@
+{
+  "error_code": "SPN-AD-002",
+  "title": "Spindle Idle \u2014 No Load Detected",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "process_anomaly",
+  "description": "Spindle running at programmed speed but P002 load = {val}%. No cutting engagement detected. Tool may be in air or rapid traversal block.",
+  "probable_cause": "Normal between-operation spindle state.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 40.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 31.0,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 34.4,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 14.8,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 17.3,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

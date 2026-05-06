@@ -1,0 +1,52 @@
+{
+  "error_code": "CLS-CR-001",
+  "title": "Coolant Flow Loss \u2014 Emergency Stop",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant flow P030 = {val} L/min (below minimum 5 L/min). Coolant tank level P033 = {val2}%. Machine stopped to prevent tool and workpiece thermal damage.",
+  "probable_cause": "Coolant pump failure, blocked filter, ruptured hose, or empty tank.",
+  "diagnostic_steps": [
+    "Check coolant tank level physically",
+    "Inspect pump operation (audible)",
+    "Check coolant supply hose for kinking or rupture",
+    "Inspect coolant filter element differential pressure",
+    "Verify pump motor circuit breaker"
+  ],
+  "remedy": "Restore coolant supply. Replace pump if failed. Do not restart machining until minimum flow P030 >15 L/min confirmed.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P030",
+      "pid": 30,
+      "name": "Coolant Flow Rate",
+      "unit": "L/min",
+      "normal_min": 15,
+      "normal_max": 40,
+      "critical_min": 5,
+      "critical_max": 50,
+      "subsystem": "CLS"
+    },
+    {
+      "param_id": "P033",
+      "pid": 33,
+      "name": "Coolant Tank Level",
+      "unit": "%",
+      "normal_min": 20,
+      "normal_max": 100,
+      "critical_min": 5,
+      "critical_max": 100,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [
+    "CLS-MJ-001",
+    "SPN-MJ-003",
+    "CLS-SR-001"
+  ],
+  "sample_observations": []
+}

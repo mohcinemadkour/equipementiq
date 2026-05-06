@@ -1,0 +1,37 @@
+{
+  "error_code": "AXS-MD-002",
+  "title": "Servo Drive Temperature \u2014 Elevated",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Drive temperature P017 = {val} \u00b0C. Within spec but {val2} \u00b0C above seasonal baseline. Monitor for progression.",
+  "probable_cause": "Marginal cabinet cooling or increased cutting load.",
+  "diagnostic_steps": [
+    "Check cabinet fan speed",
+    "Verify door seals are intact"
+  ],
+  "remedy": "Clean cabinet filters. Monitor.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P017",
+      "pid": 17,
+      "name": "Servo Drive Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 70,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "AXS-MJ-002",
+    "THM-WN-070"
+  ],
+  "sample_observations": []
+}

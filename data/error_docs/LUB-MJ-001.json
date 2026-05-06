@@ -1,0 +1,72 @@
+{
+  "error_code": "LUB-MJ-001",
+  "title": "Lubrication Pump \u2014 No Flow Confirmation",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "actuator_fault",
+  "description": "Lubrication pump current P042 = {val} A (pump running) but flow switch did not confirm delivery within {val2} s. P040 = {val3} bar.",
+  "probable_cause": "Blocked oil distributor, closed isolation valve, or internal pump bypass.",
+  "diagnostic_steps": [
+    "Check oil inlet strainer",
+    "Inspect distributor output at each lube point",
+    "Verify isolation valve position",
+    "Check for air lock in suction line"
+  ],
+  "remedy": "Clear blockage in distributor. Bleed air from suction. Replace pump if internal bypass confirmed.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P040",
+      "pid": 40,
+      "name": "Lubrication Oil Pressure",
+      "unit": "bar",
+      "normal_min": 2.0,
+      "normal_max": 4.5,
+      "critical_min": 0.5,
+      "critical_max": 6.0,
+      "subsystem": "LUB"
+    },
+    {
+      "param_id": "P042",
+      "pid": 42,
+      "name": "Lubrication Pump Current",
+      "unit": "A",
+      "normal_min": 0.5,
+      "normal_max": 2.5,
+      "critical_min": 0,
+      "critical_max": 4.0,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [
+    "LUB-CR-001",
+    "LUB-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP12",
+      "primary_value": 5.241,
+      "primary_param_unit": "bar",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP12",
+      "primary_value": 5.1,
+      "primary_param_unit": "bar",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 5.203,
+      "primary_param_unit": "bar",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

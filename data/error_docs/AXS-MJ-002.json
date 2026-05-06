@@ -1,0 +1,88 @@
+{
+  "error_code": "AXS-MJ-002",
+  "title": "Servo Drive Thermal Warning \u2014 Overtemperature",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Servo drive temperature P017 = {val} \u00b0C exceeds 80\u00b0C. Drive will fault at 90\u00b0C. Current draw: X={val2}A, Y={val3}A, Z={val4}A.",
+  "probable_cause": "Inadequate cabinet ventilation, blocked drive heatsink, or sustained high-load machining.",
+  "diagnostic_steps": [
+    "Check cabinet fans are operational P071",
+    "Clean drive heatsink fins",
+    "Reduce duty cycle temporarily",
+    "Check ambient temperature P070"
+  ],
+  "remedy": "Restore cabinet ventilation. Clean filters. If recurring, upsize drive cooling.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P013",
+      "pid": 13,
+      "name": "X-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P014",
+      "pid": 14,
+      "name": "Y-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P015",
+      "pid": 15,
+      "name": "Z-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 22,
+      "critical_min": 0,
+      "critical_max": 30,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P017",
+      "pid": 17,
+      "name": "Servo Drive Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 70,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "THM-MD-001",
+    "AXS-CR-002",
+    "ELC-MJ-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP12",
+      "primary_value": 21.729,
+      "primary_param_unit": "A",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 21.493,
+      "primary_param_unit": "A",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

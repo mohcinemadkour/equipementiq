@@ -1,0 +1,69 @@
+{
+  "error_code": "SPN-NC-002",
+  "title": "Spindle Warm-Up Complete",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "process_anomaly",
+  "description": "Spindle warm-up cycle complete. Motor temperature P003 = {val} \u00b0C. Machine ready for production at full speed.",
+  "probable_cause": "Normal machine readiness notification.",
+  "diagnostic_steps": [],
+  "remedy": "No action required. Proceed with production.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-WN-002"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 28.763,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 41.881,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 29.296,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 34.815,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 29.21,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

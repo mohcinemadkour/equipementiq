@@ -1,0 +1,67 @@
+{
+  "error_code": "TCS-WN-001",
+  "title": "Next Tool Pre-Call \u2014 Long ATC Cycle Expected",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "tool_wear",
+  "description": "Next tool T{val} is in magazine slot {val2}, requiring full magazine rotation of {val3} positions. ATC pre-call initiated.",
+  "probable_cause": "Normal magazine logistics based on program sequence.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP02",
+      "primary_value": 16.3,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 20.2,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 25.1,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP14",
+      "primary_value": 21.8,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 25.5,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    }
+  ]
+}

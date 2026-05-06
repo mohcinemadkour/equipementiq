@@ -1,0 +1,78 @@
+{
+  "error_code": "LUB-NC-001",
+  "title": "Lubrication Cycle Complete",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "process_anomaly",
+  "description": "Scheduled lubrication cycle delivered. P040 = {val} bar confirmed. Pump current P042 = {val2} A. Next cycle in {val3} min.",
+  "probable_cause": "Normal automatic lubrication cycle.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P040",
+      "pid": 40,
+      "name": "Lubrication Oil Pressure",
+      "unit": "bar",
+      "normal_min": 2.0,
+      "normal_max": 4.5,
+      "critical_min": 0.5,
+      "critical_max": 6.0,
+      "subsystem": "LUB"
+    },
+    {
+      "param_id": "P042",
+      "pid": 42,
+      "name": "Lubrication Pump Current",
+      "unit": "A",
+      "normal_min": 0.5,
+      "normal_max": 2.5,
+      "critical_min": 0,
+      "critical_max": 4.0,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 2.34,
+      "primary_param_unit": "bar",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 2.681,
+      "primary_param_unit": "bar",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP14",
+      "primary_value": 2.589,
+      "primary_param_unit": "bar",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 2.45,
+      "primary_param_unit": "bar",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 2.446,
+      "primary_param_unit": "bar",
+      "source": "synthetic_normal"
+    }
+  ]
+}

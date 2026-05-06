@@ -1,0 +1,51 @@
+{
+  "error_code": "CLS-SR-001",
+  "title": "Coolant Pressure \u2014 Low",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant pressure P032 = {val} bar, below lower advisory limit (4 bar). Flow rate P030 = {val2} L/min. Coolant-through-spindle delivery may be insufficient.",
+  "probable_cause": "Partially blocked filter, partially closed isolation valve, or pump cavitation from low tank level.",
+  "diagnostic_steps": [
+    "Check filter differential pressure gauge",
+    "Verify all isolation valves open",
+    "Check tank level P033",
+    "Listen for pump cavitation (irregular noise)"
+  ],
+  "remedy": "Replace coolant filter. Refill tank. Re-prime pump.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P032",
+      "pid": 32,
+      "name": "Coolant Pressure",
+      "unit": "bar",
+      "normal_min": 4,
+      "normal_max": 8,
+      "critical_min": 1,
+      "critical_max": 12,
+      "subsystem": "CLS"
+    },
+    {
+      "param_id": "P030",
+      "pid": 30,
+      "name": "Coolant Flow Rate",
+      "unit": "L/min",
+      "normal_min": 15,
+      "normal_max": 40,
+      "critical_min": 5,
+      "critical_max": 50,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [
+    "CLS-MJ-001",
+    "CLS-CR-001",
+    "CLS-MD-001"
+  ],
+  "sample_observations": []
+}

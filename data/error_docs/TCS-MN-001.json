@@ -1,0 +1,37 @@
+{
+  "error_code": "TCS-MN-001",
+  "title": "Magazine Pocket \u2014 Tool Life Expired",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "tool_wear",
+  "description": "Tool in magazine slot {val} has exceeded 100% of programmed tool life. Tool will not be called by NC program until life counter is reset.",
+  "probable_cause": "Normal tool life expiry.",
+  "diagnostic_steps": [
+    "Inspect tool before resetting counter",
+    "Confirm replacement is in magazine"
+  ],
+  "remedy": "Replace tool. Reset life counter.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "SPN-WN-001",
+    "TCS-MD-001"
+  ],
+  "sample_observations": []
+}

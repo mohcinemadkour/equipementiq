@@ -1,0 +1,67 @@
+{
+  "error_code": "AXS-AD-001",
+  "title": "Rapid Override Active",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "process_anomaly",
+  "description": "Rapid traverse override P083 = {val}%. Axes moving at reduced rapid speed.",
+  "probable_cause": "Operator or program-set rapid override.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P083",
+      "pid": 83,
+      "name": "Feed Override",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 150,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 57.4,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP02",
+      "primary_value": 39.2,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 12.0,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 46.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 16.9,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

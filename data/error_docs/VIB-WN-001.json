@@ -1,0 +1,89 @@
+{
+  "error_code": "VIB-WN-001",
+  "title": "Vibration \u2014 Normal Operating Range",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "process_anomaly",
+  "description": "All axes within ISO Zone A (<2.3 mm/s). X={val}, Y={val2}, Z={val3} mm/s. Machine operating in optimal vibration envelope.",
+  "probable_cause": "Status notification.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 2.527,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP02",
+      "primary_value": 3.27,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 3.086,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 2.384,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 3.742,
+      "primary_param_unit": "mm/s",
+      "source": "synthetic_normal"
+    }
+  ]
+}

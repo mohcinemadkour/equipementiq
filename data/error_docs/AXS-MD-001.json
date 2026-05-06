@@ -1,0 +1,38 @@
+{
+  "error_code": "AXS-MD-001",
+  "title": "Following Error \u2014 Elevated But Within Limit",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Following error P016 = {val} mm is elevated above advisory threshold (0.02 mm) but below halt limit. Trend over last 100 moves: increasing.",
+  "probable_cause": "Servo loop gain reduction or mechanical friction increase.",
+  "diagnostic_steps": [
+    "Run test cycle and log P016 per block",
+    "Compare to commissioning baseline",
+    "Check guide lubrication"
+  ],
+  "remedy": "Log and monitor. Schedule servo re-tuning if trend continues.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P016",
+      "pid": 16,
+      "name": "Axis Following Error",
+      "unit": "mm",
+      "normal_min": 0,
+      "normal_max": 0.05,
+      "critical_min": 0,
+      "critical_max": 2.0,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "AXS-MJ-001",
+    "AXS-SR-002"
+  ],
+  "sample_observations": []
+}

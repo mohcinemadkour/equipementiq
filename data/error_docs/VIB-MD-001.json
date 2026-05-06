@@ -1,0 +1,85 @@
+{
+  "error_code": "VIB-MD-001",
+  "title": "Crest Factor \u2014 Elevated Above Baseline",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "tool_wear",
+  "description": "Vibration crest factor P063 = {val} on spindle sensor. Kurtosis P064 = {val2}. Both elevated vs. 30-day baseline. Pattern may indicate early bearing defect or tool imbalance.",
+  "probable_cause": "Incipient bearing defect, tool imbalance, or minor structural change.",
+  "diagnostic_steps": [
+    "Compare to historical baseline for same operation",
+    "Inspect tool holder for contamination in taper",
+    "Check tool balance if >12000 RPM operation"
+  ],
+  "remedy": "Log and monitor daily. Inspect tool holder taper. Plan bearing inspection at next opportunity.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P064",
+      "pid": 64,
+      "name": "Kurtosis Index",
+      "unit": "-",
+      "normal_min": 2.5,
+      "normal_max": 5.0,
+      "critical_min": 0,
+      "critical_max": 25.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-SR-003",
+    "VIB-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP02",
+      "primary_value": 4.013,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 4.298,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 3.848,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 3.762,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 3.782,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

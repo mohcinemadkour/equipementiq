@@ -1,0 +1,96 @@
+{
+  "error_code": "SPN-CR-001",
+  "title": "Spindle Bearing Catastrophic Failure",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Spindle bearing has reached catastrophic failure threshold. Vibration RMS on spindle exceeds 11.2 mm/s with kurtosis index >20. Continued operation risks spindle shaft damage and workpiece ejection.",
+  "probable_cause": "Bearing race spalling, loss of lubrication, contamination ingress, or end-of-life fatigue. May follow undetected progression through WN-060 and MN-061 warnings.",
+  "diagnostic_steps": [
+    "Stop spindle immediately and lock out/tag out",
+    "Measure bearing vibration with handheld analyser at spindle nose",
+    "Inspect spindle cooling lines for blockage",
+    "Check oil mist lubrication nozzle P040",
+    "Review vibration trend log for P004 over prior 72 hours"
+  ],
+  "remedy": "Replace spindle bearing set. Re-grease per OEM specification. Run acceptance test program SPD-TEST-001 before production restart.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P004",
+      "pid": 4,
+      "name": "Spindle Bearing Vibration",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-002",
+    "VIB-WN-060",
+    "VIB-MN-061"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 8484.0,
+      "primary_param_unit": "RPM",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP05",
+      "primary_value": 8487.0,
+      "primary_param_unit": "RPM",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP04",
+      "primary_value": 8430.0,
+      "primary_param_unit": "RPM",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

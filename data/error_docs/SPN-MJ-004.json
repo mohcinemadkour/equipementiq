@@ -1,0 +1,96 @@
+{
+  "error_code": "SPN-MJ-004",
+  "title": "Regenerative Chatter \u2014 Stability Limit Exceeded",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "chatter_vibration",
+  "description": "Vibration pattern on X/Y/Z axes indicates regenerative chatter. Dominant frequency {val} Hz matches spindle-speed-to-tooth-passing ratio. Crest factor P063 = {val2}.",
+  "probable_cause": "Operating at unstable depth-of-cut for current spindle speed and tool geometry. May worsen with tool wear.",
+  "diagnostic_steps": [
+    "Record dominant chatter frequency from vibration log",
+    "Apply stability lobe diagram for tool/fixture combination",
+    "Check workpiece clamping force",
+    "Inspect tool holder taper contact for fretting",
+    "Review programmed RPM P001 vs stability lobe chart"
+  ],
+  "remedy": "Adjust spindle speed by \u00b110% to shift operating point to stable lobe. Reduce axial depth of cut. Consider high-damping tool holder.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "VIB-WN-060",
+    "SPN-MJ-002",
+    "AXS-MN-002"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 7.989,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP09",
+      "primary_value": 7.712,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP03",
+      "primary_value": 8.694,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

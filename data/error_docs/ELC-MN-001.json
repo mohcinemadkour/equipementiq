@@ -1,0 +1,38 @@
+{
+  "error_code": "ELC-MN-001",
+  "title": "Electrical Cabinet Temperature \u2014 Elevated",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "process_anomaly",
+  "description": "Cabinet temperature P071 = {val} \u00b0C. Above minor threshold (40 \u00b0C) but below major (55 \u00b0C).",
+  "probable_cause": "Cabinet fan partial failure, clogged filter, or high ambient temperature.",
+  "diagnostic_steps": [
+    "Check cabinet fan operation",
+    "Clean filter mats",
+    "Verify cabinet door seals"
+  ],
+  "remedy": "Clean filters. Monitor for increase.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P071",
+      "pid": 71,
+      "name": "Electrical Cabinet Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 45,
+      "critical_min": 10,
+      "critical_max": 60,
+      "subsystem": "THM"
+    }
+  ],
+  "related_codes": [
+    "THM-MD-001",
+    "ELC-MJ-001"
+  ],
+  "sample_observations": []
+}

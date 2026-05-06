@@ -1,0 +1,78 @@
+{
+  "error_code": "ELC-NC-001",
+  "title": "Power-On Self-Test \u2014 Passed",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "process_anomaly",
+  "description": "All electrical systems passed POST. DC bus P090={val}V, supply P091={val2}V. System ready.",
+  "probable_cause": "Normal start-up sequence.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P090",
+      "pid": 90,
+      "name": "DC Bus Voltage",
+      "unit": "V",
+      "normal_min": 560,
+      "normal_max": 620,
+      "critical_min": 480,
+      "critical_max": 680,
+      "subsystem": "ELC"
+    },
+    {
+      "param_id": "P091",
+      "pid": 91,
+      "name": "Main Supply Voltage",
+      "unit": "V",
+      "normal_min": 380,
+      "normal_max": 420,
+      "critical_min": 340,
+      "critical_max": 440,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 574.121,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 576.048,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 580.522,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 582.337,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP02",
+      "primary_value": 577.032,
+      "primary_param_unit": "V",
+      "source": "synthetic_normal"
+    }
+  ]
+}

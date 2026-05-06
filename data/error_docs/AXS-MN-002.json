@@ -1,0 +1,95 @@
+{
+  "error_code": "AXS-MN-002",
+  "title": "Axis Vibration \u2014 Minor Threshold",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "chatter_vibration",
+  "description": "Axis vibration RMS on {val}-axis = {val2} mm/s. Above minor threshold (3.5 mm/s) but below major (7.1 mm/s).",
+  "probable_cause": "Tool wear induced vibration or minor chatter.",
+  "diagnostic_steps": [
+    "Inspect tool condition",
+    "Try \u00b110% spindle speed"
+  ],
+  "remedy": "Monitor and log. Inspect tool at next change.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-004",
+    "AXS-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP03",
+      "primary_value": 2.553,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 3.456,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 3.486,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP09",
+      "primary_value": 3.302,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP03",
+      "primary_value": 3.599,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

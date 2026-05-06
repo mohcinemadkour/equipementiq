@@ -1,0 +1,92 @@
+{
+  "error_code": "SPN-MJ-005",
+  "title": "Spindle Drive Thermal Overcurrent",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Drive reports thermal overcurrent condition. Motor current P002 sustained at {val}% for >60 s. Drive will shut down in {val2} s if condition persists.",
+  "probable_cause": "Excessive cutting load, incorrect feed/speed parameters, or degraded drive cooling.",
+  "diagnostic_steps": [
+    "Check drive heatsink temperature",
+    "Verify drive fan is operational",
+    "Inspect drive filter mat",
+    "Reduce programmed feed rate P083",
+    "Verify tool geometry matches material"
+  ],
+  "remedy": "Allow drive to cool (20 min minimum). Clean drive filters. If recurring, upgrade drive to next current rating.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-002",
+    "THM-MD-001",
+    "SPN-MJ-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP10",
+      "primary_value": 96.8,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP10",
+      "primary_value": 94.5,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 94.6,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP10",
+      "primary_value": 94.9,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

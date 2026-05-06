@@ -1,0 +1,67 @@
+{
+  "error_code": "VIB-NC-001",
+  "title": "Crest Factor \u2014 Within Normal Band",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "process_anomaly",
+  "description": "Vibration crest factor P063 = {val}. Within normal operating band (1.0\u20134.5). No bearing defect signature detected.",
+  "probable_cause": "Status notification.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP14",
+      "primary_value": 2.097,
+      "primary_param_unit": "-",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 2.441,
+      "primary_param_unit": "-",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 2.334,
+      "primary_param_unit": "-",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 2.469,
+      "primary_param_unit": "-",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 2.505,
+      "primary_param_unit": "-",
+      "source": "synthetic_normal"
+    }
+  ]
+}

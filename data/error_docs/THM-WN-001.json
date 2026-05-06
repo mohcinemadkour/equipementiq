@@ -1,0 +1,72 @@
+{
+  "error_code": "THM-WN-001",
+  "title": "Ambient Temperature \u2014 Above Recommended Range",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Thermal Management",
+  "mid": 146,
+  "fault_category": "process_anomaly",
+  "description": "Ambient temperature P070 = {val} \u00b0C, above recommended operating range (35\u00b0C). Machine can operate but thermal compensation active.",
+  "probable_cause": "Seasonal high temperatures or HVAC reduced capacity.",
+  "diagnostic_steps": [
+    "Confirm HVAC is functional",
+    "Increase frequency of coolant concentration checks"
+  ],
+  "remedy": "Monitor thermal parameters. Consider running reduced duty cycle during peak heat hours.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P070",
+      "pid": 70,
+      "name": "Ambient Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "THM"
+    }
+  ],
+  "related_codes": [
+    "THM-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 30.086,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 30.22,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 31.316,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 25.948,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 28.14,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

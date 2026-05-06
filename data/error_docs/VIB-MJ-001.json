@@ -1,0 +1,109 @@
+{
+  "error_code": "VIB-MJ-001",
+  "title": "Vibration \u2014 ISO Zone C \u2014 Major Alert",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Vibration RMS has entered ISO Zone C (7.1\u201311.2 mm/s). X={val}, Y={val2}, Z={val3} mm/s. Crest P063={val4}. Long-term operation at this level will cause bearing damage.",
+  "probable_cause": "Advanced tool wear, bearing defect, or machine structural loosening.",
+  "diagnostic_steps": [
+    "Perform spectral analysis if portable analyser available",
+    "Inspect tool immediately",
+    "Check machine foundation",
+    "Review trending from last 48 hours"
+  ],
+  "remedy": "Reduce cutting parameters. Schedule maintenance within 4 hours.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "VIB-CR-001",
+    "SPN-MJ-002",
+    "VIB-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP03",
+      "primary_value": 7.507,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 8.832,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 8.183,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 8.698,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 8.031,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

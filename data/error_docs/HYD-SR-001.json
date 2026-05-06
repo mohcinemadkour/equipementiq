@@ -1,0 +1,50 @@
+{
+  "error_code": "HYD-SR-001",
+  "title": "Hydraulic Oil Overtemperature",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Hydraulic System",
+  "mid": 138,
+  "fault_category": "actuator_fault",
+  "description": "Hydraulic oil temperature P051 = {val} \u00b0C, above advisory limit (55 \u00b0C). Flow rate P052 = {val2} L/min. Seal degradation accelerates above 60 \u00b0C.",
+  "probable_cause": "Oil cooler fouling, high duty cycle, or low oil level reducing heat dissipation.",
+  "diagnostic_steps": [
+    "Check oil cooler condition",
+    "Verify fan operation on cooler",
+    "Check oil level",
+    "Reduce duty cycle if possible"
+  ],
+  "remedy": "Clean oil cooler. Top up oil. Allow temperature to drop before resuming full cycle rate.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P051",
+      "pid": 51,
+      "name": "Hydraulic Oil Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 30,
+      "normal_max": 55,
+      "critical_min": 20,
+      "critical_max": 70,
+      "subsystem": "HYD"
+    },
+    {
+      "param_id": "P052",
+      "pid": 52,
+      "name": "Hydraulic Pump Flow",
+      "unit": "L/min",
+      "normal_min": 20,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 40,
+      "subsystem": "HYD"
+    }
+  ],
+  "related_codes": [
+    "HYD-MJ-001",
+    "THM-MD-001"
+  ],
+  "sample_observations": []
+}

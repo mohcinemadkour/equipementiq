@@ -1,0 +1,49 @@
+{
+  "error_code": "SPN-MN-003",
+  "title": "Spindle Torque \u2014 Elevated During Entry Move",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "tool_wear",
+  "description": "Spindle torque P005 = {val} Nm during tool entry move. Exceeds expected entry torque model by {val2}%. Possible chip re-cutting or worn tool entry geometry.",
+  "probable_cause": "Insufficient chip evacuation at tool entry or worn tool corner radius.",
+  "diagnostic_steps": [
+    "Check chip evacuation \u2014 increase coolant pressure P032",
+    "Inspect tool corner condition",
+    "Review approach strategy in NC program"
+  ],
+  "remedy": "Adjust tool entry strategy (ramp instead of plunge). Inspect tool.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-003",
+    "CLS-MN-001"
+  ],
+  "sample_observations": []
+}

@@ -1,0 +1,49 @@
+{
+  "error_code": "LUB-MD-001",
+  "title": "Lubrication Pressure \u2014 Marginal",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "actuator_fault",
+  "description": "Lubrication delivery pressure P040 = {val} bar. Marginally above critical but {val2}% below nominal. Pump current P042 = {val3} A.",
+  "probable_cause": "Partially blocked strainer, slightly worn pump, or increased line restriction.",
+  "diagnostic_steps": [
+    "Clean inlet strainer",
+    "Check pump discharge pressure with calibrated gauge",
+    "Inspect distributor for sticking piston"
+  ],
+  "remedy": "Clean strainer. If pump discharge confirmed low, plan pump replacement at next maintenance.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P040",
+      "pid": 40,
+      "name": "Lubrication Oil Pressure",
+      "unit": "bar",
+      "normal_min": 2.0,
+      "normal_max": 4.5,
+      "critical_min": 0.5,
+      "critical_max": 6.0,
+      "subsystem": "LUB"
+    },
+    {
+      "param_id": "P042",
+      "pid": 42,
+      "name": "Lubrication Pump Current",
+      "unit": "A",
+      "normal_min": 0.5,
+      "normal_max": 2.5,
+      "critical_min": 0,
+      "critical_max": 4.0,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [
+    "LUB-SR-001",
+    "LUB-MJ-001"
+  ],
+  "sample_observations": []
+}

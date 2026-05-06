@@ -1,0 +1,47 @@
+{
+  "error_code": "CNC-MD-011",
+  "title": "CNC Memory \u2014 Program Storage Near Full",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "process_anomaly",
+  "description": "CNC program memory P081 = {val}%. Less than {val2} MB available. Large programs may not load.",
+  "probable_cause": "Accumulated NC programs not archived.",
+  "diagnostic_steps": [
+    "Review program list for obsolete programs",
+    "Archive and delete old programs"
+  ],
+  "remedy": "Delete or archive old NC programs. Maintain minimum 20% free memory.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P081",
+      "pid": 81,
+      "name": "CNC Memory Usage",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 80,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    },
+    {
+      "param_id": "P082",
+      "pid": 82,
+      "name": "NC Program Block Number",
+      "unit": "block",
+      "normal_min": 0,
+      "normal_max": 99999,
+      "critical_min": 0,
+      "critical_max": 99999,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "CNC-SR-001"
+  ],
+  "sample_observations": []
+}

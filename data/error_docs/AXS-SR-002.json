@@ -1,0 +1,62 @@
+{
+  "error_code": "AXS-SR-002",
+  "title": "Servo Current \u2014 Elevated Load on Axis",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "actuator_fault",
+  "description": "Servo current on {val}-axis P0{val2} = {val3} A, elevated {val4}% above baseline for equivalent move. Ball screw or guide resistance increasing.",
+  "probable_cause": "Insufficient lubrication on linear guides or ball screw, guide wear, or contamination ingress.",
+  "diagnostic_steps": [
+    "Manually jog axis and feel for stiction",
+    "Inspect linear guide surface for scoring",
+    "Check lubrication oil delivery to guides P040",
+    "Review lubrication interval log"
+  ],
+  "remedy": "Apply lubrication per maintenance schedule. If stiction persists, inspect guide rail and carriage.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P013",
+      "pid": 13,
+      "name": "X-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P014",
+      "pid": 14,
+      "name": "Y-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 18,
+      "critical_min": 0,
+      "critical_max": 25,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P015",
+      "pid": 15,
+      "name": "Z-Axis Servo Current",
+      "unit": "A",
+      "normal_min": 0,
+      "normal_max": 22,
+      "critical_min": 0,
+      "critical_max": 30,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "LUB-MD-001",
+    "AXS-MJ-001",
+    "AXS-MN-001"
+  ],
+  "sample_observations": []
+}

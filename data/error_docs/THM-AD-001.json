@@ -1,0 +1,67 @@
+{
+  "error_code": "THM-AD-001",
+  "title": "Feed Motor Temperature \u2014 Nominal",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Thermal Management",
+  "mid": 146,
+  "fault_category": "process_anomaly",
+  "description": "Feed motor temperature P072 = {val} \u00b0C. Within optimal band.",
+  "probable_cause": "Status advisory.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P072",
+      "pid": 72,
+      "name": "Feed Drive Motor Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 72,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "THM"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": 32.789,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 37.884,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": 30.175,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 44.042,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 45.453,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

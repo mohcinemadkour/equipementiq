@@ -1,0 +1,60 @@
+{
+  "error_code": "CNC-WN-001",
+  "title": "Program \u2014 Approaching End of File",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "process_anomaly",
+  "description": "NC program at block N{val}, approaching end. {val2} blocks remaining.",
+  "probable_cause": "Normal program end approach.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P082",
+      "pid": 82,
+      "name": "NC Program Block Number",
+      "unit": "block",
+      "normal_min": 0,
+      "normal_max": 99999,
+      "critical_min": 0,
+      "critical_max": 99999,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP02",
+      "primary_value": 84657.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": 66901.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 64176.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 70367.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    }
+  ]
+}

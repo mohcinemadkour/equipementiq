@@ -1,0 +1,67 @@
+{
+  "error_code": "CNC-AD-001",
+  "title": "NC Block Counter",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "process_anomaly",
+  "description": "NC program execution at block N{val}. Advisory status update.",
+  "probable_cause": "Status advisory.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P082",
+      "pid": 82,
+      "name": "NC Program Block Number",
+      "unit": "block",
+      "normal_min": 0,
+      "normal_max": 99999,
+      "critical_min": 0,
+      "critical_max": 99999,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 34698.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 47561.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 22336.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 10657.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 21586.0,
+      "primary_param_unit": "block",
+      "source": "synthetic_normal"
+    }
+  ]
+}

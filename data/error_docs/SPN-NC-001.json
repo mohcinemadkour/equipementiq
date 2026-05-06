@@ -1,0 +1,81 @@
+{
+  "error_code": "SPN-NC-001",
+  "title": "Spindle Speed Program Limit Active",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "process_anomaly",
+  "description": "Active NC program has set spindle speed limit to {val} RPM via G50 command. Maximum achievable P001 = {val2} RPM for this operation.",
+  "probable_cause": "Programmed speed limit for fixture or tool safety.",
+  "diagnostic_steps": [
+    "Confirm speed limit is intentional in NC program",
+    "Verify tool/fixture speed rating"
+  ],
+  "remedy": "No action required unless limit is unintentional.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 3952.0,
+      "primary_param_unit": "RPM",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 2653.0,
+      "primary_param_unit": "RPM",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP02",
+      "primary_value": 2563.0,
+      "primary_param_unit": "RPM",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 3039.0,
+      "primary_param_unit": "RPM",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 3843.0,
+      "primary_param_unit": "RPM",
+      "source": "synthetic_normal"
+    }
+  ]
+}

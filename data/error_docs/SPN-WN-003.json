@@ -1,0 +1,84 @@
+{
+  "error_code": "SPN-WN-003",
+  "title": "Tool Life Counter \u2014 Approaching Limit",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "tool_wear",
+  "description": "Tool T{val} has reached {val2}% of programmed tool life. Spindle load trend is stable. Tool change recommended before next production shift.",
+  "probable_cause": "Normal cumulative tool usage.",
+  "diagnostic_steps": [
+    "Inspect tool surface condition",
+    "Confirm replacement tool is available in magazine"
+  ],
+  "remedy": "Schedule tool change at shift end.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-WN-001",
+    "TCS-NC-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 45.3,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 66.8,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 56.1,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 56.9,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 70.3,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

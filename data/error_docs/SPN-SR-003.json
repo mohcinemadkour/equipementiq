@@ -1,0 +1,87 @@
+{
+  "error_code": "SPN-SR-003",
+  "title": "Bearing Kurtosis Threshold \u2014 Defect Initiation Detected",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Kurtosis index P064 = {val} has exceeded early-defect threshold (8.0). Statistical analysis of vibration signal indicates impulse-type events consistent with bearing defect initiation.",
+  "probable_cause": "Early-stage bearing race or rolling element defect. Expected remaining useful life: 200\u2013500 operating hours depending on load.",
+  "diagnostic_steps": [
+    "Enable continuous vibration trending for this spindle",
+    "Reduce spindle speed by 20% as precaution",
+    "Schedule borescope inspection at next planned downtime",
+    "Compare P064 trend rate of change to historical baseline"
+  ],
+  "remedy": "Plan bearing replacement within 200 operating hours. Continue monitoring P064 daily. Reduce maximum spindle speed to 70% until replacement.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P004",
+      "pid": 4,
+      "name": "Spindle Bearing Vibration",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P064",
+      "pid": 64,
+      "name": "Kurtosis Index",
+      "unit": "-",
+      "normal_min": 2.5,
+      "normal_max": 5.0,
+      "critical_min": 0,
+      "critical_max": 25.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-002",
+    "SPN-CR-001",
+    "VIB-WN-060"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 4.023,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 4.474,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 4.282,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP10",
+      "primary_value": 4.153,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP05",
+      "primary_value": 3.922,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

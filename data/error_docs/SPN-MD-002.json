@@ -1,0 +1,50 @@
+{
+  "error_code": "SPN-MD-002",
+  "title": "Feed Override Active \u2014 Non-Standard Cutting Condition",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "process_anomaly",
+  "description": "Feed override P083 set to {val}% (nominal 100%) during production program. Spindle speed P001 = {val2} RPM. Non-standard override active for >10 parts.",
+  "probable_cause": "Operator compensation for tool wear, material hardness variation, or unresolved vibration issue.",
+  "diagnostic_steps": [
+    "Interview operator for reason override was applied",
+    "Check if override masks a recurring alarm",
+    "Verify correct tool is loaded in spindle",
+    "Review last SPC data for dimension drift"
+  ],
+  "remedy": "Restore nominal feed rate. If override required for quality, initiate cutting parameter review with process engineer.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P083",
+      "pid": 83,
+      "name": "Feed Override",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 150,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "SPN-SR-001",
+    "SPN-MJ-003"
+  ],
+  "sample_observations": []
+}

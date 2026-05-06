@@ -1,0 +1,67 @@
+{
+  "error_code": "LUB-AD-001",
+  "title": "Lubrication Oil Level \u2014 Nominal",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "process_anomaly",
+  "description": "Oil level P041 = {val}%. Lubrication system operating normally.",
+  "probable_cause": "Status advisory.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P041",
+      "pid": 41,
+      "name": "Lubrication Oil Level",
+      "unit": "%",
+      "normal_min": 25,
+      "normal_max": 100,
+      "critical_min": 10,
+      "critical_max": 100,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 61.4,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 32.7,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 54.0,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 36.9,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 34.8,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

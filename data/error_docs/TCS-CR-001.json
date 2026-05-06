@@ -1,0 +1,92 @@
+{
+  "error_code": "TCS-CR-001",
+  "title": "ATC Arm Collision \u2014 Emergency Stop",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "actuator_fault",
+  "description": "ATC arm detected unexpected resistance during swing cycle. Emergency stop activated. Magazine position P020 = slot {val}. Clamp pressure P021 = {val2} bar. Cycle time exceeded at T+{val3}s.",
+  "probable_cause": "Tool not seated correctly in spindle, obstructed magazine pocket, or broken ATC arm.",
+  "diagnostic_steps": [
+    "Do not reset until area is clear and inspected",
+    "Check spindle bore for retained chip or damaged tool",
+    "Inspect ATC arm for physical damage",
+    "Verify magazine pocket is clear",
+    "Check pneumatic pressure to ATC cylinder"
+  ],
+  "remedy": "Clear obstruction. Inspect and repair ATC arm if damaged. Re-run ATC cycle in manual step mode.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P021",
+      "pid": 21,
+      "name": "Tool Clamp Pressure",
+      "unit": "bar",
+      "normal_min": 55,
+      "normal_max": 75,
+      "critical_min": 40,
+      "critical_max": 80,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P022",
+      "pid": 22,
+      "name": "ATC Arm Cycle Time",
+      "unit": "s",
+      "normal_min": 3.5,
+      "normal_max": 6.0,
+      "critical_min": 0,
+      "critical_max": 10,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-003",
+    "TCS-MJ-001",
+    "HYD-MJ-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP12",
+      "primary_value": 30.7,
+      "primary_param_unit": "slot",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP12",
+      "primary_value": 30.8,
+      "primary_param_unit": "slot",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 30.9,
+      "primary_param_unit": "slot",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 30.7,
+      "primary_param_unit": "slot",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

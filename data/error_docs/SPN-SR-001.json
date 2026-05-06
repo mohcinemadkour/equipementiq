@@ -1,0 +1,99 @@
+{
+  "error_code": "SPN-SR-001",
+  "title": "Spindle Load Gradually Increasing \u2014 Tool Wear Trend",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "tool_wear",
+  "description": "Spindle load P002 shows monotonic increase of {val}% over last 50 tool engagements. Pattern consistent with progressive tool flank wear. Current load {val2}%.",
+  "probable_cause": "Tool cutting edge wear beyond recommended tool life. Insufficient coolant delivery or incorrect cutting parameters accelerating wear.",
+  "diagnostic_steps": [
+    "Inspect cutting edge under 10\u00d7 loupe",
+    "Compare current tool life to OEM recommendation",
+    "Check coolant concentration (refractometer)",
+    "Review chip formation \u2014 short chips indicate worn tool",
+    "Trend P002 on same operation across last 20 parts"
+  ],
+  "remedy": "Replace tool at next part completion. Update tool life counter in tool table. Optimise cutting parameters.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-003",
+    "SPN-WN-004",
+    "TCS-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 76.9,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 84.1,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 80.0,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 85.0,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 79.1,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

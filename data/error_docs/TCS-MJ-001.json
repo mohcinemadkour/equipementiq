@@ -1,0 +1,51 @@
+{
+  "error_code": "TCS-MJ-001",
+  "title": "Tool Clamp Pressure \u2014 Below Minimum",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "actuator_fault",
+  "description": "Tool clamp pressure P021 = {val} bar, below minimum safe value (55 bar). Tool change aborted. Risk of tool ejection if machining continues.",
+  "probable_cause": "Pneumatic supply pressure drop, clamp valve leakage, or draw-bar spring fatigue.",
+  "diagnostic_steps": [
+    "Check pneumatic supply pressure at machine entry",
+    "Inspect clamp solenoid valve for leakage",
+    "Measure draw-bar pull force with tool pull gauge",
+    "Check air service unit filter/regulator"
+  ],
+  "remedy": "Restore pneumatic pressure. Replace draw-bar spring if pull force <12 kN. Do not machine until clamp pressure verified.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P021",
+      "pid": 21,
+      "name": "Tool Clamp Pressure",
+      "unit": "bar",
+      "normal_min": 55,
+      "normal_max": 75,
+      "critical_min": 40,
+      "critical_max": 80,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P022",
+      "pid": 22,
+      "name": "ATC Arm Cycle Time",
+      "unit": "s",
+      "normal_min": 3.5,
+      "normal_max": 6.0,
+      "critical_min": 0,
+      "critical_max": 10,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "TCS-CR-001",
+    "HYD-SR-001",
+    "TCS-SR-001"
+  ],
+  "sample_observations": []
+}

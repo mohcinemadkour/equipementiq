@@ -1,0 +1,99 @@
+{
+  "error_code": "SPN-MJ-003",
+  "title": "Spindle Load Anomaly \u2014 Possible Tool Breakage",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "tool_wear",
+  "description": "Spindle load P002 jumped from baseline by >40% within one NC block. P005 torque = {val} Nm. Pattern consistent with sudden tool breakage during milling operation.",
+  "probable_cause": "Tool fracture due to worn cutting edges, excessive depth of cut, incorrect tool material, or coolant failure at cutting zone.",
+  "diagnostic_steps": [
+    "Halt program and inspect tool in spindle",
+    "Check tool length with probe if available",
+    "Review P033 coolant level and P030 flow rate",
+    "Inspect workpiece surface for gouging",
+    "Review NC block G-code for programmed depth of cut"
+  ],
+  "remedy": "Replace broken or worn tool. Verify tool offset in tool table. Run first-off inspection before resuming production.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "CLS-SR-001",
+    "SPN-WN-004",
+    "TCS-MD-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 93.5,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 94.0,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 97.4,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 95.6,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 97.3,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

@@ -1,0 +1,73 @@
+{
+  "error_code": "SPN-WN-002",
+  "title": "Spindle Temperature \u2014 Warm-Up Reminder",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Machine has been idle >4 hours. Spindle temperature P003 = {val} \u00b0C. Run warm-up program SPD-WARMUP-001 before resuming production to avoid thermal shock to bearings.",
+  "probable_cause": "Standard thermal management \u2014 bearing preload changes with temperature.",
+  "diagnostic_steps": [
+    "Check ambient temperature P070",
+    "Verify warm-up program is loaded in CNC memory"
+  ],
+  "remedy": "Execute spindle warm-up program (15 min). Do not exceed 30% of maximum speed during first 5 minutes.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MN-002",
+    "THM-NC-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 53.92,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 63.467,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP14",
+      "primary_value": 56.55,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 52.611,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 55.562,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

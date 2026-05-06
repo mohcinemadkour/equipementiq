@@ -1,0 +1,71 @@
+{
+  "error_code": "SPN-MN-004",
+  "title": "Vibration RMS \u2014 Gradual Increase Detected",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Vibration RMS P004 shows {val}% increase over last 7 days. Current value {val2} mm/s. Still within ISO Zone B (acceptable for long-term operation) but trend requires monitoring.",
+  "probable_cause": "Normal bearing wear progression or loosening of machine foundation bolts.",
+  "diagnostic_steps": [
+    "Check and re-torque foundation bolts",
+    "Inspect ballscrew support bearing",
+    "Compare to factory acceptance vibration record"
+  ],
+  "remedy": "Schedule preventive inspection at next planned maintenance. Document in maintenance log.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P004",
+      "pid": 4,
+      "name": "Spindle Bearing Vibration",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-SR-003",
+    "SPN-MJ-002"
+  ],
+  "sample_observations": []
+}

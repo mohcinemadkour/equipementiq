@@ -1,0 +1,73 @@
+{
+  "error_code": "VIB-MN-001",
+  "title": "Kurtosis Index \u2014 Rising Trend",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Vibration Monitoring",
+  "mid": 144,
+  "fault_category": "tool_wear",
+  "description": "Kurtosis index P064 = {val}. Trending upward over last 14 days: +{val2}% per week. Currently in early-warning zone (5.0\u20138.0).",
+  "probable_cause": "Early-stage bearing defect initiation or accumulating surface fatigue.",
+  "diagnostic_steps": [
+    "Enable high-frequency logging on spindle vibration",
+    "Review full spectrum for defect frequencies"
+  ],
+  "remedy": "Schedule detailed inspection at next planned downtime. Continue monitoring.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P064",
+      "pid": 64,
+      "name": "Kurtosis Index",
+      "unit": "-",
+      "normal_min": 2.5,
+      "normal_max": 5.0,
+      "critical_min": 0,
+      "critical_max": 25.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "VIB-MD-001",
+    "SPN-SR-003"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 4.623,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 4.6,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 4.194,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 4.579,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 4.384,
+      "primary_param_unit": "-",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

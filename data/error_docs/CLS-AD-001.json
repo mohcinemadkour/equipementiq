@@ -1,0 +1,67 @@
+{
+  "error_code": "CLS-AD-001",
+  "title": "Coolant \u2014 Through-Spindle Active",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Through-spindle coolant active. Flow P030 = {val} L/min at spindle nose.",
+  "probable_cause": "NC program M-code activated through-spindle coolant.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P030",
+      "pid": 30,
+      "name": "Coolant Flow Rate",
+      "unit": "L/min",
+      "normal_min": 15,
+      "normal_max": 40,
+      "critical_min": 5,
+      "critical_max": 50,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 26.489,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP04",
+      "primary_value": 18.7,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 22.306,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 21.071,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP02",
+      "primary_value": 25.17,
+      "primary_param_unit": "L/min",
+      "source": "synthetic_normal"
+    }
+  ]
+}

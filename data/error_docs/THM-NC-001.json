@@ -1,0 +1,78 @@
+{
+  "error_code": "THM-NC-001",
+  "title": "Thermal Compensation Active",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Thermal Management",
+  "mid": 146,
+  "fault_category": "process_anomaly",
+  "description": "CNC thermal error compensation is active. Ambient P070={val}\u00b0C, spindle P003={val2}\u00b0C. Axis offsets automatically adjusted for thermal expansion.",
+  "probable_cause": "Normal thermal compensation function.",
+  "diagnostic_steps": [],
+  "remedy": "No action required. Monitor part quality.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P070",
+      "pid": 70,
+      "name": "Ambient Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "THM"
+    },
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M03",
+      "operation_code": "OP04",
+      "primary_value": 20.655,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP01",
+      "primary_value": 24.747,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP07",
+      "primary_value": 22.676,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP14",
+      "primary_value": 19.65,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 17.789,
+      "primary_param_unit": "\u00b0C",
+      "source": "synthetic_normal"
+    }
+  ]
+}

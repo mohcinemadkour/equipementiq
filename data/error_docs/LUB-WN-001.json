@@ -1,0 +1,72 @@
+{
+  "error_code": "LUB-WN-001",
+  "title": "Lubrication \u2014 Scheduled Interval Due",
+  "severity_level": "WARNING",
+  "severity_number": 6,
+  "severity_color": "CYAN",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "process_anomaly",
+  "description": "Lubrication cycle interval counter has reached {val} hours since last full service. Lube point inspection recommended.",
+  "probable_cause": "Normal maintenance interval.",
+  "diagnostic_steps": [
+    "Inspect all lube points for oil film",
+    "Check distribution block operation"
+  ],
+  "remedy": "Perform lubrication inspection per maintenance checklist MAINT-LUB-001.",
+  "required_action": "Log event. No immediate action required. Review at end of shift.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P041",
+      "pid": 41,
+      "name": "Lubrication Oil Level",
+      "unit": "%",
+      "normal_min": 25,
+      "normal_max": 100,
+      "critical_min": 10,
+      "critical_max": 100,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [
+    "LUB-SR-001"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 86.5,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 73.6,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 73.6,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP14",
+      "primary_value": 87.4,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP11",
+      "primary_value": 78.5,
+      "primary_param_unit": "%",
+      "source": "synthetic_normal"
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "error_code": "CLS-MN-001",
+  "title": "Coolant Flow \u2014 Minor Deviation",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Coolant System",
+  "mid": 134,
+  "fault_category": "process_anomaly",
+  "description": "Coolant flow P030 = {val} L/min, {val2}% below setpoint. Temperature P031 = {val3} \u00b0C. No immediate machining impact.",
+  "probable_cause": "Minor filter restriction or nozzle partial blockage.",
+  "diagnostic_steps": [
+    "Inspect coolant nozzles for chip blockage",
+    "Check filter condition"
+  ],
+  "remedy": "Clean nozzles. Schedule filter inspection at shift end.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P030",
+      "pid": 30,
+      "name": "Coolant Flow Rate",
+      "unit": "L/min",
+      "normal_min": 15,
+      "normal_max": 40,
+      "critical_min": 5,
+      "critical_max": 50,
+      "subsystem": "CLS"
+    },
+    {
+      "param_id": "P031",
+      "pid": 31,
+      "name": "Coolant Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "CLS"
+    }
+  ],
+  "related_codes": [
+    "CLS-SR-001",
+    "CLS-MD-001"
+  ],
+  "sample_observations": []
+}

@@ -1,0 +1,38 @@
+{
+  "error_code": "TCS-MD-001",
+  "title": "Magazine Tool Count \u2014 Inventory Discrepancy",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "tool_wear",
+  "description": "CNC tool table shows {val} tools; magazine sensor count = {val2}. Discrepancy of {val3} tools. Risk of calling empty pocket.",
+  "probable_cause": "Tool loaded without updating tool table, or tool removed manually without clearing table entry.",
+  "diagnostic_steps": [
+    "Run magazine inventory check program",
+    "Physically verify each occupied pocket vs. tool table",
+    "Check for manual tool removal log entries"
+  ],
+  "remedy": "Reconcile tool table with physical magazine. Clear empty pocket entries.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "TCS-SR-001",
+    "SPN-WN-001"
+  ],
+  "sample_observations": []
+}

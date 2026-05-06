@@ -1,0 +1,71 @@
+{
+  "error_code": "TCS-NC-001",
+  "title": "Tool Change Complete",
+  "severity_level": "NOTICE",
+  "severity_number": 7,
+  "severity_color": "GREEN",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "process_anomaly",
+  "description": "ATC cycle completed successfully. Tool T{val} in spindle. Cycle time P022 = {val2} s. Magazine at position {val3}.",
+  "probable_cause": "Normal tool change event.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Informational. Parameter approaching limit. Review during next maintenance window.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P022",
+      "pid": 22,
+      "name": "ATC Arm Cycle Time",
+      "unit": "s",
+      "normal_min": 3.5,
+      "normal_max": 6.0,
+      "critical_min": 0,
+      "critical_max": 10,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP11",
+      "primary_value": 14.9,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 6.0,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP08",
+      "primary_value": 9.8,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M03",
+      "operation_code": "OP08",
+      "primary_value": 12.7,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    }
+  ]
+}

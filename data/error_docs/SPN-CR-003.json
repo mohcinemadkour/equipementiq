@@ -1,0 +1,52 @@
+{
+  "error_code": "SPN-CR-003",
+  "title": "Spindle Orientation Failure \u2014 Tool Change Blocked",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "actuator_fault",
+  "description": "Spindle failed to reach orientation position within timeout (5 s). Orientation error P006 = {val} deg (limit \u00b10.5 deg). Tool change cycle aborted to prevent ATC arm collision.",
+  "probable_cause": "Encoder signal loss, orientation proximity switch failure, or mechanical brake malfunction.",
+  "diagnostic_steps": [
+    "Check spindle encoder cable continuity",
+    "Verify orientation switch target disk alignment",
+    "Inspect pneumatic brake actuation pressure",
+    "Test orientation cycle manually in JOG mode",
+    "Review parameter P082 for last NC block executed"
+  ],
+  "remedy": "Replace encoder or repair signal cable. Re-teach orientation position parameter. Re-run tool change acceptance cycle TCS-TEST-002.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P006",
+      "pid": 6,
+      "name": "Spindle Orientation Error",
+      "unit": "deg",
+      "normal_min": -0.05,
+      "normal_max": 0.05,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "TCS-CR-001",
+    "SPN-MJ-003",
+    "CNC-MD-011"
+  ],
+  "sample_observations": []
+}

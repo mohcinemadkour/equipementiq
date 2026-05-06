@@ -1,0 +1,63 @@
+{
+  "error_code": "SPN-CR-002",
+  "title": "Spindle Drive Overcurrent \u2014 Hard Fault",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Spindle drive current exceeded 145% of rated value for more than 200ms. Drive has tripped on hardware overcurrent protection. P002 read {val} % (limit 105%).",
+  "probable_cause": "Spindle motor short circuit, drive IGBT failure, or mechanical seizure of spindle bearings. Distinguish from thermal overcurrent SPN-MJ-005.",
+  "diagnostic_steps": [
+    "Do not reset drive until root cause identified",
+    "Check spindle motor insulation resistance (megger test)",
+    "Inspect drive power stage for burn marks",
+    "Verify no mechanical obstruction in spindle bore",
+    "Check P005 torque log for sudden spike event"
+  ],
+  "remedy": "Replace faulty drive module or motor depending on fault localisation. Verify DC bus voltage P090 is within spec before power-on.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-005",
+    "ELC-CR-001",
+    "SPN-CR-001"
+  ],
+  "sample_observations": []
+}

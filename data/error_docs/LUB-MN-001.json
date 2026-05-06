@@ -1,0 +1,36 @@
+{
+  "error_code": "LUB-MN-001",
+  "title": "Lubrication Pump Current \u2014 Elevated",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "Lubrication System",
+  "mid": 136,
+  "fault_category": "process_anomaly",
+  "description": "Pump current P042 = {val} A, {val2}% above baseline. Pump running but increased load detected.",
+  "probable_cause": "Increased oil viscosity (cold start), partial line restriction.",
+  "diagnostic_steps": [
+    "Check oil temperature",
+    "Confirm oil grade matches viscosity specification"
+  ],
+  "remedy": "Allow machine to warm up. Monitor for 30 minutes.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P042",
+      "pid": 42,
+      "name": "Lubrication Pump Current",
+      "unit": "A",
+      "normal_min": 0.5,
+      "normal_max": 2.5,
+      "critical_min": 0,
+      "critical_max": 4.0,
+      "subsystem": "LUB"
+    }
+  ],
+  "related_codes": [
+    "LUB-MD-001"
+  ],
+  "sample_observations": []
+}

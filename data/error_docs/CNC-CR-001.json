@@ -1,0 +1,50 @@
+{
+  "error_code": "CNC-CR-001",
+  "title": "CNC Controller \u2014 Watchdog Timeout",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "actuator_fault",
+  "description": "CNC real-time kernel watchdog timed out. All motion halted. CPU load at time of fault: P080={val}%. Memory P081={val2}%.",
+  "probable_cause": "Software exception in motion planner, hardware interrupt overload, or memory corruption.",
+  "diagnostic_steps": [
+    "Record fault dump from CNC system log",
+    "Check for recent software updates",
+    "Verify RAM hardware via POST diagnostics",
+    "Check CPU temperature"
+  ],
+  "remedy": "Reboot CNC controller. If recurring, contact CNC manufacturer support with fault dump. Do not restart machine with persistent watchdog faults.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P080",
+      "pid": 80,
+      "name": "CNC CPU Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    },
+    {
+      "param_id": "P081",
+      "pid": 81,
+      "name": "CNC Memory Usage",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 80,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "AXS-CR-001",
+    "ELC-CR-001"
+  ],
+  "sample_observations": []
+}

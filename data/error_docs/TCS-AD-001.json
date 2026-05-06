@@ -1,0 +1,67 @@
+{
+  "error_code": "TCS-AD-001",
+  "title": "Magazine Position Update",
+  "severity_level": "ADVISORY",
+  "severity_number": 8,
+  "severity_color": "WHITE",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "process_anomaly",
+  "description": "Magazine indexed to reference position {val} after power-on.",
+  "probable_cause": "Normal start-up sequence.",
+  "diagnostic_steps": [],
+  "remedy": "No action required.",
+  "required_action": "Performance advisory only. No maintenance action required.",
+  "max_downtime_min": 0,
+  "parameters": [
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [],
+  "sample_observations": [
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 14.9,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP14",
+      "primary_value": 12.8,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 14.2,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 9.5,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP07",
+      "primary_value": 9.2,
+      "primary_param_unit": "slot",
+      "source": "synthetic_normal"
+    }
+  ]
+}

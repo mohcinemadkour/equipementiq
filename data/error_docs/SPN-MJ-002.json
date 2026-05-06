@@ -1,0 +1,92 @@
+{
+  "error_code": "SPN-MJ-002",
+  "title": "Spindle Bearing Vibration \u2014 Major Threshold Exceeded",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Spindle bearing vibration P004 = {val} mm/s exceeds ISO 10816-3 Zone C limit (7.1 mm/s). Kurtosis index P064 = {val2} indicates bearing defect frequency component present.",
+  "probable_cause": "Bearing inner or outer race defect, ball spall, or loss of preload. Consistent with tool_wear or spindle_bearing_fault events in operational data.",
+  "diagnostic_steps": [
+    "Capture vibration spectrum via on-machine sensor",
+    "Compare dominant frequency to bearing defect frequencies (BPFO, BPFI, BSF)",
+    "Check spindle thermal growth compensation active",
+    "Inspect tool holder for imbalance",
+    "Review trend for P004 over prior 30 days"
+  ],
+  "remedy": "Schedule spindle bearing replacement within 8 hours. Reduce spindle speed by 30% until replacement. Do not run over 6000 RPM.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P004",
+      "pid": 4,
+      "name": "Spindle Bearing Vibration",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P063",
+      "pid": 63,
+      "name": "Vibration Crest Factor",
+      "unit": "-",
+      "normal_min": 1.0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 12.0,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P064",
+      "pid": 64,
+      "name": "Kurtosis Index",
+      "unit": "-",
+      "normal_min": 2.5,
+      "normal_max": 5.0,
+      "critical_min": 0,
+      "critical_max": 25.0,
+      "subsystem": "VIB"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-001",
+    "VIB-MN-061",
+    "SPN-SR-003"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP04",
+      "primary_value": 7.672,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP05",
+      "primary_value": 8.468,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP10",
+      "primary_value": 8.068,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP10",
+      "primary_value": 9.151,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

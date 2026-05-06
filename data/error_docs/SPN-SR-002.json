@@ -1,0 +1,52 @@
+{
+  "error_code": "SPN-SR-002",
+  "title": "Spindle Speed Deviation \u2014 Encoder Signal Degraded",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "spindle_bearing_fault",
+  "description": "Actual spindle speed deviates from commanded speed by >{val} RPM for >500 ms. Encoder signal shows {val2} missing pulses per revolution.",
+  "probable_cause": "Encoder disc contamination, bearing play causing encoder misalignment, or encoder cable shield failure causing EMI.",
+  "diagnostic_steps": [
+    "Clean encoder disc with IPA",
+    "Check encoder mounting bolts torque",
+    "Inspect cable routing for pinch points",
+    "Measure signal quality on oscilloscope",
+    "Check cable shield continuity to ground"
+  ],
+  "remedy": "Clean or replace encoder. Re-route cable away from power cables. Re-commission speed loop.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P001",
+      "pid": 1,
+      "name": "Spindle Speed",
+      "unit": "RPM",
+      "normal_min": 100,
+      "normal_max": 8000,
+      "critical_min": 0,
+      "critical_max": 8500,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P006",
+      "pid": 6,
+      "name": "Spindle Orientation Error",
+      "unit": "deg",
+      "normal_min": -0.05,
+      "normal_max": 0.05,
+      "critical_min": -0.5,
+      "critical_max": 0.5,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-CR-003",
+    "SPN-MJ-002",
+    "CNC-MD-011"
+  ],
+  "sample_observations": []
+}

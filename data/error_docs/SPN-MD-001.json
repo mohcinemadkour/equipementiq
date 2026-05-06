@@ -1,0 +1,86 @@
+{
+  "error_code": "SPN-MD-001",
+  "title": "Spindle Load \u2014 Elevated Baseline",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Spindle Drive System",
+  "mid": 128,
+  "fault_category": "tool_wear",
+  "description": "Spindle load P002 baseline on operation {val} is {val2}% above historical mean for same program. No acute spike. Gradual trend suggests accumulating mechanical resistance.",
+  "probable_cause": "Tool wear progression, slight bearing preload increase, or minor misalignment.",
+  "diagnostic_steps": [
+    "Compare current cycle time to nominal",
+    "Inspect tool visually for chip edge",
+    "Run dry cycle (spindle only, no feed) and check no-load current",
+    "Trend over next 20 cycles"
+  ],
+  "remedy": "Schedule tool inspection at next shift change. Log in maintenance history.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P002",
+      "pid": 2,
+      "name": "Spindle Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 85,
+      "critical_min": 0,
+      "critical_max": 105,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P005",
+      "pid": 5,
+      "name": "Spindle Torque",
+      "unit": "Nm",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 145,
+      "subsystem": "SPN"
+    }
+  ],
+  "related_codes": [
+    "SPN-SR-001",
+    "SPN-WN-004"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP01",
+      "primary_value": 74.5,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP07",
+      "primary_value": 63.5,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP08",
+      "primary_value": 76.6,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M01",
+      "operation_code": "OP11",
+      "primary_value": 60.6,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    },
+    {
+      "machine": "M02",
+      "operation_code": "OP01",
+      "primary_value": 65.1,
+      "primary_param_unit": "%",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

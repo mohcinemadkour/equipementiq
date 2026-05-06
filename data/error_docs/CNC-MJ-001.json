@@ -1,0 +1,50 @@
+{
+  "error_code": "CNC-MJ-001",
+  "title": "NC Program \u2014 Syntax Error at Block",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "actuator_fault",
+  "description": "NC program execution halted at block N{val}. P082={val}. Syntax error detected: illegal G-code combination or out-of-range parameter.",
+  "probable_cause": "Incorrect NC program modification, corrupted file transfer, or unsupported G-code for this CNC model.",
+  "diagnostic_steps": [
+    "Review NC block P082 in program editor",
+    "Check G-code reference manual for supported codes",
+    "Re-transfer program from CAM system",
+    "Run program in single-block test mode"
+  ],
+  "remedy": "Correct NC program. Re-verify with dry run before production restart.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P080",
+      "pid": 80,
+      "name": "CNC CPU Load",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 100,
+      "subsystem": "CNC"
+    },
+    {
+      "param_id": "P082",
+      "pid": 82,
+      "name": "NC Program Block Number",
+      "unit": "block",
+      "normal_min": 0,
+      "normal_max": 99999,
+      "critical_min": 0,
+      "critical_max": 99999,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "CNC-SR-001",
+    "CNC-MD-011"
+  ],
+  "sample_observations": []
+}

@@ -1,0 +1,36 @@
+{
+  "error_code": "CNC-MN-001",
+  "title": "Feed Override \u2014 Non-100% Setting",
+  "severity_level": "MINOR",
+  "severity_number": 5,
+  "severity_color": "BLUE",
+  "subsystem": "CNC Controller",
+  "mid": 140,
+  "fault_category": "process_anomaly",
+  "description": "Feed override P083 = {val}% (nominal 100%). Machine running at non-standard feed rate.",
+  "probable_cause": "Operator-applied override.",
+  "diagnostic_steps": [
+    "Confirm override is intentional",
+    "Check if masking a vibration or quality issue"
+  ],
+  "remedy": "Restore to 100% if not intentional. Log reason if intentional.",
+  "required_action": "Log fault. Monitor parameters. Schedule inspection at next planned maintenance.",
+  "max_downtime_min": 30,
+  "parameters": [
+    {
+      "param_id": "P083",
+      "pid": 83,
+      "name": "Feed Override",
+      "unit": "%",
+      "normal_min": 0,
+      "normal_max": 120,
+      "critical_min": 0,
+      "critical_max": 150,
+      "subsystem": "CNC"
+    }
+  ],
+  "related_codes": [
+    "SPN-MD-002"
+  ],
+  "sample_observations": []
+}

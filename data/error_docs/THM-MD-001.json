@@ -1,0 +1,60 @@
+{
+  "error_code": "THM-MD-001",
+  "title": "Thermal Gradient \u2014 Elevated Ambient",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Thermal Management",
+  "mid": 146,
+  "fault_category": "process_anomaly",
+  "description": "Ambient temperature P070 = {val} \u00b0C. Cabinet P071 = {val2} \u00b0C. Feed motor P072 = {val3} \u00b0C. All within spec but elevated vs seasonal baseline.",
+  "probable_cause": "HVAC system in machine area running below capacity or unusual ambient conditions.",
+  "diagnostic_steps": [
+    "Check room HVAC status",
+    "Verify all machine air filters clean",
+    "Review duty cycle vs. thermal model"
+  ],
+  "remedy": "Request HVAC inspection for machine area. Clean all filters.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P070",
+      "pid": 70,
+      "name": "Ambient Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 15,
+      "normal_max": 35,
+      "critical_min": 5,
+      "critical_max": 45,
+      "subsystem": "THM"
+    },
+    {
+      "param_id": "P071",
+      "pid": 71,
+      "name": "Electrical Cabinet Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 45,
+      "critical_min": 10,
+      "critical_max": 60,
+      "subsystem": "THM"
+    },
+    {
+      "param_id": "P072",
+      "pid": 72,
+      "name": "Feed Drive Motor Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 72,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "THM"
+    }
+  ],
+  "related_codes": [
+    "THM-CR-001",
+    "ELC-MN-001"
+  ],
+  "sample_observations": []
+}

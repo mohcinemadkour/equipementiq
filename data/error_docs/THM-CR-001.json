@@ -1,0 +1,74 @@
+{
+  "error_code": "THM-CR-001",
+  "title": "Multi-Zone Overtemperature \u2014 Emergency Stop",
+  "severity_level": "CRITICAL",
+  "severity_number": 1,
+  "severity_color": "RED",
+  "subsystem": "Thermal Management",
+  "mid": 146,
+  "fault_category": "process_anomaly",
+  "description": "Multiple thermal zones simultaneously over critical threshold. Spindle P003={val}\u00b0C, servo P017={val2}\u00b0C, cabinet P071={val3}\u00b0C, motor P072={val4}\u00b0C. Machine stopped.",
+  "probable_cause": "Chiller failure, blocked ventilation, or ambient temperature event.",
+  "diagnostic_steps": [
+    "Check ambient temperature in machine area",
+    "Verify all cooling fans active",
+    "Check chiller unit",
+    "Inspect all air filters"
+  ],
+  "remedy": "Restore cooling. Do not restart until all zones below 70% of critical threshold.",
+  "required_action": "Immediate machine stop. Do not restart without authorised technician inspection.",
+  "max_downtime_min": 480,
+  "parameters": [
+    {
+      "param_id": "P003",
+      "pid": 3,
+      "name": "Spindle Motor Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 75,
+      "critical_min": 0,
+      "critical_max": 95,
+      "subsystem": "SPN"
+    },
+    {
+      "param_id": "P017",
+      "pid": 17,
+      "name": "Servo Drive Temperature",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 70,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "AXS"
+    },
+    {
+      "param_id": "P071",
+      "pid": 71,
+      "name": "Electrical Cabinet Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 45,
+      "critical_min": 10,
+      "critical_max": 60,
+      "subsystem": "THM"
+    },
+    {
+      "param_id": "P072",
+      "pid": 72,
+      "name": "Feed Drive Motor Temp",
+      "unit": "\u00b0C",
+      "normal_min": 20,
+      "normal_max": 72,
+      "critical_min": 0,
+      "critical_max": 90,
+      "subsystem": "THM"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-001",
+    "AXS-MJ-002",
+    "ELC-MN-001",
+    "CLS-MJ-001"
+  ],
+  "sample_observations": []
+}

@@ -1,0 +1,50 @@
+{
+  "error_code": "ELC-MJ-001",
+  "title": "Supply Voltage \u2014 Out of Tolerance",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "actuator_fault",
+  "description": "Main supply voltage P091 = {val} V. Outside \u00b110% tolerance band ({val2}\u2013{val3} V). DC bus P090 = {val4} V.",
+  "probable_cause": "Site power quality issue, undersized transformer, or high demand on shared bus.",
+  "diagnostic_steps": [
+    "Measure voltage at main incoming terminal",
+    "Check transformer tap setting",
+    "Contact facility electrical team",
+    "Log time of occurrence vs. site load profile"
+  ],
+  "remedy": "Notify facility maintenance. Install line conditioner if recurring.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P091",
+      "pid": 91,
+      "name": "Main Supply Voltage",
+      "unit": "V",
+      "normal_min": 380,
+      "normal_max": 420,
+      "critical_min": 340,
+      "critical_max": 440,
+      "subsystem": "ELC"
+    },
+    {
+      "param_id": "P090",
+      "pid": 90,
+      "name": "DC Bus Voltage",
+      "unit": "V",
+      "normal_min": 560,
+      "normal_max": 620,
+      "critical_min": 480,
+      "critical_max": 680,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [
+    "ELC-CR-001",
+    "ELC-SR-001"
+  ],
+  "sample_observations": []
+}

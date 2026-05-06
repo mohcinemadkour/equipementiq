@@ -1,0 +1,81 @@
+{
+  "error_code": "AXS-SR-001",
+  "title": "Axis Vibration \u2014 Resonance Detected",
+  "severity_level": "SERIOUS",
+  "severity_number": 3,
+  "severity_color": "YELLOW",
+  "subsystem": "Axis Servo System",
+  "mid": 130,
+  "fault_category": "chatter_vibration",
+  "description": "Axis vibration on {val}-axis shows resonant frequency at {val2} Hz. Following error P016 = {val3} mm. Pattern consistent with chatter or axis mechanical resonance.",
+  "probable_cause": "Feed rate at resonant frequency, worn ball screw nut, or inadequate servo filter.",
+  "diagnostic_steps": [
+    "Measure resonant frequency from vibration log",
+    "Check servo filter notch frequency setting",
+    "Inspect ball screw nut preload",
+    "Change feed rate by \u00b115% and observe effect"
+  ],
+  "remedy": "Apply servo notch filter at resonant frequency. Inspect ball screw nut.",
+  "required_action": "Complete current cycle then stop. Schedule maintenance within 4 hours.",
+  "max_downtime_min": 120,
+  "parameters": [
+    {
+      "param_id": "P060",
+      "pid": 60,
+      "name": "X-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P061",
+      "pid": 61,
+      "name": "Y-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P062",
+      "pid": 62,
+      "name": "Z-Axis Vibration RMS",
+      "unit": "mm/s",
+      "normal_min": 0,
+      "normal_max": 4.5,
+      "critical_min": 0,
+      "critical_max": 11.2,
+      "subsystem": "VIB"
+    },
+    {
+      "param_id": "P016",
+      "pid": 16,
+      "name": "Axis Following Error",
+      "unit": "mm",
+      "normal_min": 0,
+      "normal_max": 0.05,
+      "critical_min": 0,
+      "critical_max": 2.0,
+      "subsystem": "AXS"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-004",
+    "AXS-MJ-001",
+    "VIB-WN-060"
+  ],
+  "sample_observations": [
+    {
+      "machine": "M01",
+      "operation_code": "OP06",
+      "primary_value": 4.635,
+      "primary_param_unit": "mm/s",
+      "source": "bosch_real_fault"
+    }
+  ]
+}

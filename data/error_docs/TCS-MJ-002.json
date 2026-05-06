@@ -1,0 +1,50 @@
+{
+  "error_code": "TCS-MJ-002",
+  "title": "Tool Length Measurement \u2014 Out of Tolerance",
+  "severity_level": "MAJOR",
+  "severity_number": 2,
+  "severity_color": "ORANGE",
+  "subsystem": "Tool Change System",
+  "mid": 132,
+  "fault_category": "actuator_fault",
+  "description": "In-process tool length measurement via touch probe reports P023 = {val} mm offset from stored value. Tolerance \u00b10.05 mm. Tool slot {val2}. Risk of dimensional error on workpiece.",
+  "probable_cause": "Tool not fully seated, incorrect tool loaded, or tool breakage not detected by P002 load monitor.",
+  "diagnostic_steps": [
+    "Inspect tool in spindle for seating",
+    "Verify tool ID matches NC program expectation",
+    "Re-measure with tool presetter offline",
+    "Check probe calibration"
+  ],
+  "remedy": "Re-seat tool and re-measure. If offset confirmed, update tool table and scrap/inspect last part.",
+  "required_action": "Stop current operation. Machine must be inspected before resuming production.",
+  "max_downtime_min": 240,
+  "parameters": [
+    {
+      "param_id": "P023",
+      "pid": 23,
+      "name": "Tool Length Offset Error",
+      "unit": "mm",
+      "normal_min": -0.02,
+      "normal_max": 0.02,
+      "critical_min": -2.0,
+      "critical_max": 2.0,
+      "subsystem": "TCS"
+    },
+    {
+      "param_id": "P020",
+      "pid": 20,
+      "name": "Tool Magazine Position",
+      "unit": "slot",
+      "normal_min": 1,
+      "normal_max": 30,
+      "critical_min": 0,
+      "critical_max": 31,
+      "subsystem": "TCS"
+    }
+  ],
+  "related_codes": [
+    "SPN-MJ-003",
+    "TCS-CR-001"
+  ],
+  "sample_observations": []
+}

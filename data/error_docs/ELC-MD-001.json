@@ -1,0 +1,38 @@
+{
+  "error_code": "ELC-MD-001",
+  "title": "UPS Battery \u2014 Low Charge",
+  "severity_level": "MODERATE",
+  "severity_number": 4,
+  "severity_color": "AMBER",
+  "subsystem": "Electrical Cabinet",
+  "mid": 142,
+  "fault_category": "process_anomaly",
+  "description": "UPS battery level P093 = {val}%. Battery backup time estimated {val2} minutes. CNC memory protection duration may be insufficient for extended power outage.",
+  "probable_cause": "Battery aging, recent extended power interruption, or battery charger fault.",
+  "diagnostic_steps": [
+    "Check UPS charger LED status",
+    "Measure battery float voltage",
+    "Check battery age against replacement schedule (typically 3\u20135 years)"
+  ],
+  "remedy": "Recharge UPS. If charge does not recover to >80% within 24h, replace battery.",
+  "required_action": "Log fault. Schedule maintenance within 24 hours. Reduce feed rate by 20%.",
+  "max_downtime_min": 60,
+  "parameters": [
+    {
+      "param_id": "P093",
+      "pid": 93,
+      "name": "UPS Battery Level",
+      "unit": "%",
+      "normal_min": 80,
+      "normal_max": 100,
+      "critical_min": 20,
+      "critical_max": 100,
+      "subsystem": "ELC"
+    }
+  ],
+  "related_codes": [
+    "ELC-CR-001",
+    "ELC-MN-001"
+  ],
+  "sample_observations": []
+}
