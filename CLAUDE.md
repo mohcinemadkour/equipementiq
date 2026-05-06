@@ -107,9 +107,18 @@ PHASE_2_CHECKLIST.md         # Pre-merge validation checklist
 .gitignore                   # Git ignore rules
 ```
 
-### Phase 3–5 (⬜ Next)
+### Phase 3 ✅
 ```
-agents/       # base_agent.py + 3 domain agents
+agents/
+├── __init__.py              # BaseAgent + MechanicalAgent + SoftwareAgent + SupportAgent exported
+├── base_agent.py            # Abstract retrieval interface (88 lines)
+├── mechanical_agent.py      # Subsystem-aware agent (37 lines)
+├── software_agent.py        # Error code filtering agent (35 lines)
+└── support_agent.py         # Case status/priority filtering agent (36 lines)
+```
+
+### Phase 4–5 (⬜ Next)
+```
 orchestrator/ # state.py, intent_classifier.py, synthesiser.py, graph.py
 evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
 feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
@@ -156,6 +165,13 @@ LANGCHAIN_PROJECT=equipmentiq
   - 30/30 unit tests passing
   - All DR-001..007 and NFR-SEC/MAINT requirements verified
   - PII masking (NFR-SEC-002) on customer phone/email/contact before logging
-- **Phase 3 — Agents/Orchestrator**: ⬜ next (base_agent.py, 3 domain agents, LangGraph orchestrator)
+- **Phase 3 — Agents/Orchestrator**: ✅ Agents complete ([sprint-2] 28b4202)
+  - BaseAgent abstract retrieval interface (embed, retrieve, filter, rerank, cite)
+  - MechanicalAgent (subsystem filtering, FR-MECH-001..007)
+  - SoftwareAgent (severity/error code filtering, FR-SOFT-001..007)
+  - SupportAgent (case status/priority filtering, FR-SUPP-001..008)
+  - Collection isolation enforced (DR-005), 18/18 agent tests passing
+  - **48/48 total tests passing** (config 3 + ingestion 27 + agents 18)
+  - ❌ Orchestrator NOT YET implemented (per user constraint — "agents only")
 - **Phase 4 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
 - **Phase 5 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
