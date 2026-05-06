@@ -1,0 +1,45 @@
+# EquipmentIQ — Python dependencies
+# Python 3.11+
+
+# --- LLM clients (locked by FRD §2.3) ---
+anthropic>=0.40.0              # Claude generation + LLM-as-Judge
+openai>=1.50.0                 # text-embedding-3-small (1536 dims)
+
+# --- LangChain stack ---
+langchain>=0.3.0
+langchain-core>=0.3.0
+langchain-community>=0.3.0
+langchain-openai>=0.2.0        # OpenAI embeddings adapter
+langchain-anthropic>=0.2.0     # Claude chat adapter
+langchain-text-splitters>=0.3.0  # RecursiveCharacterTextSplitter (DR-001: 512/64)
+langgraph>=0.2.0               # StateGraph orchestrator (FR-ORCH)
+
+# --- Vector store ---
+chromadb>=0.5.0                # Local persistent ChromaDB
+
+# --- Document loading ---
+pypdf>=5.0.0                   # PDF parser for DOC-EIQ-001..006
+pandas>=2.2.0                  # Complaints CSV, error observations CSV
+
+# --- Reranking (FR-MECH-002) ---
+sentence-transformers>=3.0.0   # cross-encoder/ms-marco-MiniLM-L-6-v2
+
+# --- Evaluation (FR-EVAL) ---
+ragas>=0.2.0                   # Faithfulness, Answer Relevance, Context Precision
+scikit-learn>=1.5.0            # NDCG, cosine similarity, drift centroids
+numpy>=1.26.0
+datasets>=3.0.0                # ragas dependency for eval datasets
+
+# --- Tracing & observability ---
+langsmith>=0.1.130             # NFR-OBS-001 — span-level traces
+
+# --- UI ---
+streamlit>=1.39.0              # FR-UI demo + eval dashboard
+
+# --- Configuration ---
+pyyaml>=6.0.2                  # config.yaml loader (NFR-MAINT-003)
+python-dotenv>=1.0.1           # .env loader
+
+# --- Testing ---
+pytest>=8.3.0                  # NFR-MAINT-004
+pytest-asyncio>=0.24.0         # async orchestrator tests

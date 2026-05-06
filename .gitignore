@@ -1,0 +1,65 @@
+# --- Secrets (NFR-SEC-001) ---
+.env
+.env.local
+.env.*.local
+
+# --- Python bytecode & caches ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+build/
+dist/
+
+# --- Virtual environments ---
+.venv/
+venv/
+env/
+ENV/
+
+# --- Test & lint caches ---
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.tox/
+
+# --- Vector store (regeneratable from data/) ---
+chroma_db/
+
+# --- Feedback SQLite DB (FR-FEED-002) ---
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+feedback/feedback.db
+
+# --- Evaluation logs ---
+evaluation/logs/
+*.jsonl.gz
+
+# --- Install / runtime logs ---
+*.log
+.venv/install.log
+
+# --- Streamlit ---
+.streamlit/secrets.toml
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- IDE ---
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- DO NOT IGNORE the version-controlled golden set ---
+!evaluation/golden_set.jsonl

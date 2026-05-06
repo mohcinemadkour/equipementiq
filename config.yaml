@@ -1,0 +1,121 @@
+# EquipmentIQ — central configuration (NFR-MAINT-003).
+# All tunable parameters live here. Do not hardcode these values in modules.
+
+# ---------------------------------------------------------------------------
+# Paths (relative to project root)
+# ---------------------------------------------------------------------------
+paths:
+  data_root: data
+  pdfs_dir: data/pdfs                              # Mechanical Agent source
+  error_docs_dir: data/error_docs                  # Software Agent source
+  processed_dir: data/processed                    # Bosch + complaints + error catalogue
+  complaints_csv: data/processed/customer_complaints.csv
+  error_observations_csv: data/processed/error_observations.csv
+  error_code_catalogue_csv: data/processed/error_code_catalogue.csv
+  fault_events_csv: data/processed/fault_events.csv
+  bosch_backbone_csv: data/processed/bosch_backbone.csv
+  chroma_persist_dir: chroma_db                    # Local persistent vector store
+  prompts_dir: prompts                             # Versioned LLM prompts (NFR-MAINT-002)
+  feedback_db: feedback/feedback.db                # SQLite (FR-FEED-002 deviation)
+  eval_log_dir: evaluation/logs                    # JSONL eval output
+  golden_set: evaluation/golden_set.jsonl
+
+# ---------------------------------------------------------------------------
+# ChromaDB collections (DR-005 — strict isolation enforced)
+# ---------------------------------------------------------------------------
+collections:
+  mechanical: mechanical_collection
+  software: software_collection
+  support: support_collection
+
+# ---------------------------------------------------------------------------
+# Ingestion (DR-001, DR-004)
+# ---------------------------------------------------------------------------
+ingestion:
+  chunk_size: 512                # tokens
+  chunk_overlap: 64              # tokens
+  splitter: recursive_character  # preserves sentence boundaries
+
+# ---------------------------------------------------------------------------
+# Embeddings (DR-004)
+# ---------------------------------------------------------------------------
+embeddings:
+  provider: openai
+  model: text-embedding-3-small
+  dimensions: 1536
+
+# ---------------------------------------------------------------------------
+# Retrieval & reranking (FR-MECH-002, FR-MECH-007)
+# ---------------------------------------------------------------------------
+retrieval:
+  top_k_retrieval: 8             # pre-rerank candidate pool
+  top_k_final: 5                 # post-rerank chunks passed to synthesis
+  mmr_lambda: 0.5                # diversity vs relevance balance
+  reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
+  oos_similarity_floor: 0.4      # FR-ORCH-007 — below this, return "insufficient context"
+
+# ---------------------------------------------------------------------------
+# LLM (FRD §2.3)
+# ---------------------------------------------------------------------------
+llm:
+  generation_model: claude-sonnet-4-20250514
+  judge_model: claude-sonnet-4-20250514          # separate instance, different prompt
+  temperature: 0.0                                # grounded answers, no creativity
+  max_tokens: 2048
+
+# ---------------------------------------------------------------------------
+# Orchestrator (FR-ORCH)
+# ---------------------------------------------------------------------------
+orchestrator:
+  intent_confidence_threshold: 0.80              # FR-ORCH-002
+  conversation_window_turns: 5                   # FR-ORCH-010
+  single_agent_latency_sla_s: 10                 # FR-ORCH-008
+  cross_domain_latency_sla_s: 20                 # FR-ORCH-008
+
+# ---------------------------------------------------------------------------
+# Evaluation (FR-EVAL, NFR-OBS-003)
+# ---------------------------------------------------------------------------
+evaluation:
+  online_sampling_rate: 0.10                     # 10% of live queries get RAGAS
+  ragas_metrics:
+    - faithfulness
+    - answer_relevance
+    - context_precision
+  judge_rubric_dimensions:
+    - factual_accuracy
+    - completeness
+    - appropriate_uncertainty
+    - citation_quality
+  thresholds:
+    ndcg_at_5: 0.70                              # AC-001
+    hit_rate_at_5: 0.85                          # AC-002
+    faithfulness_target: 0.80                    # FR-EVAL-005
+    faithfulness_review: 0.60                    # below this -> manual review
+    answer_relevance_target: 0.75                # FR-EVAL-006
+    context_precision_target: 0.70               # FR-EVAL-007
+    drift_alert: 0.15                            # FR-EVAL-004
+    weekly_regression_delta: 0.05                # NFR-OBS-003
+
+# ---------------------------------------------------------------------------
+# Feedback (FR-FEED)
+# ---------------------------------------------------------------------------
+feedback:
+  max_comment_length: 500                        # FR-FEED-001
+  commit_timeout_s: 2                            # NFR-REL-003
+
+# ---------------------------------------------------------------------------
+# UI (FR-UI)
+# ---------------------------------------------------------------------------
+ui:
+  max_query_length: 1000                         # FR-UI-001
+  demo_mode_query_count: 10                      # FR-UI-009
+
+# ---------------------------------------------------------------------------
+# PII masking before LangSmith logging (NFR-SEC-002)
+# ---------------------------------------------------------------------------
+pii_fields:
+  - customer_name
+  - contact_name
+  - phone_number
+  - email
+  - email_address
