@@ -352,7 +352,7 @@ def sample_and_evaluate(golden_path: str, sample_rate: float = 0.12) -> list[dic
         for result in results:
             f.write(json.dumps(result) + '\n')
     
-    print(f"\n✓ Generation evaluation results saved to {results_path}")
+    print(f"\n[OK] Generation evaluation results saved to {results_path}")
     
     return results
 

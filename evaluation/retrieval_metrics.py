@@ -142,7 +142,7 @@ def evaluate_collection(agent_name: str, golden_pairs: list[dict]) -> dict:
         if ndcg < 0.70:
             below_target += 1
         
-        status = "✓" if ndcg >= 0.70 else "✗"
+        status = "[PASS]" if ndcg >= 0.70 else "[FAIL]"
         print(f"  {i:2d}. {query[:50]:<50} NDCG={ndcg:.2f} Hit={hit:.1f} MRR={mrr:.2f} {status}")
     
     mean_ndcg = sum(ndcg_scores) / len(ndcg_scores) if ndcg_scores else 0.0
@@ -231,7 +231,7 @@ def run_retrieval_eval(golden_path: str) -> dict:
     with open(results_path, 'w') as f:
         f.write(json.dumps(results) + '\n')
     
-    print(f"\n✓ Results saved to {results_path}")
+    print(f"\n[OK] Results saved to {results_path}")
     
     return results
 

@@ -155,8 +155,8 @@ class BaseAgent(ABC):
                     insufficient_context=True,
                 )
 
-            # Convert Chroma distance (0-2 scale) to similarity (0-1 scale)
-            # Chroma returns Euclidean distance, we convert to cosine similarity
+            # Convert Chroma distance to cosine similarity
+            # For unit vectors: cosine_similarity = 1 - (distance^2 / 2)
             retrieval_results = []
             for doc_id, doc, metadata, distance in zip(
                 results["ids"][0],
@@ -164,11 +164,10 @@ class BaseAgent(ABC):
                 results["metadatas"][0],
                 results["distances"][0],
             ):
-                # Chroma distance is L2; convert to cosine similarity
-                similarity = 1 - (distance / 2)  # Euclidean to cosine approximation
+                similarity = 1 - (distance ** 2 / 2)
 
-                # Skip low-similarity results (FR-ORCH-007: < 0.4)
-                if similarity < self._config["orchestrator"]["oos_similarity_floor"]:
+                # Skip low-similarity results (FR-ORCH-007)
+                if similarity < self._config["retrieval"]["oos_similarity_floor"]:
                     continue
 
                 retrieval_results.append(
