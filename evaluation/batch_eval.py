@@ -63,17 +63,30 @@ def run_batch_eval(golden_path: str = "evaluation/golden_set.jsonl"):
     
     # === GENERATION EVAL ===
     print("[2/3] Running generation evaluation...")
-    gen_metrics = sample_and_evaluate(golden_path, sample_rate=0.12)
+    gen_results = sample_and_evaluate(golden_path, sample_rate=0.12)
     
-    faithfulness = gen_metrics["faithfulness"]
-    relevance = gen_metrics["answer_relevance"]
-    judge_avg = gen_metrics["llm_judge_avg"]
+    # Aggregate metrics from list of results
+    faithfulness_scores = []
+    relevance_scores = []
+    judge_scores = []
+    
+    for result in gen_results:
+        if "faithfulness" in result:
+            faithfulness_scores.append(result["faithfulness"])
+        if "answer_relevance" in result:
+            relevance_scores.append(result["answer_relevance"])
+        if "judge_score" in result:
+            judge_scores.append(result["judge_score"])
+    
+    faithfulness = sum(faithfulness_scores) / len(faithfulness_scores) if faithfulness_scores else 0.0
+    relevance = sum(relevance_scores) / len(relevance_scores) if relevance_scores else 0.0
+    judge_avg = sum(judge_scores) / len(judge_scores) if judge_scores else 0.0
     
     results["generation"] = {
         "faithfulness": round(faithfulness, 3),
         "answer_relevance": round(relevance, 3),
         "llm_judge_avg": round(judge_avg, 2),
-        "n_sampled": gen_metrics["n_sampled"]
+        "n_sampled": len(gen_results)
     }
     
     # Check faithfulness gate
