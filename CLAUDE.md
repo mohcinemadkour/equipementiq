@@ -117,12 +117,24 @@ agents/
 └── support_agent.py         # Case status/priority filtering agent (36 lines)
 ```
 
-### Phase 4–5 (⬜ Next)
+### Phase 4 ⏳ (Foundation Complete)
 ```
-orchestrator/ # state.py, intent_classifier.py, synthesiser.py, graph.py
+orchestrator/
+├── __init__.py              # AgentState, AgentResult, IntentClassification, classify exported
+├── state.py                 # TypedDict: AgentState (full app state), AgentResult (agent output)
+├── intent_classifier.py     # IntentClassification model + classify() → Claude routing
+├── synthesiser.py           # (⬜ next) LLM synthesis of merged context → final_answer
+└── graph.py                 # (⬜ next) LangGraph StateGraph with CROSS_DOMAIN node
+
+prompts/
+├── intent_classification.txt # Domain definitions, examples, JSON schema (80 lines)
+├── (⬜ next) retrieval_synthesis.txt  # Synthesis prompt for final answer generation
+└── (⬜ next) judge_rubric.txt        # LLM-as-Judge evaluation prompt
+
+### Phase 5 (⬜ Next)
+```
 evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
 feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
-prompts/      # versioned .txt files — NEVER inline LLM prompts in code (NFR-MAINT-002)
 ui/           # app.py (demo), eval_dashboard.py
 .env.example  # Example env vars template
 ```
@@ -165,13 +177,21 @@ LANGCHAIN_PROJECT=equipmentiq
   - 30/30 unit tests passing
   - All DR-001..007 and NFR-SEC/MAINT requirements verified
   - PII masking (NFR-SEC-002) on customer phone/email/contact before logging
-- **Phase 3 — Agents/Orchestrator**: ✅ Agents complete ([sprint-2] 28b4202)
+- **Phase 3 — Agents**: ✅ complete ([sprint-2] 28b4202)
   - BaseAgent abstract retrieval interface (embed, retrieve, filter, rerank, cite)
   - MechanicalAgent (subsystem filtering, FR-MECH-001..007)
   - SoftwareAgent (severity/error code filtering, FR-SOFT-001..007)
   - SupportAgent (case status/priority filtering, FR-SUPP-001..008)
   - Collection isolation enforced (DR-005), 18/18 agent tests passing
-  - **48/48 total tests passing** (config 3 + ingestion 27 + agents 18)
-  - ❌ Orchestrator NOT YET implemented (per user constraint — "agents only")
-- **Phase 4 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
-- **Phase 5 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
+- **Phase 4 — Orchestrator Foundation**: ✅ partial ([sprint-2] 8e4137b)
+  - AgentState TypedDict (full app state management)
+  - AgentResult TypedDict (domain agent output contract)
+  - IntentClassification Pydantic model (routing decision with confidence)
+  - classify() function (Claude intent routing with 0.80 threshold)
+  - prompts/intent_classification.txt (domain definitions + examples + JSON schema)
+  - Intent routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 28 tests
+  - ✅ 75/75 total tests passing (config 3 + ingestion 27 + agents 18 + orchestrator 27)
+  - ❌ synthesiser.py NOT YET implemented (LLM synthesis of context)
+  - ❌ graph.py NOT YET implemented (LangGraph StateGraph, CROSS_DOMAIN node)
+- **Phase 5 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
+- **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)

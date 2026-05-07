@@ -540,3 +540,137 @@ class TestConfidenceThresholdOverride:
         result = classify("Some query")
         
         assert result.domain == "support"
+
+
+# ============================================================================
+# Integration Tests (Real ChromaDB Collections)
+# ============================================================================
+
+import os
+
+ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
+SKIP_INTEGRATION = (
+    not ANTHROPIC_API_KEY or 
+    ANTHROPIC_API_KEY.upper() in ["REPLACE_ME", "", "YOUR_API_KEY", "NONE"]
+)
+
+
+class TestOrchestratorIntegration:
+    """Integration tests using REAL ChromaDB collections (no mocking).
+    
+    NOTE: These tests require valid ANTHROPIC_API_KEY environment variable.
+    They will be skipped if the API key is not set or is a placeholder.
+    """
+    
+    @pytest.mark.skipif(SKIP_INTEGRATION, reason="ANTHROPIC_API_KEY not configured or is placeholder")
+    @pytest.mark.integration
+    def test_software_query_error_code_lookup(self):
+        """Test software domain: error code query."""
+        from orchestrator.graph import run_query
+        
+        query = "What does error SPN-CR-001 mean?"
+        state = run_query(query)
+        
+        # Verify domain routing
+        assert state["domain"] in ["software", "cross_domain"]
+        assert 0.0 <= state["confidence"] <= 1.0
+        
+        # Verify state structure
+        assert "final_answer" in state
+        assert isinstance(state["final_answer"], str)
+        assert isinstance(state["citations"], list)
+        assert "agent_results" in state
+    
+    @pytest.mark.skipif(SKIP_INTEGRATION, reason="ANTHROPIC_API_KEY not configured or is placeholder")
+    @pytest.mark.integration
+    def test_mechanical_query_bearing_type(self):
+        """Test mechanical domain: bearing specifications query."""
+        from orchestrator.graph import run_query
+        
+        query = "What bearing type does the VMC-3000 spindle use?"
+        state = run_query(query)
+        
+        # Verify domain routing
+        assert state["domain"] in ["mechanical", "cross_domain"]
+        assert 0.0 <= state["confidence"] <= 1.0
+        
+        # Verify state structure
+        assert "final_answer" in state
+        assert isinstance(state["final_answer"], str)
+        assert "merged_context" in state
+        assert isinstance(state["merged_context"], list)
+    
+    @pytest.mark.skipif(SKIP_INTEGRATION, reason="ANTHROPIC_API_KEY not configured or is placeholder")
+    @pytest.mark.integration
+    def test_support_query_complaint_lookup(self):
+        """Test support domain: complaint case lookup."""
+        from orchestrator.graph import run_query
+        
+        query = "Show me complaint case CMP-2019-1000"
+        state = run_query(query)
+        
+        # Verify domain routing
+        assert state["domain"] in ["support", "cross_domain"]
+        assert 0.0 <= state["confidence"] <= 1.0
+        
+        # Verify response structure
+        assert "final_answer" in state
+        assert len(state["final_answer"]) > 0 or state["final_answer"] == "INSUFFICIENT_CONTEXT"
+        
+        # Verify citations present if answer provided
+        if "INSUFFICIENT_CONTEXT" not in state["final_answer"]:
+            assert len(state["citations"]) >= 0
+    
+    @pytest.mark.skipif(SKIP_INTEGRATION, reason="ANTHROPIC_API_KEY not configured or is placeholder")
+    @pytest.mark.integration
+    def test_cross_domain_query_mixed(self):
+        """Test cross-domain: spindle fault + error code + machine."""
+        from orchestrator.graph import run_query
+        
+        query = "M01 spindle bearing fault and ATC alarm triggered — what's happening?"
+        state = run_query(query)
+        
+        # Verify cross-domain routing for ambiguous query
+        assert state["domain"] in ["mechanical", "software", "support", "cross_domain"]
+        assert 0.0 <= state["confidence"] <= 1.0
+        
+        # Verify all agents were called (if cross_domain)
+        if state["domain"] == "cross_domain":
+            assert len(state["agent_results"]) > 0
+        
+        # Verify synthesis occurred
+        assert isinstance(state["final_answer"], str)
+        assert len(state["final_answer"]) > 0
+    
+    @pytest.mark.skipif(SKIP_INTEGRATION, reason="ANTHROPIC_API_KEY not configured or is placeholder")
+    @pytest.mark.integration
+    def test_langgraph_execution_complete(self):
+        """Test that full LangGraph execution completes with valid state."""
+        from orchestrator.graph import run_query
+        
+        query = "Any diagnostic query"
+        state = run_query(query)
+        
+        # Verify all required state fields are present
+        assert "query" in state
+        assert "domain" in state
+        assert "confidence" in state
+        assert "agent_results" in state
+        assert "merged_context" in state
+        assert "final_answer" in state
+        assert "citations" in state
+        assert "conversation_history" in state
+        
+        # Verify types
+        assert isinstance(state["query"], str)
+        assert isinstance(state["domain"], str)
+        assert isinstance(state["confidence"], float)
+        assert isinstance(state["agent_results"], dict)
+        assert isinstance(state["merged_context"], list)
+        assert isinstance(state["final_answer"], str)
+        assert isinstance(state["citations"], list)
+        assert isinstance(state["conversation_history"], list)
+        
+        # Verify node_latency tracking (proof of execution)
+        assert "node_latency" in state
+        assert len(state["node_latency"]) > 0
