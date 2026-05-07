@@ -183,7 +183,7 @@ LANGCHAIN_PROJECT=equipmentiq
   - SoftwareAgent (severity/error code filtering, FR-SOFT-001..007)
   - SupportAgent (case status/priority filtering, FR-SUPP-001..008)
   - Collection isolation enforced (DR-005), 18/18 agent tests passing
-- **Phase 4 — Orchestrator**: ✅ complete ([sprint-2] b21f9cc)
+- **Phase 4 — Orchestrator**: ✅ complete ([sprint-2] fad90ee)
   - AgentState TypedDict (full app state management)
   - AgentResult TypedDict (domain agent output contract)
   - IntentClassification Pydantic model (routing decision with confidence)
@@ -194,7 +194,15 @@ LANGCHAIN_PROJECT=equipmentiq
   - run_query() public API with @traceable decorator for LangSmith
   - Routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 27 tests
   - Integration tests: 5 tests (software, mechanical, support, cross_domain, langgraph) with skipif for missing API key
-  - ✅ **75/75 total tests passing** (config 3 + ingestion 27 + agents 18 + routing 27), **5 integration tests skipped** (no valid API key)
+  - ✅ **80/80 tests** (75 passing + 5 skipped; config 3 + ingestion 27 + agents 18 + orchestrator 27)
   - All prompts externalized (NFR-MAINT-002)
-- **Phase 5 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
+  - Pre-merge checklist: all 6 items verified ✅
+- **Phase 5 — Evaluation**: 🚀 in-progress ([sprint-3])
+  - RAGAS metrics (Faithfulness, Answer Relevance, Context Precision, Context Recall)
+  - Custom metrics (NDCG@5, Hit@5, MRR)
+  - Drift monitoring (cosine similarity degradation detection)
+  - Batch evaluation pipeline (golden_set.jsonl → eval runner → metric aggregation)
+  - **Golden set seeded**: 10 Q&A pairs (3 mechanical, 4 software, 3 support) in evaluation/golden_set.jsonl
+  - Target: 90 queries total (30 per agent) by end of phase
+  - Acceptance gates: AC-001..008 (NDCG≥0.70, Hit≥0.85, Faithfulness≥0.80, routing≥95%)
 - **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
