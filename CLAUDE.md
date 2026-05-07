@@ -209,7 +209,7 @@ LANGCHAIN_PROJECT=equipmentiq
     - JSON parsing: try/except in intent_classifier for graceful fallback
     - State management: node_latency field added to AgentState TypedDict for execution timing
   - LangSmith tracing: All queries logged with project_name="equipmentiq"
-- **Phase 5 — Evaluation**: ✅ complete evaluation framework ([sprint-3] b3df997)
+- **Phase 5 — Evaluation**: ✅ complete evaluation framework ([sprint-3] 852554d)
   - **Retrieval metrics** (evaluation/retrieval_metrics.py):
     - NDCG@5: DCG@k / IDCG@k scoring (perfect=1.0, no match=0.0)
     - Hit@k: Binary presence in top-k (1.0 on match, 0.0 otherwise)
@@ -222,6 +222,17 @@ LANGCHAIN_PROJECT=equipmentiq
     - llm_judge_score(): 4-dimension scoring (factual_accuracy, completeness, uncertainty_handling, citation_quality) via Claude Haiku
     - sample_and_evaluate(): Loads golden set, samples at configurable rate, runs live queries, evaluates all generations
     - Graceful RAGAS fallback: If RAGAS unavailable or errors, use Claude Haiku prompt-based evaluation
+  - **Drift detection** (evaluation/drift_monitor.py):
+    - compute_centroid(collection_name): Mean embedding vector for all docs in collection (1536 dims)
+    - detect_drift(collection_name): Cosine distance between baseline and current centroid, alerts if > 0.15 threshold
+    - update_baseline(collection_name): Save current centroid as baseline for future drift detection
+    - Saves baselines to evaluation/baselines/{collection}_baseline.npy
+  - **Batch evaluation pipeline** (evaluation/batch_eval.py):
+    - run_batch_eval(golden_path): Orchestrates retrieval + generation + drift on all 3 agents
+    - print_summary(): Formatted table output with metrics for all agents
+    - save_results(): Persists full results to evaluation/results/batch_YYYYMMDD_HHMMSS.jsonl
+    - **CI Gate logic**: PASS if NDCG ≥ 0.70 AND faithfulness ≥ 0.80; else FAIL (exit code 1)
+    - Used in CD pipeline to gate deployments
   - **Evaluation prompts** (prompts/llm_judge.txt):
     - 4-dimension rubric (1-5 scale): Factual Accuracy, Completeness, Uncertainty Handling, Citation Quality
     - JSON-only output format (no preamble/markdown)
@@ -230,12 +241,16 @@ LANGCHAIN_PROJECT=equipmentiq
     - 30 Q&A pairs (10 per agent): 10 mechanical, 10 software, 10 support
     - Real data: Actual error codes, part numbers, case IDs from dataset
     - Schema: {query, agent, expected_doc_ids, ground_truth_answer}
-  - **Test coverage** (tests/test_evaluation.py): 11/11 passing
+  - **Test coverage** (tests/test_evaluation.py): 16/16 passing
     - Retrieval: NDCG, Hit@k, MRR, collection evaluation (7 tests)
     - Generation: Faithfulness, LLM judge scoring with mocking (4 tests)
-  - **All 86+ unit tests passing** (config 3 + ingestion 27 + orchestrator 27 + evaluation 11 + agents 18)
+    - Drift detection: Schema validation, alert threshold testing (2 tests)
+    - Batch evaluation: JSONL output, gate logic on NDCG/faithfulness (3 tests)
+  - **Total unit tests**: 91 passing (config 3 + ingestion 27 + agents 18 + orchestrator 27 + evaluation 16)
   - ✅ RAGAS fallback pattern verified (try RAGAS, except → Claude Haiku)
   - ✅ Metric schema validation (return types, key presence)
   - ✅ Model verification (haiku in judge calls)
+  - ✅ Drift monitoring (centroid computation, cosine distance, alert thresholds)
+  - ✅ CI gate logic (NDCG ≥ 0.70, faithfulness ≥ 0.80, failures tracked)
   - Acceptance gates ready: AC-001..008 (NDCG≥0.70, Hit≥0.85, Faithfulness≥0.80, routing≥95%)
 - **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
