@@ -52,7 +52,7 @@ retrieval:
   top_k_final: 5                 # post-rerank chunks passed to synthesis
   mmr_lambda: 0.5                # diversity vs relevance balance
   reranker_model: cross-encoder/ms-marco-MiniLM-L-6-v2
-  oos_similarity_floor: 0.0      # FR-ORCH-007 — below this, return "insufficient context" (TEMP: 0.0 to debug)
+  oos_similarity_floor: 0.15     # FR-ORCH-007 — below this, return "insufficient context"
 
 # ---------------------------------------------------------------------------
 # LLM (FRD §2.3)
