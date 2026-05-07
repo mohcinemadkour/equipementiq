@@ -1,15 +1,20 @@
 """
-Tests for retrieval metrics and evaluation pipeline.
+Tests for retrieval and generation metrics, evaluation pipeline.
 """
 
 import pytest
 import json
 from pathlib import Path
+from unittest.mock import patch, MagicMock
 from evaluation.retrieval_metrics import (
     ndcg_at_k,
     hit_rate_at_k,
     mean_reciprocal_rank,
     evaluate_collection
+)
+from evaluation.generation_metrics import (
+    faithfulness_score,
+    llm_judge_score
 )
 
 
@@ -156,3 +161,117 @@ class TestGoldenSetFormat:
         assert by_agent.get('software', 0) == 10, "Should have 10 software queries"
         assert by_agent.get('mechanical', 0) == 10, "Should have 10 mechanical queries"
         assert by_agent.get('support', 0) == 10, "Should have 10 support queries"
+
+
+class TestFaithfulnessMetric:
+    """Test faithfulness score computation."""
+    
+    @patch('evaluation.generation_metrics.Anthropic')
+    def test_faithfulness_returns_float_in_range(self, mock_anthropic):
+        """faithfulness_score returns float between 0.0 and 1.0."""
+        # Mock Claude response
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        
+        mock_response = MagicMock()
+        mock_response.content = [MagicMock(text='{"faithfulness_score": 0.75}')]
+        mock_client.messages.create.return_value = mock_response
+        
+        query = "What is SPN-CR-001?"
+        context = ["SPN-CR-001 is a critical spindle error."]
+        answer = "SPN-CR-001 is a critical spindle error indicating bearing failure."
+        
+        score = faithfulness_score(query, context, answer)
+        
+        assert isinstance(score, float), "Score should be float"
+        assert 0.0 <= score <= 1.0, f"Score should be in [0.0, 1.0], got {score}"
+    
+    @patch('evaluation.generation_metrics.Anthropic')
+    def test_faithfulness_zero_when_answer_contradicts_context(self, mock_anthropic):
+        """faithfulness_score = 0.0 when answer contradicts context."""
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        
+        mock_response = MagicMock()
+        mock_response.content = [MagicMock(text='{"faithfulness_score": 0.0}')]
+        mock_client.messages.create.return_value = mock_response
+        
+        query = "What is SPN-CR-001?"
+        context = ["SPN-CR-001 is a critical spindle error."]
+        answer = "SPN-CR-001 is not related to spindle issues, it's a thermal warning."
+        
+        score = faithfulness_score(query, context, answer)
+        
+        assert score == 0.0, "Score should be 0.0 for contradictory answer"
+
+
+class TestLLMJudgeScore:
+    """Test LLM-as-Judge evaluation."""
+    
+    @patch('evaluation.generation_metrics.Anthropic')
+    def test_llm_judge_returns_all_required_keys(self, mock_anthropic):
+        """llm_judge_score returns dict with all 6 required keys."""
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        
+        judge_response = {
+            "score": 4,
+            "reasoning": "Well-grounded answer with good citations.",
+            "factual_accuracy": 5,
+            "completeness": 4,
+            "uncertainty_handling": 4,
+            "citation_quality": 4
+        }
+        mock_response = MagicMock()
+        mock_response.content = [MagicMock(text=json.dumps(judge_response))]
+        mock_client.messages.create.return_value = mock_response
+        
+        query = "What is SPN-CR-001?"
+        context = ["SPN-CR-001 is a critical spindle bearing catastrophic failure."]
+        answer = "[SOURCE: SPN-CR-001 chunk 1] SPN-CR-001 is a critical spindle bearing catastrophic failure."
+        
+        result = llm_judge_score(query, context, answer)
+        
+        # Verify all required keys present
+        required_keys = {'score', 'reasoning', 'factual_accuracy', 'completeness', 
+                        'uncertainty_handling', 'citation_quality'}
+        assert set(result.keys()) == required_keys, f"Missing keys: {required_keys - set(result.keys())}"
+        
+        # Verify types
+        assert isinstance(result['score'], int), "score should be int"
+        assert isinstance(result['reasoning'], str), "reasoning should be str"
+        assert isinstance(result['factual_accuracy'], int), "factual_accuracy should be int"
+        assert isinstance(result['completeness'], int), "completeness should be int"
+        assert isinstance(result['uncertainty_handling'], int), "uncertainty_handling should be int"
+        assert isinstance(result['citation_quality'], int), "citation_quality should be int"
+    
+    @patch('evaluation.generation_metrics.Anthropic')
+    def test_llm_judge_uses_haiku_model(self, mock_anthropic):
+        """llm_judge_score uses claude-haiku-4-5-20251001 model."""
+        mock_client = MagicMock()
+        mock_anthropic.return_value = mock_client
+        
+        judge_response = {
+            "score": 3,
+            "reasoning": "Acceptable answer.",
+            "factual_accuracy": 3,
+            "completeness": 3,
+            "uncertainty_handling": 3,
+            "citation_quality": 3
+        }
+        mock_response = MagicMock()
+        mock_response.content = [MagicMock(text=json.dumps(judge_response))]
+        mock_client.messages.create.return_value = mock_response
+        
+        query = "What is AXS-MJ-001?"
+        context = ["AXS-MJ-001 is an axis following error."]
+        answer = "AXS-MJ-001 is an axis following error major limit."
+        
+        llm_judge_score(query, context, answer)
+        
+        # Verify the model used in the API call
+        call_args = mock_client.messages.create.call_args
+        assert call_args is not None, "API call should have been made"
+        assert call_args.kwargs['model'] == 'claude-haiku-4-5-20251001', \
+            f"Should use haiku model, got {call_args.kwargs['model']}"
+
