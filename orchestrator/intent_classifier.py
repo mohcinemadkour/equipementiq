@@ -105,11 +105,29 @@ def classify(query: str, history: list[dict] | None = None) -> IntentClassificat
     
     # Extract JSON from potential markdown code blocks
     if "```json" in response_text:
-        response_text = response_text.split("```json")[1].split("```")[0]
+        response_text = response_text.split("```json")[1].split("```")[0].strip()
     elif "```" in response_text:
-        response_text = response_text.split("```")[1].split("```")[0]
+        response_text = response_text.split("```")[1].split("```")[0].strip()
     
-    json_data = json.loads(response_text)
+    # Handle empty response
+    if not response_text:
+        return IntentClassification(
+            domain="cross_domain",
+            confidence=0.0,
+            reasoning="Claude returned empty response",
+            suggested_filters={}
+        )
+    
+    try:
+        json_data = json.loads(response_text)
+    except json.JSONDecodeError as e:
+        # If JSON parsing fails, return a default classification
+        return IntentClassification(
+            domain="cross_domain",
+            confidence=0.0,
+            reasoning=f"Failed to parse Claude response as JSON: {str(e)}",
+            suggested_filters={}
+        )
     
     # Validate with Pydantic
     classification = IntentClassification(**json_data)

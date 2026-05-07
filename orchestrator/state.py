@@ -48,6 +48,7 @@ class AgentState(TypedDict, total=False):
         eval_scores: RAGAS metrics (faithfulness, answer_relevance, context_precision)
         feedback: User feedback signal (rating, comment, corrections)
         conversation_history: Last 5 (query, answer) turns for synthesis context
+        node_latency: Execution times for each node in the graph
     """
     query: str
     domain: Literal["mechanical", "software", "support", "cross_domain"]
@@ -59,3 +60,4 @@ class AgentState(TypedDict, total=False):
     eval_scores: dict[str, float]
     feedback: dict[str, str | int | None]
     conversation_history: list[dict]
+    node_latency: dict[str, float]

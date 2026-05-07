@@ -58,8 +58,8 @@ retrieval:
 # LLM (FRD §2.3)
 # ---------------------------------------------------------------------------
 llm:
-  generation_model: claude-sonnet-4-20250514
-  judge_model: claude-sonnet-4-20250514          # separate instance, different prompt
+  generation_model: claude-haiku-4-5-20251001
+  judge_model: claude-haiku-4-5-20251001        # separate instance, different prompt
   temperature: 0.0                                # grounded answers, no creativity
   max_tokens: 2048
 

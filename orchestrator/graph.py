@@ -103,18 +103,18 @@ def mechanical_node(state: AgentState) -> AgentState:
     subsystem = filters.get("subsystem")
     
     # Retrieve
-    chunks = agent.retrieve(state["query"], where_filter={"subsystem": subsystem} if subsystem else None)
+    agent_response = agent.retrieve(state["query"], subsystem=subsystem)
     
     # Format result
     agent_result: AgentResult = {
-        "chunks": chunks,
+        "chunks": agent_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in agent_response.results],
         "agent_name": "mechanical_agent",
-        "status": "ok" if chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in chunks]
+        "status": "ok" if agent_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in agent_response.results]
     }
     
     state["agent_results"]["mechanical_agent"] = agent_result
@@ -134,28 +134,28 @@ def software_node(state: AgentState) -> AgentState:
     
     # Extract filters
     filters = state.get("suggested_filters", {})
-    severity = filters.get("severity_level")
-    error_prefix = filters.get("error_code_prefix")
-    
-    where_filter = {}
-    if severity:
-        where_filter["severity_level"] = severity
-    if error_prefix:
-        where_filter["error_code"] = {"$regex": f"^{error_prefix}"}
+    severity_level = filters.get("severity_level")
+    subsystem_code = filters.get("subsystem_code")
+    fault_category = filters.get("fault_category")
     
     # Retrieve
-    chunks = agent.retrieve(state["query"], where_filter=where_filter if where_filter else None)
+    agent_response = agent.retrieve(
+        state["query"],
+        severity_level=severity_level,
+        subsystem_code=subsystem_code,
+        fault_category=fault_category
+    )
     
     # Format result
     agent_result: AgentResult = {
-        "chunks": chunks,
+        "chunks": agent_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in agent_response.results],
         "agent_name": "software_agent",
-        "status": "ok" if chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in chunks]
+        "status": "ok" if agent_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in agent_response.results]
     }
     
     state["agent_results"]["software_agent"] = agent_result
@@ -178,28 +178,27 @@ def support_node(state: AgentState) -> AgentState:
     case_status = filters.get("case_status")
     priority = filters.get("priority")
     machine_id = filters.get("machine_id")
-    
-    where_filter = {}
-    if case_status:
-        where_filter["case_status"] = case_status
-    if priority:
-        where_filter["priority"] = priority
-    if machine_id:
-        where_filter["machine_id"] = machine_id
+    rma_required = filters.get("rma_required")
     
     # Retrieve
-    chunks = agent.retrieve(state["query"], where_filter=where_filter if where_filter else None)
+    agent_response = agent.retrieve(
+        state["query"],
+        case_status=case_status,
+        priority=priority,
+        machine_id=machine_id,
+        rma_required=rma_required
+    )
     
     # Format result
     agent_result: AgentResult = {
-        "chunks": chunks,
+        "chunks": agent_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in agent_response.results],
         "agent_name": "support_agent",
-        "status": "ok" if chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in chunks]
+        "status": "ok" if agent_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in agent_response.results]
     }
     
     state["agent_results"]["support_agent"] = agent_result
@@ -223,47 +222,51 @@ def parallel_node(state: AgentState) -> AgentState:
     """
     start_time = time.time()
     
+    # Initialize node_latency if not present
+    if "node_latency" not in state:
+        state["node_latency"] = {}
+    
     # Call all 3 agents (conceptually parallel, practically sequential)
     mech_agent = _mechanical_agent()
     soft_agent = _software_agent()
     supp_agent = _support_agent()
     
-    mech_chunks = mech_agent.retrieve(state["query"])
-    soft_chunks = soft_agent.retrieve(state["query"])
-    support_chunks = supp_agent.retrieve(state["query"])
+    mech_response = mech_agent.retrieve(state["query"])
+    soft_response = soft_agent.retrieve(state["query"])
+    support_response = supp_agent.retrieve(state["query"])
     
     # Format results
     state["agent_results"]["mechanical_agent"] = {
-        "chunks": mech_chunks,
+        "chunks": mech_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in mech_chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in mech_response.results],
         "agent_name": "mechanical_agent",
-        "status": "ok" if mech_chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in mech_chunks]
+        "status": "ok" if mech_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in mech_response.results]
     }
     
     state["agent_results"]["software_agent"] = {
-        "chunks": soft_chunks,
+        "chunks": soft_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in soft_chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in soft_response.results],
         "agent_name": "software_agent",
-        "status": "ok" if soft_chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in soft_chunks]
+        "status": "ok" if soft_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in soft_response.results]
     }
     
     state["agent_results"]["support_agent"] = {
-        "chunks": support_chunks,
+        "chunks": support_response.results,
         "answer": "",
-        "citations": [{"source_document": c["metadata"].get("source_document"), 
-                       "chunk_id": c["metadata"].get("chunk_id"),
-                       "score": c["cosine_similarity"]} for c in support_chunks],
+        "citations": [{"source_document": c.source_document, 
+                       "chunk_id": c.chunk_id,
+                       "score": c.similarity_score} for c in support_response.results],
         "agent_name": "support_agent",
-        "status": "ok" if support_chunks else "out_of_scope",
-        "retrieval_scores": [c["cosine_similarity"] for c in support_chunks]
+        "status": "ok" if support_response.results else "out_of_scope",
+        "retrieval_scores": [c.similarity_score for c in support_response.results]
     }
     
     state["node_latency"]["parallel_node"] = time.time() - start_time
@@ -279,19 +282,23 @@ def merge_context(state: AgentState) -> AgentState:
     """Deduplicate chunks by chunk_id, sort by retrieval score descending."""
     start_time = time.time()
     
+    # Initialize node_latency if not present
+    if "node_latency" not in state:
+        state["node_latency"] = {}
+    
     # Collect all chunks from all agents
     all_chunks = []
     seen_chunk_ids = set()
     
     for agent_result in state["agent_results"].values():
         for chunk in agent_result.get("chunks", []):
-            chunk_id = chunk["metadata"].get("chunk_id")
+            chunk_id = chunk.chunk_id
             if chunk_id not in seen_chunk_ids:
                 all_chunks.append(chunk)
                 seen_chunk_ids.add(chunk_id)
     
-    # Sort by cosine_similarity descending
-    all_chunks.sort(key=lambda c: c.get("cosine_similarity", 0.0), reverse=True)
+    # Sort by similarity_score descending
+    all_chunks.sort(key=lambda c: c.similarity_score, reverse=True)
     
     # Format as merged_context (limit to top_k_final)
     cfg = load_config()
@@ -299,10 +306,10 @@ def merge_context(state: AgentState) -> AgentState:
     
     state["merged_context"] = [
         {
-            "text": c.get("text", ""),
-            "source_document": c["metadata"].get("source_document"),
-            "chunk_id": c["metadata"].get("chunk_id"),
-            "cosine_similarity": c.get("cosine_similarity", 0.0)
+            "text": c.content,
+            "source_document": c.source_document,
+            "chunk_id": c.chunk_id,
+            "cosine_similarity": c.similarity_score
         }
         for c in all_chunks[:top_k]
     ]
@@ -323,16 +330,20 @@ def synthesise(state: AgentState) -> AgentState:
     cfg = load_config()
     client = _get_anthropic_client()
     
+    # Initialize node_latency if not present
+    if "node_latency" not in state:
+        state["node_latency"] = {}
+    
     # Format merged context for prompt
     context_str = "\n\n".join(
-        f"[SOURCE: {c['source_document']} chunk {c['chunk_id']}]\n{c['text']}"
-        for c in state["merged_context"]
+        f"[SOURCE: {c.get('source_document', 'UNKNOWN')} chunk {c.get('chunk_id', 'UNKNOWN')}]\n{c.get('text', '')}"
+        for c in state.get("merged_context", [])
     )
     
     # Format conversation history for prompt
     history_str = "\n\n".join(
-        f"Q: {turn['query']}\nA: {turn['answer'][:100]}..."
-        for turn in state.get("conversation_history", [])[-5:]
+        f"Q: {turn.get('query', '')}\nA: {turn.get('answer', '')[:100]}..."
+        for turn in state.get("conversation_history", [])[- 5:]
     )
     
     # Load synthesis prompt
@@ -387,14 +398,18 @@ def log_trace(state: AgentState) -> AgentState:
     """Log query execution to LangSmith."""
     start_time = time.time()
     
+    # Initialize node_latency if not present
+    if "node_latency" not in state:
+        state["node_latency"] = {}
+    
     # Build trace data
     trace_data = {
         "query": state["query"],
         "domain": state["domain"],
         "confidence": state["confidence"],
         "agents_used": [k for k, v in state["agent_results"].items() if v.get("chunks")],
-        "chunk_ids": [c["chunk_id"] for c in state["merged_context"]],
-        "citation_count": len(state["citations"]),
+        "chunk_ids": [c.get("chunk_id", "UNKNOWN") for c in state.get("merged_context", [])],
+        "citation_count": len(state.get("citations", [])),
         "node_latencies": state.get("node_latency", {})
     }
     
@@ -513,7 +528,8 @@ def run_query(query: str, history: list[dict] | None = None) -> AgentState:
         "citations": [],
         "eval_scores": {},
         "feedback": {},
-        "conversation_history": history or []
+        "conversation_history": history or [],
+        "node_latency": {}  # Track node execution times
     }
     
     # Run graph

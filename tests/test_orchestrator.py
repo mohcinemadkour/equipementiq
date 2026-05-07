@@ -547,6 +547,12 @@ class TestConfidenceThresholdOverride:
 # ============================================================================
 
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load .env to get API keys
+_env_path = Path(__file__).parent.parent / '.env'
+load_dotenv(_env_path, override=True)
 
 ANTHROPIC_API_KEY = os.getenv("ANTHROPIC_API_KEY", "").strip()
 SKIP_INTEGRATION = (
