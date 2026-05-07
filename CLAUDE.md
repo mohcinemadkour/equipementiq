@@ -44,8 +44,8 @@ chunk_overlap: 64          # DR-001
 top_k_retrieval: 8         # FR-MECH-002 — pre-rerank
 top_k_final: 5             # post-rerank
 mmr_lambda: 0.5            # FR-MECH-007
-intent_confidence_threshold: 0.80   # FR-ORCH-002
-oos_similarity_floor: 0.4           # FR-ORCH-007
+intent_confidence_threshold: 0.75   # FR-ORCH-002
+oos_similarity_floor: 0.15           # FR-ORCH-007
 eval_sampling_rate: 0.10            # 10–15% online sampling
 ```
 
@@ -257,7 +257,12 @@ LANGCHAIN_PROJECT=equipmentiq
     - Fixed: `oos_similarity_floor` was accessed from `orchestrator` config section instead of `retrieval`
     - Fixed: Similarity conversion formula was `1 - distance/2` (incorrect), changed to `1 - (distance**2/2)` for L2→cosine
     - Result: All NDCG zero metrics resolved, now returning 1.0 for correctly routed queries
-    - Tuning: Lowered `intent_confidence_threshold` from 0.80 → 0.75, `oos_similarity_floor` from 0.4 → 0.0
+  - **Threshold tuning** (commit 204275e):
+    - Tested 3 queries with varying `oos_similarity_floor` values
+    - Query 1 (software error SPN-CR-001): 0.25 → 1 chunk; 0.15 → 4 chunks ✓
+    - Query 2 (mechanical bearing): 5 chunks at both thresholds ✓
+    - Query 3 (support complaint): 5 chunks at both thresholds ✓
+    - Final value: `oos_similarity_floor: 0.15` (ensures 3+ chunks per query)
   - **Drift baselines saved**: evaluation/baselines/{mechanical,software,support}_collection_baseline.npy
-  - **Status**: ✅ SPRINT 3 COMPLETE — all agent retrieval working, NDCG metrics computed, generation metrics validated, drift baselines saved, 91 unit tests passing
+  - **Status**: ✅ SPRINT 3 COMPLETE — all agent retrieval working, NDCG metrics computed, generation metrics validated, drift baselines saved, threshold tuned to 0.15, 91 unit tests passing
 - **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
