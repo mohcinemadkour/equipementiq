@@ -117,19 +117,19 @@ agents/
 └── support_agent.py         # Case status/priority filtering agent (36 lines)
 ```
 
-### Phase 4 ⏳ (Foundation Complete)
+### Phase 4 ✅ (Complete)
 ```
 orchestrator/
-├── __init__.py              # AgentState, AgentResult, IntentClassification, classify exported
+├── __init__.py              # AgentState, AgentResult, IntentClassification, classify, run_query exported
 ├── state.py                 # TypedDict: AgentState (full app state), AgentResult (agent output)
-├── intent_classifier.py     # IntentClassification model + classify() → Claude routing
-├── synthesiser.py           # (⬜ next) LLM synthesis of merged context → final_answer
-└── graph.py                 # (⬜ next) LangGraph StateGraph with CROSS_DOMAIN node
+├── intent_classifier.py     # IntentClassification model + classify() → Claude routing (0.80 threshold)
+├── graph.py                 # LangGraph StateGraph (8 nodes) + run_query() public API
+└── (✅ Complete)
 
 prompts/
-├── intent_classification.txt # Domain definitions, examples, JSON schema (80 lines)
-├── (⬜ next) retrieval_synthesis.txt  # Synthesis prompt for final answer generation
-└── (⬜ next) judge_rubric.txt        # LLM-as-Judge evaluation prompt
+├── intent_classification.txt # Domain definitions, examples, JSON schema (45 lines)
+├── synthesis.txt            # LLM synthesis instructions (citations, INSUFFICIENT_CONTEXT)
+└── (✅ All prompts externalized, NFR-MAINT-002)
 
 ### Phase 5 (⬜ Next)
 ```
@@ -183,15 +183,18 @@ LANGCHAIN_PROJECT=equipmentiq
   - SoftwareAgent (severity/error code filtering, FR-SOFT-001..007)
   - SupportAgent (case status/priority filtering, FR-SUPP-001..008)
   - Collection isolation enforced (DR-005), 18/18 agent tests passing
-- **Phase 4 — Orchestrator Foundation**: ✅ partial ([sprint-2] 8e4137b)
+- **Phase 4 — Orchestrator**: ✅ complete ([sprint-2] b21f9cc)
   - AgentState TypedDict (full app state management)
   - AgentResult TypedDict (domain agent output contract)
   - IntentClassification Pydantic model (routing decision with confidence)
   - classify() function (Claude intent routing with 0.80 threshold)
   - prompts/intent_classification.txt (domain definitions + examples + JSON schema)
-  - Intent routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 28 tests
-  - ✅ 75/75 total tests passing (config 3 + ingestion 27 + agents 18 + orchestrator 27)
-  - ❌ synthesiser.py NOT YET implemented (LLM synthesis of context)
-  - ❌ graph.py NOT YET implemented (LangGraph StateGraph, CROSS_DOMAIN node)
+  - prompts/synthesis.txt (LLM synthesis with citation formatting)
+  - LangGraph StateGraph (8 nodes): classify_intent → conditional → agent nodes → parallel_node → merge_context → synthesise → log_trace → END
+  - run_query() public API with @traceable decorator for LangSmith
+  - Routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 27 tests
+  - Integration tests: 5 tests (software, mechanical, support, cross_domain, langgraph) with skipif for missing API key
+  - ✅ **75/75 total tests passing** (config 3 + ingestion 27 + agents 18 + routing 27), **5 integration tests skipped** (no valid API key)
+  - All prompts externalized (NFR-MAINT-002)
 - **Phase 5 — Evaluation**: ⬜ next (RAGAS, custom metrics, golden_set.jsonl)
 - **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
