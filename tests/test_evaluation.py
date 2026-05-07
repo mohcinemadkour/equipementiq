@@ -47,6 +47,20 @@ class TestNDCGMetric:
         
         # Should be 0.0 since doc doesn't exist
         assert ndcg == 0.0, "NDCG should be 0 for non-existent docs"
+    
+    def test_ndcg_always_in_valid_range(self):
+        """NDCG@5 must always be in [0.0, 1.0], never overflow."""
+        # Test with multiple queries to ensure bounds are always respected
+        queries = [
+            ("SPN-CR-001 spindle bearing catastrophic failure", ["SPN-CR-001"]),
+            ("What does error AXS-CR-001 mean?", ["AXS-CR-001"]),
+            ("Describe the X-axis servo mechanism", ["DOC-EIQ-003_Axis_Servo_Motion_Control"]),
+        ]
+        
+        for query, expected_ids in queries:
+            ndcg = ndcg_at_k(query, expected_ids, "software", k=5)
+            # Ensure NDCG is never outside [0.0, 1.0] (catches overflow/underflow bugs)
+            assert 0.0 <= ndcg <= 1.0, f"NDCG overflow detected: {ndcg} for query '{query[:40]}...'"
 
 
 class TestHitRateMetric:

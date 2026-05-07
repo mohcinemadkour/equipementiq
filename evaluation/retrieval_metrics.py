@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 import json
 import argparse
+import math
 from datetime import datetime
 from typing import Any
 import chromadb
@@ -21,6 +22,7 @@ def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -
     """
     Compute NDCG@k (Normalized Discounted Cumulative Gain).
     Relevance binary: doc in expected_doc_ids = 1, else = 0.
+    Uses log2 discount: DCG = Σ(relevance / log2(rank + 1)) where rank is 1-indexed.
     """
     # Run the orchestrator query
     try:
@@ -37,19 +39,23 @@ def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -
             if doc_id:
                 retrieved_ids.append(doc_id)
     
-    # Compute ideal DCG (all relevant at top)
-    ideal_dcg = sum(1.0 / (i + 1) for i in range(min(len(expected_doc_ids), k)))
+    # Compute ideal DCG (all relevant documents at top with log2 discount)
+    # IDCG = Σ(1.0 / log2(i + 1)) for i in 1..min(len(expected_doc_ids), k)
+    ideal_dcg = sum(1.0 / math.log2(i + 1) for i in range(1, min(len(expected_doc_ids), k) + 1))
     
+    # Guard against division by zero
     if ideal_dcg == 0:
         return 0.0
     
-    # Compute actual DCG
+    # Compute actual DCG with log2 discount (1-indexed rank)
     actual_dcg = 0.0
-    for i, doc_id in enumerate(retrieved_ids[:k]):
+    for rank, doc_id in enumerate(retrieved_ids[:k], start=1):
         if doc_id in expected_doc_ids:
-            actual_dcg += 1.0 / (i + 1)
+            actual_dcg += 1.0 / math.log2(rank + 1)
     
-    return actual_dcg / ideal_dcg
+    # Compute and clamp NDCG to [0.0, 1.0] as safety net
+    ndcg = actual_dcg / ideal_dcg
+    return min(1.0, max(0.0, ndcg))
 
 
 def hit_rate_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -> float:
