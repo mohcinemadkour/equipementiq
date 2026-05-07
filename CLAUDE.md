@@ -25,8 +25,8 @@ DR-005: **collections are strictly isolated** — no cross-collection retrieval 
 
 ## Tech stack (locked by FRD §2.3)
 
-- **Generation LLM**: `claude-sonnet-4-20250514`
-- **Judge LLM**: separate Claude instance, same model, different prompt
+- **Generation LLM**: `claude-haiku-4-5-20251001` (verified available, temperature=0.0, max_tokens=2048)
+- **Judge LLM**: `claude-haiku-4-5-20251001` (separate instance, different prompt)
 - **Embeddings**: OpenAI `text-embedding-3-small` (1536 dims)
 - **Vector store**: ChromaDB, local persistent (`chroma_db/`, gitignored)
 - **Reranker**: `cross-encoder/ms-marco-MiniLM-L-6-v2`
@@ -131,6 +131,10 @@ prompts/
 ├── synthesis.txt            # LLM synthesis instructions (citations, INSUFFICIENT_CONTEXT)
 └── (✅ All prompts externalized, NFR-MAINT-002)
 
+conftest.py                 # Pytest configuration (env loading at startup for @skipif evaluation)
+run_integration_tests.py    # Integration test runner script
+verify_api.py               # API key verification utility (Anthropic, OpenAI, LangSmith)
+
 ### Phase 5 (⬜ Next)
 ```
 evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
@@ -183,20 +187,28 @@ LANGCHAIN_PROJECT=equipmentiq
   - SoftwareAgent (severity/error code filtering, FR-SOFT-001..007)
   - SupportAgent (case status/priority filtering, FR-SUPP-001..008)
   - Collection isolation enforced (DR-005), 18/18 agent tests passing
-- **Phase 4 — Orchestrator**: ✅ complete ([sprint-2] fad90ee)
-  - AgentState TypedDict (full app state management)
+- **Phase 4 — Orchestrator**: ✅ complete ([sprint-2] f11525a)
+  - AgentState TypedDict (full app state management with node_latency tracking)
   - AgentResult TypedDict (domain agent output contract)
   - IntentClassification Pydantic model (routing decision with confidence)
-  - classify() function (Claude intent routing with 0.80 threshold)
+  - classify() function (Claude intent routing with 0.80 threshold, JSON parse error handling)
   - prompts/intent_classification.txt (domain definitions + examples + JSON schema)
-  - prompts/synthesis.txt (LLM synthesis with citation formatting)
+  - prompts/synthesis.txt (LLM synthesis with citation formatting, escaped braces for string.format())
   - LangGraph StateGraph (8 nodes): classify_intent → conditional → agent nodes → parallel_node → merge_context → synthesise → log_trace → END
   - run_query() public API with @traceable decorator for LangSmith
-  - Routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 27 tests
-  - Integration tests: 5 tests (software, mechanical, support, cross_domain, langgraph) with skipif for missing API key
-  - ✅ **80/80 tests** (75 passing + 5 skipped; config 3 + ingestion 27 + agents 18 + orchestrator 27)
+  - Routing tests: 5 mechanical + 5 software + 5 support + 5 cross_domain + 8 validation = 27 unit tests
+  - Integration tests: 5 tests (software, mechanical, support, cross_domain, langgraph) all PASSING with real ChromaDB + API calls
+  - ✅ **32/32 tests PASSING** (27 unit + 5 integration; all live with real APIs, ChromaDB populated with 308 documents)
   - All prompts externalized (NFR-MAINT-002)
-  - Pre-merge checklist: all 6 items verified ✅
+  - Model updated: claude-haiku-4-5-20251001 (verified working)
+  - conftest.py: Pytest startup env loading (fixes @skipif decorator evaluation timing)
+  - Fixes applied:
+    - Agent method signatures: Changed where_filter → domain-specific params (subsystem, severity_level, priority, etc.)
+    - Agent result handling: dict access → RetrievalResult attributes (.results, .chunk_id, .source_document, .similarity_score)
+    - Prompt template: Escaped braces in synthesis.txt ({{source_document}} for string.format())
+    - JSON parsing: try/except in intent_classifier for graceful fallback
+    - State management: node_latency field added to AgentState TypedDict for execution timing
+  - LangSmith tracing: All queries logged with project_name="equipmentiq"
 - **Phase 5 — Evaluation**: 🚀 in-progress ([sprint-3])
   - RAGAS metrics (Faithfulness, Answer Relevance, Context Precision, Context Recall)
   - Custom metrics (NDCG@5, Hit@5, MRR)
