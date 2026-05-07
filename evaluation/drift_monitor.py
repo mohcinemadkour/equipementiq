@@ -35,7 +35,7 @@ def compute_centroid(collection_name: str) -> np.ndarray:
     # Get all embeddings (ChromaDB returns them in include=['embeddings'])
     results = collection.get(include=["embeddings"])
     
-    if not results or not results["embeddings"]:
+    if not results or len(results.get("embeddings", [])) == 0:
         raise ValueError(f"No embeddings found in {collection_name}")
     
     embeddings = np.array(results["embeddings"])

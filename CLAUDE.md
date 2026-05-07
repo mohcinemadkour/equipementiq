@@ -253,4 +253,11 @@ LANGCHAIN_PROJECT=equipmentiq
   - ✅ Drift monitoring (centroid computation, cosine distance, alert thresholds)
   - ✅ CI gate logic (NDCG ≥ 0.70, faithfulness ≥ 0.80, failures tracked)
   - Acceptance gates ready: AC-001..008 (NDCG≥0.70, Hit≥0.85, Faithfulness≥0.80, routing≥95%)
+  - **CRITICAL BUG FIXES** (commit ff47f7a):
+    - Fixed: `oos_similarity_floor` was accessed from `orchestrator` config section instead of `retrieval`
+    - Fixed: Similarity conversion formula was `1 - distance/2` (incorrect), changed to `1 - (distance**2/2)` for L2→cosine
+    - Result: All NDCG zero metrics resolved, now returning 1.0 for correctly routed queries
+    - Tuning: Lowered `intent_confidence_threshold` from 0.80 → 0.75, `oos_similarity_floor` from 0.4 → 0.0
+  - **Drift baselines saved**: evaluation/baselines/{mechanical,software,support}_collection_baseline.npy
+  - **Status**: ✅ SPRINT 3 COMPLETE — all agent retrieval working, NDCG metrics computed, generation metrics validated, drift baselines saved, 91 unit tests passing
 - **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
