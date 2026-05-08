@@ -67,7 +67,7 @@ llm:
 # Orchestrator (FR-ORCH)
 # ---------------------------------------------------------------------------
 orchestrator:
-  intent_confidence_threshold: 0.75              # FR-ORCH-002 (lowered to 0.75 from 0.80)
+  intent_confidence_threshold: 0.70              # FR-ORCH-002 (lowered to 0.70 to improve support classification)
   conversation_window_turns: 5                   # FR-ORCH-010
   single_agent_latency_sla_s: 10                 # FR-ORCH-008
   cross_domain_latency_sla_s: 20                 # FR-ORCH-008
