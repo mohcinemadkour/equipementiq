@@ -2,8 +2,8 @@
 """
 Rebuild golden_set.jsonl by running actual collection queries.
 
-For each entry, retrieves top-3 IDs from the collection using fixed
-LangChain OpenAIEmbeddings, replacing expected_doc_ids with actual results.
+For each entry, retrieves top-3 from the collection and extracts source_document
+(the document ID without chunk suffix), which matches what orchestrator returns.
 """
 
 import json
@@ -16,6 +16,9 @@ from langchain_openai import OpenAIEmbeddings
 from dotenv import load_dotenv
 
 from ingestion.config import load_config
+
+# Add workspace root to path
+sys.path.insert(0, str(Path(__file__).parent))
 
 load_dotenv()
 
@@ -49,11 +52,15 @@ def rebuild_golden_set(golden_path: str = "evaluation/golden_set.jsonl"):
     """
     Rebuild golden set by running actual collection queries.
     
+    Extracts source_document IDs (not chunk IDs) to match what orchestrator returns
+    after processing through agents and reranking.
+    
     For each entry:
     1. Get the agent and query
-    2. Retrieve top-3 from the agent's collection using LangChain embeddings
-    3. Replace expected_doc_ids with actual top-3 IDs
-    4. Print old vs new if changed
+    2. Query collection directly with LangChain embeddings
+    3. Extract source_document from metadata (document ID without chunk suffix)
+    4. Replace expected_doc_ids with top-3 source_document values
+    5. Print old vs new if changed
     """
     print("Rebuilding golden_set.jsonl with actual collection queries...\n")
     
@@ -86,10 +93,15 @@ def rebuild_golden_set(golden_path: str = "evaluation/golden_set.jsonl"):
                 n_results=3
             )
             
-            # Extract doc IDs
+            # Extract source_document (not full chunk ID)
+            # This matches what orchestrator returns in merged_context
             new_expected_ids = []
             if results["ids"] and len(results["ids"]) > 0:
-                new_expected_ids = results["ids"][0]
+                if results["metadatas"] and len(results["metadatas"]) > 0:
+                    for metadata in results["metadatas"][0]:
+                        source_doc = metadata.get("source_document")
+                        if source_doc:
+                            new_expected_ids.append(source_doc)
             
             # Update entry
             entry_copy = dict(entry)
