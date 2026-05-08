@@ -38,7 +38,7 @@ def run_batch_eval(golden_path: str = "evaluation/golden_set.jsonl"):
     }
     
     # Load golden set
-    with open(golden_path) as f:
+    with open(golden_path, encoding="utf-8") as f:
         golden_pairs = [json.loads(line) for line in f]
     
     # Group by agent
@@ -114,9 +114,9 @@ def print_summary(results: dict) -> None:
     print("  EquipmentIQ Evaluation Summary")
     print("="*60)
     print("\nRetrieval Metrics:")
-    print("┌──────────────────┬───────┬─────────┬──────┬─────────┐")
-    print("│ Collection       │ NDCG  │ HitRate │ MRR  │ Drift   │")
-    print("├──────────────────┼───────┼─────────┼──────┼─────────┤")
+    print("+---------+---------+---------+---------+---------+")
+    print("| Collection       | NDCG  | HitRate | MRR  | Drift   |")
+    print("+---------+---------+---------+---------+---------+")
     
     collection_order = ["mechanical", "software", "support"]
     collection_names = ["mechanical_collection", "software_collection", "support_collection"]
@@ -132,9 +132,9 @@ def print_summary(results: dict) -> None:
         if drift.get("drift") is None:
             drift_status = "—"
         
-        print(f"│ {agent:16s} │ {ndcg:5.2f} │ {hit:7.2f} │ {mrr:4.2f} │ {drift_status:7s} │")
+        print(f"| {agent:16s} | {ndcg:5.2f} | {hit:7.2f} | {mrr:4.2f} | {drift_status:7s} |")
     
-    print("└──────────────────┴───────┴─────────┴──────┴─────────┘")
+    print("+---------+---------+---------+---------+---------+")
     
     # Generation metrics
     gen = results["generation"]
@@ -161,8 +161,8 @@ def save_results(results: dict) -> Path:
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     results_path = results_dir / f"batch_{timestamp}.jsonl"
     
-    with open(results_path, "w") as f:
-        f.write(json.dumps(results) + "\n")
+    with open(results_path, "w", encoding="utf-8") as f:
+        f.write(json.dumps(results, ensure_ascii=False) + "\n")
     
     print(f"Results saved to {results_path}")
     return results_path
@@ -172,19 +172,31 @@ def main():
     """Run full batch evaluation and return exit code."""
     try:
         results = run_batch_eval()
-        print_summary(results)
-        save_results(results)
-        
-        if results["gate_result"] == "FAIL":
-            print("❌ CI GATE FAILED — deployment blocked")
-            sys.exit(1)
-        else:
-            print("✅ CI GATE PASSED — ready to deploy")
-            sys.exit(0)
-    
     except Exception as e:
-        print(f"Error during evaluation: {e}")
+        print(f"Error during evaluation: {str(e)[:100]}")
         sys.exit(1)
+    
+    # ALWAYS save results first (before any printing)
+    try:
+        results_path = save_results(results)
+        print(f"Results saved to {results_path}")
+    except Exception as e:
+        print(f"Error saving results: {str(e)[:100]}")
+        sys.exit(1)
+    
+    # Print summary (silently skip if encoding fails)
+    try:
+        print_summary(results)
+    except Exception:
+        pass  # Silently ignore encoding errors
+    
+    # Report gate result
+    if results["gate_result"] == "FAIL":
+        print("FAIL: CI GATE FAILED -- deployment blocked")
+        sys.exit(1)
+    else:
+        print("PASS: CI GATE PASSED -- ready to deploy")
+        sys.exit(0)
 
 
 if __name__ == "__main__":
