@@ -12,10 +12,49 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import json
 import argparse
 import math
+import os
 from datetime import datetime
 from typing import Any
 import chromadb
+from dotenv import load_dotenv
+from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from orchestrator.graph import run_query
+
+load_dotenv()
+
+
+def _compute_ndcg_direct(expected_doc_ids: list[str], retrieved_ids: list[str], k: int = 5) -> float:
+    """Compute NDCG directly from retrieved_ids list."""
+    # IDCG - sum of log2 discounts for expected docs
+    ideal_dcg = sum(1.0 / math.log2(i + 1) for i in range(1, min(len(expected_doc_ids), k) + 1))
+    
+    if ideal_dcg == 0:
+        return 0.0
+    
+    # Actual DCG
+    actual_dcg = 0.0
+    for rank, doc_id in enumerate(retrieved_ids[:k], start=1):
+        if doc_id in expected_doc_ids:
+            actual_dcg += 1.0 / math.log2(rank + 1)
+    
+    ndcg = actual_dcg / ideal_dcg
+    return min(1.0, max(0.0, ndcg))
+
+
+def _compute_hit_rate_direct(expected_doc_ids: list[str], retrieved_ids: list[str], k: int = 5) -> float:
+    """Compute Hit Rate directly from retrieved_ids list."""
+    for doc_id in expected_doc_ids:
+        if doc_id in retrieved_ids[:k]:
+            return 1.0
+    return 0.0
+
+
+def _compute_mrr_direct(expected_doc_ids: list[str], retrieved_ids: list[str]) -> float:
+    """Compute MRR directly from retrieved_ids list."""
+    for rank, doc_id in enumerate(retrieved_ids, start=1):
+        if doc_id in expected_doc_ids:
+            return 1.0 / rank
+    return 0.0
 
 
 def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -> float:
@@ -28,7 +67,7 @@ def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -
     try:
         result = run_query(query)
     except Exception as e:
-        print(f"  ⚠️  Query failed: {e}")
+        print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
     
     # Extract retrieved doc IDs from merged_context
@@ -66,7 +105,7 @@ def hit_rate_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 
     try:
         result = run_query(query)
     except Exception as e:
-        print(f"  ⚠️  Query failed: {e}")
+        print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
     
     retrieved_ids = []
@@ -92,7 +131,7 @@ def mean_reciprocal_rank(query: str, expected_doc_ids: list[str], agent: str) ->
     try:
         result = run_query(query)
     except Exception as e:
-        print(f"  ⚠️  Query failed: {e}")
+        print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
     
     retrieved_ids = []
@@ -112,7 +151,8 @@ def mean_reciprocal_rank(query: str, expected_doc_ids: list[str], agent: str) ->
 
 def evaluate_collection(agent_name: str, golden_pairs: list[dict]) -> dict:
     """
-    Evaluate a single agent on its golden query set.
+    Evaluate a single agent on its golden query set using the full orchestrator.
+    This tests end-to-end retrieval through the routing system.
     
     Returns:
         {
@@ -135,10 +175,23 @@ def evaluate_collection(agent_name: str, golden_pairs: list[dict]) -> dict:
         query = pair['query']
         expected_ids = pair['expected_doc_ids']
         
+        # Use orchestrator to retrieve
+        try:
+            result = run_query(query)
+            retrieved_ids = []
+            if 'merged_context' in result and result['merged_context']:
+                for chunk in result['merged_context'][:5]:
+                    doc_id = chunk.get('source_document') or chunk.get('chunk_id')
+                    if doc_id:
+                        retrieved_ids.append(doc_id)
+        except Exception as e:
+            print(f"  [ERROR] Query failed: {str(e)[:80]}")
+            retrieved_ids = []
+        
         # Compute metrics
-        ndcg = ndcg_at_k(query, expected_ids, agent_name, k=5)
-        hit = hit_rate_at_k(query, expected_ids, agent_name, k=5)
-        mrr = mean_reciprocal_rank(query, expected_ids, agent_name)
+        ndcg = _compute_ndcg_direct(expected_ids, retrieved_ids, k=5)
+        hit = _compute_hit_rate_direct(expected_ids, retrieved_ids, k=5)
+        mrr = _compute_mrr_direct(expected_ids, retrieved_ids)
         
         ndcg_scores.append(ndcg)
         hit_rates.append(hit)
