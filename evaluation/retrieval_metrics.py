@@ -1,6 +1,8 @@
 """
 Retrieval evaluation metrics for EquipmentIQ RAG system.
 Computes NDCG@5, Hit Rate@5, and Mean Reciprocal Rank for each agent.
+
+Uses LangChain's OpenAIEmbeddings (consistent with ingestion & agents).
 """
 
 import sys
@@ -12,12 +14,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import json
 import argparse
 import math
-import os
 from datetime import datetime
 from typing import Any
-import chromadb
 from dotenv import load_dotenv
-from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from langchain_openai import OpenAIEmbeddings
+
 from orchestrator.graph import run_query
 
 load_dotenv()
