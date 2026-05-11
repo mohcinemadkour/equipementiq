@@ -3,7 +3,6 @@
 import streamlit as st
 import os
 import json
-import chromadb
 from datetime import datetime
 from typing import Optional
 from dotenv import load_dotenv
@@ -37,6 +36,7 @@ with st.sidebar:
     # System status
     st.subheader("System Status")
     try:
+        import chromadb
         client = chromadb.PersistentClient(path=config.get("chroma_persist_dir", "./chroma_db"))
         collections = ["mechanical_collection", "software_collection", "support_collection"]
         for coll_name in collections:
