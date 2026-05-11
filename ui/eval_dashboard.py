@@ -2,9 +2,14 @@
 
 import streamlit as st
 import pandas as pd
+import os
+import sys
 import json
 from pathlib import Path
 from dotenv import load_dotenv
+
+# Ensure parent directory is in path for module imports
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Load environment
 load_dotenv()
