@@ -1,0 +1,312 @@
+"""EquipmentIQ Streamlit Demo Interface."""
+
+import streamlit as st
+import os
+import json
+import chromadb
+from datetime import datetime
+from typing import Optional
+from dotenv import load_dotenv
+
+# Load environment
+load_dotenv()
+
+# Page configuration
+st.set_page_config(
+    page_title="EquipmentIQ",
+    page_icon="🔧",
+    layout="wide"
+)
+
+# Import after page config
+from orchestrator.graph import run_query
+from feedback.feedback_store import init_db, save_feedback, get_stats
+from ingestion.config import load_config
+
+# Initialize database
+init_db()
+
+# Load configuration
+config = load_config()
+
+# --- SIDEBAR ---
+with st.sidebar:
+    st.title("⚙️ EquipmentIQ Demo")
+    st.divider()
+    
+    # System status
+    st.subheader("System Status")
+    try:
+        client = chromadb.PersistentClient(path=config.get("chroma_persist_dir", "./chroma_db"))
+        collections = ["mechanical_collection", "software_collection", "support_collection"]
+        for coll_name in collections:
+            try:
+                coll = client.get_collection(coll_name)
+                count = coll.count()
+                col_display = coll_name.replace("_", " ").title()
+                st.metric(col_display, count)
+            except Exception:
+                st.metric(coll_name, "N/A")
+    except Exception as e:
+        st.warning(f"Cannot connect to ChromaDB: {e}")
+    
+    st.divider()
+    
+    # Demo mode
+    st.subheader("Demo Queries")
+    demo_mode = st.checkbox("📋 Use Curated Queries", value=False)
+    
+    demo_queries = [
+        "What does error SPN-CR-001 mean and what is the remedy?",
+        "What bearing type does the VMC-3000 spindle use?",
+        "What is the part number for spindle bearings?",
+        "What wiring connects the X-axis encoder to the CNC?",
+        "Show me complaint case CMP-2019-1000",
+        "What are the most common failure modes on M01?",
+        "What does error AXS-CR-001 mean?",
+        "What maintenance is required every 4000 hours?",
+        "What caused the spindle bearing fault in February 2019?",
+        "M01 spindle vibration and ATC alarm at the same time"
+    ]
+    
+    if demo_mode:
+        selected_query = st.selectbox(
+            "Select a query:",
+            demo_queries,
+            key="demo_selector"
+        )
+    
+    st.divider()
+    
+    # Model info
+    st.subheader("Configuration")
+    model_name = config.get("generation_model", "claude-haiku-4-5-20251001")
+    st.text(f"🤖 Model: {model_name}")
+    
+    # Feedback stats
+    try:
+        stats = get_stats()
+        if stats['total'] > 0:
+            st.metric("Total Feedback", stats['total'])
+            st.metric("Positive", stats['positive'])
+            st.metric("Negative", stats['negative'])
+    except Exception:
+        pass
+
+
+# --- MAIN AREA ---
+st.title("🏭 EquipmentIQ — Industrial Predictive Maintenance")
+st.markdown("**Query the VMC-3000 knowledge base:** mechanical specs, error codes, and customer complaints.")
+st.divider()
+
+# Initialize session state
+if "history" not in st.session_state:
+    st.session_state.history = []
+
+if "current_result" not in st.session_state:
+    st.session_state.current_result = None
+
+# --- Query Input ---
+st.subheader("📝 Your Query")
+
+# Example buttons in a row
+col1, col2, col3 = st.columns(3)
+with col1:
+    if st.button("❌ Error SPN-CR-001?", use_container_width=True):
+        st.session_state.query_input = "What does error SPN-CR-001 mean?"
+with col2:
+    if st.button("⚙️ Spindle bearing?", use_container_width=True):
+        st.session_state.query_input = "What bearing type does the VMC-3000 spindle use?"
+with col3:
+    if st.button("📋 Complaint CMP-2019-1000?", use_container_width=True):
+        st.session_state.query_input = "Show me complaint case CMP-2019-1000"
+
+# Query text area
+query_input = st.text_area(
+    "Enter your query:",
+    value=st.session_state.get("query_input", (selected_query if demo_mode else "")),
+    height=100,
+    key="main_query"
+)
+st.session_state.query_input = query_input
+
+# Submit button
+col_submit = st.columns([1, 4])
+with col_submit[0]:
+    submit_button = st.button("🚀 Submit", use_container_width=True)
+
+# --- Process Query ---
+if submit_button and query_input.strip():
+    st.session_state.query_input = ""  # Clear after submit
+    
+    with st.spinner("🔍 Routing and retrieving..."):
+        try:
+            # Run orchestrator
+            result = run_query(query_input)
+            st.session_state.current_result = result
+            
+            # Add to history
+            st.session_state.history.append({
+                "query": query_input,
+                "timestamp": datetime.now().isoformat(),
+                "result": result
+            })
+            
+        except Exception as e:
+            st.error(f"❌ Error processing query: {e}")
+            st.session_state.current_result = None
+
+# --- Display Latest Result ---
+if st.session_state.current_result:
+    result = st.session_state.current_result
+    
+    st.divider()
+    st.subheader("✅ Result")
+    
+    # --- SECTION A: Routing Display ---
+    st.markdown("### 🧭 Routing Information")
+    
+    domain = result.get("domain", "unknown")
+    confidence = result.get("confidence", 0.0)
+    agents_used = result.get("agents_used", [])
+    node_latency = result.get("node_latency", {})
+    
+    # Domain badge with color
+    domain_colors = {
+        "mechanical": "🔵",
+        "software": "🟠",
+        "support": "🟢",
+        "cross_domain": "🟣"
+    }
+    domain_emoji = domain_colors.get(domain, "⚪")
+    
+    metric_cols = st.columns(4)
+    with metric_cols[0]:
+        st.metric("Domain", f"{domain_emoji} {domain.title()}")
+    
+    with metric_cols[1]:
+        st.metric("Confidence", f"{confidence:.1%}")
+    
+    with metric_cols[2]:
+        st.metric("Agents Used", ", ".join(agents_used) if agents_used else "N/A")
+    
+    with metric_cols[3]:
+        total_latency = sum(node_latency.values()) if node_latency else 0
+        st.metric("Latency", f"{total_latency:.0f}ms")
+    
+    # Confidence progress bar
+    st.progress(min(confidence, 1.0))
+    
+    # --- SECTION B: Answer ---
+    st.markdown("### 💬 Answer")
+    answer = result.get("final_answer", "No answer generated.")
+    st.markdown(answer)
+    
+    # Sources expander
+    with st.expander("📚 Sources Used", expanded=False):
+        citations = result.get("citations", [])
+        if citations:
+            for i, citation in enumerate(citations, 1):
+                col1, col2, col3 = st.columns(3)
+                with col1:
+                    st.text(f"**Source {i}**")
+                    st.text(citation.get("source_document", "Unknown"))
+                with col2:
+                    st.text("Chunk ID")
+                    st.code(citation.get("chunk_id", "N/A"))
+                with col3:
+                    st.text("Similarity")
+                    sim = citation.get("similarity_score", 0.0)
+                    st.metric("", f"{sim:.3f}")
+                st.divider()
+        else:
+            st.info("No citations available.")
+    
+    # --- SECTION C: Metrics Expander ---
+    with st.expander("📊 Evaluation Metrics", expanded=False):
+        eval_scores = result.get("eval_scores", {})
+        
+        # Faithfulness with color coding
+        faithfulness = eval_scores.get("faithfulness_score", 0.0)
+        if faithfulness >= 0.80:
+            color = "🟢"  # Green
+        elif faithfulness >= 0.60:
+            color = "🟡"  # Amber
+        else:
+            color = "🔴"  # Red
+        
+        metrics_cols = st.columns(3)
+        with metrics_cols[0]:
+            st.metric(f"{color} Faithfulness", f"{faithfulness:.2f}")
+        
+        with metrics_cols[1]:
+            judge_score = eval_scores.get("llm_judge_score", 0.0)
+            st.metric("LLM Judge", f"{judge_score:.1f} / 5")
+        
+        with metrics_cols[2]:
+            st.metric("Confidence", f"{confidence:.1%}")
+    
+    # --- SECTION D: Feedback Widget ---
+    st.divider()
+    st.markdown("### 👍 Was this answer helpful?")
+    
+    feedback_cols = st.columns(2)
+    
+    feedback_given = False
+    feedback_rating = None
+    feedback_comment = ""
+    
+    with feedback_cols[0]:
+        if st.button("👍 Yes, helpful!", use_container_width=True):
+            feedback_given = True
+            feedback_rating = "positive"
+    
+    with feedback_cols[1]:
+        if st.button("👎 No, needs work", use_container_width=True):
+            feedback_given = True
+            feedback_rating = "negative"
+    
+    # Optional comment if feedback given
+    if feedback_given and feedback_rating:
+        st.session_state.feedback_active = True
+        
+        feedback_comment = st.text_area(
+            "Optional: What could be improved?",
+            height=80,
+            key=f"feedback_comment_{len(st.session_state.history)}"
+        )
+        
+        if st.button("📤 Submit Feedback", use_container_width=True):
+            try:
+                # Save feedback
+                record = {
+                    "query": query_input,
+                    "agent_routed": domain,
+                    "domain": domain,
+                    "confidence": confidence,
+                    "retrieved_chunk_ids": json.dumps([c.get("chunk_id", "") for c in citations]),
+                    "generated_answer": answer,
+                    "rating": feedback_rating,
+                    "free_text": feedback_comment if feedback_comment.strip() else None,
+                    "faithfulness_score": eval_scores.get("faithfulness_score"),
+                    "llm_judge_score": eval_scores.get("llm_judge_score")
+                }
+                
+                feedback_id = save_feedback(record)
+                st.success(f"✅ Thank you for your feedback! (ID: {feedback_id[:8]}...)")
+                
+                # Clear feedback state
+                del st.session_state.feedback_active
+                
+            except Exception as e:
+                st.error(f"Failed to save feedback: {e}")
+
+# --- Conversation History (Last 5 turns) ---
+if st.session_state.history:
+    st.divider()
+    st.subheader("📜 Conversation History (Last 5 turns)")
+    
+    for turn in st.session_state.history[-5:]:
+        with st.expander(f"Q: {turn['query'][:60]}..."):
+            st.text(f"Timestamp: {turn['timestamp']}")
+            st.markdown(turn['result'].get('final_answer', 'N/A'))

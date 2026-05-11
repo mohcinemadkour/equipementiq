@@ -1,0 +1,1 @@
+"""EquipmentIQ Streamlit UI module."""
