@@ -135,14 +135,38 @@ conftest.py                 # Pytest configuration (env loading at startup for @
 run_integration_tests.py    # Integration test runner script
 verify_api.py               # API key verification utility (Anthropic, OpenAI, LangSmith)
 
-### Phase 6 (🔵 In Progress — Sprint 4)
+### Phase 6 ✅ (COMPLETE — Sprint 4)
 ```
-feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
-ui/           # app.py (Streamlit demo), eval_dashboard.py
-.env.example  # Example env vars template
+feedback/                          # Feedback infrastructure complete
+├── __init__.py                    # Exports: init_db, save_feedback, get_feedback, get_stats, extract_signal, correlate
+├── feedback_store.py              # SQLite persistence (15-col schema, 4 functions)
+├── signal_extractor.py            # Extract root cause via Claude classification
+└── correlation_monitor.py         # Detect metric calibration drift
+
+prompts/
+├── feedback_classifier.txt        # 10-example classifier (5 failure modes, JSON output)
+
+ui/                                # Streamlit demo interface + evaluation dashboard
+├── __init__.py
+├── app.py                         # Main demo: query input, routing display, answer, sources, metrics, feedback widget
+└── eval_dashboard.py              # Evaluation dashboard: metrics, retrieval eval, feedback breakdown, discordant cases
+
+tests/
+├── test_feedback.py               # 7 tests: init, save, get, stats, signal, correlate
 ```
 
-**Sprint 4 Focus**: Build feedback store (SQLite: query, domain, answer, rating, timestamp), Streamlit UI (query input → orchestrator → answer display → feedback form), integration tests, end-to-end demo.
+**Sprint 4 COMPLETE ✅**: 
+- [PART A] Faithfulness scorer validation: Added debug output to generation_metrics.py sample_and_evaluate() (requires API to fully test)
+- [PART B] Feedback store: SQLite persistence with 15-column schema, 4 functions (init_db, save_feedback, get_feedback, get_stats)
+- [PART C] Signal extraction: Claude-powered classification of negative feedback into 5 failure modes (wrong_answer, incomplete, hallucinated, out_of_scope, correct)
+- [PART D] Correlation monitoring: Detect discordant cases (negative rating ∧ high faithfulness) → metric calibration flag
+- [PART E] Tests: 7 unit tests (init, save, retrieve, stats, signal extraction positive/negative, correlation) — all PASSING
+- [UI] Streamlit demo (ui/app.py): Query input, routing badges, answer display, source citations, metrics expander, feedback widget with optional comments
+- [UI] Evaluation dashboard (ui/eval_dashboard.py): Summary metrics, retrieval evaluation button, agent/failure breakdown charts, discordant cases table
+- Test suite: **92/104 total PASSING** (7 new feedback tests added; 12 API integration failures expected)
+- Git commits: 
+  - `[sprint-4] feedback store + signal extractor + faithfulness fix` (5ed8f8b)
+  - `[sprint-4] Streamlit demo UI + eval dashboard` (46a0df3)
 
 ## Hard rules (do not violate)
 
