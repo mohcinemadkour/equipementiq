@@ -18,7 +18,6 @@ st.set_page_config(
 )
 
 # Import after page config
-from orchestrator.graph import run_query
 from feedback.feedback_store import init_db, save_feedback, get_stats
 from ingestion.config import load_config
 
@@ -141,6 +140,9 @@ if submit_button and query_input.strip():
     
     with st.spinner("🔍 Routing and retrieving..."):
         try:
+            # Import here to avoid Streamlit module issues
+            from orchestrator.graph import run_query
+            
             # Run orchestrator
             result = run_query(query_input)
             st.session_state.current_result = result
