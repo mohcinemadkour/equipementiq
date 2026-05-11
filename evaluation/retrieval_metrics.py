@@ -3,6 +3,7 @@ Retrieval evaluation metrics for EquipmentIQ RAG system.
 Computes NDCG@5, Hit Rate@5, and Mean Reciprocal Rank for each agent.
 
 Uses LangChain's OpenAIEmbeddings (consistent with ingestion & agents).
+Direct collection queries - no orchestrator/API required.
 """
 
 import sys
@@ -14,12 +15,12 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import json
 import argparse
 import math
+import os
 from datetime import datetime
 from typing import Any
 from dotenv import load_dotenv
+import chromadb
 from langchain_openai import OpenAIEmbeddings
-
-from orchestrator.graph import run_query
 
 load_dotenv()
 
@@ -58,26 +59,51 @@ def _compute_mrr_direct(expected_doc_ids: list[str], retrieved_ids: list[str]) -
     return 0.0
 
 
+def _extract_source_doc_id(chunk_id: str) -> str:
+    """Extract source document ID from full chunk ID (strip __XXXX suffix)."""
+    if '__' in chunk_id:
+        return chunk_id.split('__')[0]
+    return chunk_id
+
+
 def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -> float:
     """
     Compute NDCG@k (Normalized Discounted Cumulative Gain).
     Relevance binary: doc in expected_doc_ids = 1, else = 0.
     Uses log2 discount: DCG = Σ(relevance / log2(rank + 1)) where rank is 1-indexed.
+    Queries collections directly (no orchestrator/API required).
     """
-    # Run the orchestrator query
     try:
-        result = run_query(query)
+        # Initialize ChromaDB client
+        chroma_persist_dir = os.getenv('CHROMA_PERSIST_DIR', './chroma_db')
+        client = chromadb.PersistentClient(path=chroma_persist_dir)
+        
+        # Get the appropriate collection based on agent
+        agent_to_collection = {
+            'mechanical': 'mechanical_collection',
+            'software': 'software_collection',
+            'support': 'support_collection'
+        }
+        collection_name = agent_to_collection.get(agent, 'mechanical_collection')
+        collection = client.get_collection(name=collection_name)
+        
+        # Embed query using LangChain (same as ingestion)
+        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        query_embedding = embedder.embed_query(query)
+        
+        # Query the collection
+        result = collection.query(query_embeddings=[query_embedding], n_results=k)
+        
+        # Extract source_document IDs (strip __XXXX suffix from chunk_ids)
+        retrieved_ids = []
+        if result['ids'] and len(result['ids']) > 0:
+            for chunk_id in result['ids'][0][:k]:
+                source_id = _extract_source_doc_id(chunk_id)
+                retrieved_ids.append(source_id)
+        
     except Exception as e:
         print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
-    
-    # Extract retrieved doc IDs from merged_context
-    retrieved_ids = []
-    if 'merged_context' in result and result['merged_context']:
-        for chunk in result['merged_context'][:k]:
-            doc_id = chunk.get('source_document') or chunk.get('chunk_id')
-            if doc_id:
-                retrieved_ids.append(doc_id)
     
     # Compute ideal DCG (all relevant documents at top with log2 discount)
     # IDCG = Σ(1.0 / log2(i + 1)) for i in 1..min(len(expected_doc_ids), k)
@@ -102,19 +128,39 @@ def hit_rate_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 
     """
     Compute Hit Rate@k: fraction of queries where at least one relevant doc appears in top-k.
     Returns 1.0 if any expected_doc_id in top-k, else 0.0.
+    Queries collections directly (no orchestrator/API required).
     """
     try:
-        result = run_query(query)
+        # Initialize ChromaDB client
+        chroma_persist_dir = os.getenv('CHROMA_PERSIST_DIR', './chroma_db')
+        client = chromadb.PersistentClient(path=chroma_persist_dir)
+        
+        # Get the appropriate collection based on agent
+        agent_to_collection = {
+            'mechanical': 'mechanical_collection',
+            'software': 'software_collection',
+            'support': 'support_collection'
+        }
+        collection_name = agent_to_collection.get(agent, 'mechanical_collection')
+        collection = client.get_collection(name=collection_name)
+        
+        # Embed query using LangChain (same as ingestion)
+        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        query_embedding = embedder.embed_query(query)
+        
+        # Query the collection
+        result = collection.query(query_embeddings=[query_embedding], n_results=k)
+        
+        # Extract source_document IDs (strip __XXXX suffix from chunk_ids)
+        retrieved_ids = []
+        if result['ids'] and len(result['ids']) > 0:
+            for chunk_id in result['ids'][0][:k]:
+                source_id = _extract_source_doc_id(chunk_id)
+                retrieved_ids.append(source_id)
+        
     except Exception as e:
         print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
-    
-    retrieved_ids = []
-    if 'merged_context' in result and result['merged_context']:
-        for chunk in result['merged_context'][:k]:
-            doc_id = chunk.get('source_document') or chunk.get('chunk_id')
-            if doc_id:
-                retrieved_ids.append(doc_id)
     
     # Check if any expected doc in top-k
     for doc_id in expected_doc_ids:
@@ -128,19 +174,39 @@ def mean_reciprocal_rank(query: str, expected_doc_ids: list[str], agent: str) ->
     """
     Compute MRR (Mean Reciprocal Rank): 1/rank of first relevant doc.
     If no relevant doc found, return 0.0.
+    Queries collections directly (no orchestrator/API required).
     """
     try:
-        result = run_query(query)
+        # Initialize ChromaDB client
+        chroma_persist_dir = os.getenv('CHROMA_PERSIST_DIR', './chroma_db')
+        client = chromadb.PersistentClient(path=chroma_persist_dir)
+        
+        # Get the appropriate collection based on agent
+        agent_to_collection = {
+            'mechanical': 'mechanical_collection',
+            'software': 'software_collection',
+            'support': 'support_collection'
+        }
+        collection_name = agent_to_collection.get(agent, 'mechanical_collection')
+        collection = client.get_collection(name=collection_name)
+        
+        # Embed query using LangChain (same as ingestion)
+        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        query_embedding = embedder.embed_query(query)
+        
+        # Query the collection (get more results to find MRR rank)
+        result = collection.query(query_embeddings=[query_embedding], n_results=20)
+        
+        # Extract source_document IDs (strip __XXXX suffix from chunk_ids)
+        retrieved_ids = []
+        if result['ids'] and len(result['ids']) > 0:
+            for chunk_id in result['ids'][0]:
+                source_id = _extract_source_doc_id(chunk_id)
+                retrieved_ids.append(source_id)
+        
     except Exception as e:
         print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
-    
-    retrieved_ids = []
-    if 'merged_context' in result and result['merged_context']:
-        for chunk in result['merged_context']:
-            doc_id = chunk.get('source_document') or chunk.get('chunk_id')
-            if doc_id:
-                retrieved_ids.append(doc_id)
     
     # Find rank of first relevant doc (1-indexed)
     for rank, doc_id in enumerate(retrieved_ids, start=1):
@@ -176,23 +242,10 @@ def evaluate_collection(agent_name: str, golden_pairs: list[dict]) -> dict:
         query = pair['query']
         expected_ids = pair['expected_doc_ids']
         
-        # Use orchestrator to retrieve
-        try:
-            result = run_query(query)
-            retrieved_ids = []
-            if 'merged_context' in result and result['merged_context']:
-                for chunk in result['merged_context'][:5]:
-                    doc_id = chunk.get('source_document') or chunk.get('chunk_id')
-                    if doc_id:
-                        retrieved_ids.append(doc_id)
-        except Exception as e:
-            print(f"  [ERROR] Query failed: {str(e)[:80]}")
-            retrieved_ids = []
-        
-        # Compute metrics
-        ndcg = _compute_ndcg_direct(expected_ids, retrieved_ids, k=5)
-        hit = _compute_hit_rate_direct(expected_ids, retrieved_ids, k=5)
-        mrr = _compute_mrr_direct(expected_ids, retrieved_ids)
+        # Query collections directly (no orchestrator API required)
+        ndcg = ndcg_at_k(query, expected_ids, agent_name, k=5)
+        hit = hit_rate_at_k(query, expected_ids, agent_name, k=5)
+        mrr = mean_reciprocal_rank(query, expected_ids, agent_name)
         
         ndcg_scores.append(ndcg)
         hit_rates.append(hit)

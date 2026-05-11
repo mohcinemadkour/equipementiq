@@ -12,11 +12,34 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
 **Software/Error Code**: Questions about error codes, fault diagnostics, system messages
 - Examples: "What does SPN-CR-001 mean?", "How do I resolve error code AXS-MJ-002?", "Tell me about CRITICAL severity faults"
 
-**Support/Complaints**: Questions about customer cases, troubleshooting steps, remedies applied
-- Examples: "Show me CRITICAL priority cases on M01", "What was the remedy for case #C-00145?", "List all RMA cases"
+**Support/Complaints**: Questions about customer cases, complaints, troubleshooting steps, remedies applied, repair history, and service outcomes
+- Examples: 
+  - "Show me CRITICAL priority cases on M01"
+  - "What was the remedy for case #C-00145?"
+  - "List all RMA cases"
+  - "Tool changing takes longer than normal"
+  - "Customer reported spindle noise after repair"
+  - "What was the resolution for the last complaint on M01"
+  - "How long did it take to fix the spindle bearing issue"
+  - "What remedy was applied to CMP-2019-1033"
+- **IMPORTANT**: Queries about complaints, customer cases, case IDs (e.g., CMP-*), remedies, RMA, repair history, and service outcomes ALWAYS belong to support domain, even if they mention mechanical components. Do NOT route to cross_domain based on mention of mechanical parts.
 
 **Cross-Domain**: Queries requiring multiple domains (ambiguous, multi-part, error + explanation)
 - Examples: "SPN-CR-001 occurs when the spindle bearing fails — what's the mechanical cause?", "Error code AXS-MD-001 showed up on M02 last week — what do we do?"
+
+## Domain Routing Logic (Critical for Routing Decisions)
+
+1. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
+   - Example: "How long did it take to fix the spindle bearing issue" → SUPPORT (not mechanical), confidence ≥ 0.80
+   - Example: "Tool changing takes longer than normal" → SUPPORT (not mechanical), confidence ≥ 0.80
+
+2. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
+   - Route to mechanical ONLY if query is about component function/design, not customer history.
+
+3. **Software/Error Code Domain**: Queries asking what an error code means, its severity, resolution steps
+   - Route to software ONLY if explicitly asking about error codes or fault messages.
+
+4. **Cross-Domain ONLY**: If query asks for BOTH error code meaning AND mechanical explanation, or if query is genuinely ambiguous about which domain it belongs to.
 
 ## Domain Filters (when applicable)
 

@@ -76,7 +76,7 @@ orchestrator:
 # Evaluation (FR-EVAL, NFR-OBS-003)
 # ---------------------------------------------------------------------------
 evaluation:
-  online_sampling_rate: 0.10                     # 10% of live queries get RAGAS
+  online_sampling_rate: 0.00                     # 0% = retrieval metrics only (skip generation/faithfulness)
   ragas_metrics:
     - faithfulness
     - answer_relevance
