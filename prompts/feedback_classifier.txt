@@ -1,0 +1,107 @@
+## Feedback Classifier — Identify Root Cause of Negative Feedback
+
+Your task is to analyze user feedback to identify the root cause of a negative rating.
+
+The user has given a **negative** rating (or other indication of dissatisfaction) and provided optional free-text feedback.
+
+Classify the feedback into one of these failure modes:
+- **wrong_answer**: The answer contains incorrect facts or information
+- **incomplete**: The answer misses key information or doesn't fully address the query
+- **hallucinated**: The answer makes up information not in the knowledge base
+- **out_of_scope**: The system cannot answer this type of query
+- **correct**: Actually, this feedback is positive (re-classify as success)
+
+Also identify:
+- **affected_agent**: Which agent (mechanical|software|support|unknown) failed?
+- **chunk_blamed**: Whether the user blamed specific documents (true/false)
+- **confidence**: Your confidence in this classification (0.0-1.0)
+
+## Examples of Each Failure Mode
+
+### wrong_answer (Examples 1-2)
+
+**Example 1:**
+- Query: "What is the spindle motor maximum RPM?"
+- Answer: "The VMC-3000 spindle reaches 8,000 RPM"
+- Free text: "Wrong — the spec sheet says 12,000 RPM. Your answer is incorrect."
+- Classification: {"failure_mode": "wrong_answer", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 0.95}
+
+**Example 2:**
+- Query: "What does error SPN-MJ-001 mean?"
+- Answer: "Major spindle coolant issue"
+- Free text: "Not accurate. The error code indicates major spindle vibration, not coolant."
+- Classification: {"failure_mode": "wrong_answer", "affected_agent": "software", "chunk_blamed": true, "confidence": 0.90}
+
+### incomplete (Examples 3-4)
+
+**Example 3:**
+- Query: "Describe the tool change procedure"
+- Answer: "The tool changer moves the arm to the spindle."
+- Free text: "You skipped several steps. What about tool position verification and timing?"
+- Classification: {"failure_mode": "incomplete", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 0.88}
+
+**Example 4:**
+- Query: "How do I fix a spindle bearing fault?"
+- Answer: "Replace the bearing."
+- Free text: "The answer needs more detail on safety procedures and alignment steps."
+- Classification: {"failure_mode": "incomplete", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 0.92}
+
+### hallucinated (Examples 5-6)
+
+**Example 5:**
+- Query: "What is part number for the X-axis servo motor?"
+- Answer: "Part number is SVM-2500-X with integrated encoder"
+- Free text: "I checked the manual. There is no SVM-2500-X model. You made this up."
+- Classification: {"failure_mode": "hallucinated", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 0.99}
+
+**Example 6:**
+- Query: "What error code means hydraulic pressure low?"
+- Answer: "Code HYD-CR-004 indicates low pressure"
+- Free text: "HYD-CR-004 doesn't exist. You invented this error code."
+- Classification: {"failure_mode": "hallucinated", "affected_agent": "software", "chunk_blamed": false, "confidence": 0.98}
+
+### out_of_scope (Examples 7-8)
+
+**Example 7:**
+- Query: "What is the weather forecast for tomorrow?"
+- Answer: "I don't have weather data, but the spindle temperature is..."
+- Free text: "This question is not about the machine. System should say it can't help."
+- Classification: {"failure_mode": "out_of_scope", "affected_agent": "unknown", "chunk_blamed": false, "confidence": 0.95}
+
+**Example 8:**
+- Query: "Who invented the VMC-3000?"
+- Answer: "The engineering team uses CNC..."
+- Free text: "That's not relevant. I asked for company history, not operating procedures."
+- Classification: {"failure_mode": "out_of_scope", "affected_agent": "unknown", "chunk_blamed": false, "confidence": 0.90}
+
+### correct (Examples 9-10)
+
+**Example 9:**
+- Query: "What bearing types does the spindle use?"
+- Answer: "Angular contact and cylindrical roller bearings in series arrangement."
+- Free text: "Actually, this answer is accurate. I was wrong to rate it negative. It's correct."
+- Classification: {"failure_mode": "correct", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 1.0}
+
+**Example 10:**
+- Query: "How often should I recalibrate the tool changer?"
+- Answer: "Every 250 tool changes or monthly, whichever comes first."
+- Free text: "Disregard my previous feedback. The manual confirms this is right."
+- Classification: {"failure_mode": "correct", "affected_agent": "mechanical", "chunk_blamed": false, "confidence": 0.95}
+
+## Your Task
+
+Analyze the following feedback and classify it.
+
+User Query: {query}
+Generated Answer: {answer}
+User Free-Text Feedback: {free_text}
+Rating: {rating}
+
+Respond ONLY with valid JSON (no markdown, no preamble, no explanation):
+
+{{
+  "failure_mode": "wrong_answer|incomplete|hallucinated|out_of_scope|correct",
+  "affected_agent": "mechanical|software|support|unknown",
+  "chunk_blamed": true|false,
+  "confidence": 0.0-1.0
+}}
