@@ -16,9 +16,25 @@ st.set_page_config(
     layout="wide"
 )
 
-from feedback.feedback_store import get_stats, get_feedback
-from feedback.correlation_monitor import correlate
-from evaluation.retrieval_metrics import evaluate_collection
+# Deferred imports
+def get_feedback_functions():
+    """Load feedback functions lazily."""
+    try:
+        from feedback.feedback_store import get_stats, get_feedback
+        from feedback.correlation_monitor import correlate
+        return get_stats, get_feedback, correlate
+    except Exception as e:
+        st.error(f"Cannot load feedback functions: {e}")
+        return None, None, None
+
+def get_retrieval_eval():
+    """Load retrieval evaluation lazily."""
+    try:
+        from evaluation.retrieval_metrics import evaluate_collection
+        return evaluate_collection
+    except Exception as e:
+        st.error(f"Cannot load evaluation functions: {e}")
+        return None
 
 st.title("📊 EquipmentIQ — Evaluation Dashboard")
 st.markdown("Monitor system performance, feedback metrics, and data quality.")
@@ -28,7 +44,9 @@ st.divider()
 st.subheader("📈 Key Metrics")
 
 try:
-    stats = get_stats()
+    get_stats, get_feedback, correlate = get_feedback_functions()
+    if get_stats:
+        stats = get_stats()
     
     metric_cols = st.columns(4)
     
@@ -106,7 +124,9 @@ st.divider()
 st.subheader("📊 Feedback Breakdown by Agent")
 
 try:
-    stats = get_stats()
+    get_stats, get_feedback, correlate = get_feedback_functions()
+    if get_stats:
+        stats = get_stats()
     by_agent = stats.get("by_agent", {})
     
     if by_agent:
@@ -127,7 +147,9 @@ st.divider()
 st.subheader("❌ Failure Mode Distribution")
 
 try:
-    stats = get_stats()
+    get_stats, get_feedback, correlate = get_feedback_functions()
+    if get_stats:
+        stats = get_stats()
     by_failure = stats.get("by_failure_mode", {})
     
     if by_failure:
@@ -148,7 +170,9 @@ st.divider()
 st.subheader("⚠️ Metric Calibration Status")
 
 try:
-    corr_result = correlate(limit=50)
+    get_stats, get_feedback, correlate = get_feedback_functions()
+    if correlate:
+        corr_result = correlate(limit=50)
     
     metric_flag = corr_result.get("metric_calibration_flag", False)
     summary = corr_result.get("summary", "")
@@ -181,7 +205,9 @@ st.divider()
 st.subheader("📝 Recent Feedback")
 
 try:
-    recent = get_feedback(limit=20)
+    get_stats, get_feedback, correlate = get_feedback_functions()
+    if get_feedback:
+        recent = get_feedback(limit=20)
     
     if recent:
         df_recent = pd.DataFrame(recent)

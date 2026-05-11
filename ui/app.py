@@ -17,15 +17,24 @@ st.set_page_config(
     layout="wide"
 )
 
-# Import after page config
-from feedback.feedback_store import init_db, save_feedback, get_stats
-from ingestion.config import load_config
+# Deferred imports - loaded only when needed
+def get_config():
+    """Load configuration lazily."""
+    try:
+        from ingestion.config import load_config
+        return load_config()
+    except Exception as e:
+        st.warning(f"Cannot load config: {e}")
+        return {}
 
-# Initialize database
-init_db()
-
-# Load configuration
-config = load_config()
+def get_feedback_functions():
+    """Load feedback functions lazily."""
+    try:
+        from feedback.feedback_store import init_db, save_feedback, get_stats
+        return init_db, save_feedback, get_stats
+    except Exception as e:
+        st.error(f"Cannot load feedback functions: {e}")
+        return None, None, None
 
 # --- SIDEBAR ---
 with st.sidebar:
@@ -36,6 +45,7 @@ with st.sidebar:
     st.subheader("System Status")
     try:
         import chromadb
+        config = get_config()
         client = chromadb.PersistentClient(path=config.get("chroma_persist_dir", "./chroma_db"))
         collections = ["mechanical_collection", "software_collection", "support_collection"]
         for coll_name in collections:
@@ -79,16 +89,20 @@ with st.sidebar:
     
     # Model info
     st.subheader("Configuration")
+    config = get_config()
     model_name = config.get("generation_model", "claude-haiku-4-5-20251001")
     st.text(f"🤖 Model: {model_name}")
     
     # Feedback stats
     try:
-        stats = get_stats()
-        if stats['total'] > 0:
-            st.metric("Total Feedback", stats['total'])
-            st.metric("Positive", stats['positive'])
-            st.metric("Negative", stats['negative'])
+        init_db, save_feedback, get_stats = get_feedback_functions()
+        if init_db:
+            init_db()
+            stats = get_stats()
+            if stats['total'] > 0:
+                st.metric("Total Feedback", stats['total'])
+                st.metric("Positive", stats['positive'])
+                st.metric("Negative", stats['negative'])
     except Exception:
         pass
 
@@ -121,9 +135,15 @@ with col3:
         st.session_state.query_input = "Show me complaint case CMP-2019-1000"
 
 # Query text area
+try:
+    selected_query
+    demo_default = selected_query if demo_mode else ""
+except NameError:
+    demo_default = ""
+
 query_input = st.text_area(
     "Enter your query:",
-    value=st.session_state.get("query_input", (selected_query if demo_mode else "")),
+    value=st.session_state.get("query_input", demo_default),
     height=100,
     key="main_query"
 )
@@ -280,26 +300,31 @@ if st.session_state.current_result:
         
         if st.button("📤 Submit Feedback", use_container_width=True):
             try:
-                # Save feedback
-                record = {
-                    "query": query_input,
-                    "agent_routed": domain,
-                    "domain": domain,
-                    "confidence": confidence,
-                    "retrieved_chunk_ids": json.dumps([c.get("chunk_id", "") for c in citations]),
-                    "generated_answer": answer,
-                    "rating": feedback_rating,
-                    "free_text": feedback_comment if feedback_comment.strip() else None,
-                    "faithfulness_score": eval_scores.get("faithfulness_score"),
-                    "llm_judge_score": eval_scores.get("llm_judge_score")
-                }
-                
-                feedback_id = save_feedback(record)
-                st.success(f"✅ Thank you for your feedback! (ID: {feedback_id[:8]}...)")
-                
-                # Clear feedback state
-                del st.session_state.feedback_active
-                
+                # Import feedback functions
+                init_db, save_feedback, get_stats = get_feedback_functions()
+                if save_feedback:
+                    init_db()
+                    # Save feedback
+                    record = {
+                        "query": query_input,
+                        "agent_routed": domain,
+                        "domain": domain,
+                        "confidence": confidence,
+                        "retrieved_chunk_ids": json.dumps([c.get("chunk_id", "") for c in citations]),
+                        "generated_answer": answer,
+                        "rating": feedback_rating,
+                        "free_text": feedback_comment if feedback_comment.strip() else None,
+                        "faithfulness_score": eval_scores.get("faithfulness_score"),
+                        "llm_judge_score": eval_scores.get("llm_judge_score")
+                    }
+                    
+                    feedback_id = save_feedback(record)
+                    st.success(f"✅ Thank you for your feedback! (ID: {feedback_id[:8]}...)")
+                    
+                    # Clear feedback state
+                    if "feedback_active" in st.session_state:
+                        del st.session_state.feedback_active
+            
             except Exception as e:
                 st.error(f"Failed to save feedback: {e}")
 
