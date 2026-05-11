@@ -135,13 +135,14 @@ conftest.py                 # Pytest configuration (env loading at startup for @
 run_integration_tests.py    # Integration test runner script
 verify_api.py               # API key verification utility (Anthropic, OpenAI, LangSmith)
 
-### Phase 5 (⬜ Next)
+### Phase 6 (🔵 In Progress — Sprint 4)
 ```
-evaluation/   # retrieval_metrics, generation_metrics, drift_monitor, batch_eval, golden_set.jsonl
 feedback/     # feedback_store.py (SQLite), signal_extractor.py, correlation_monitor.py
-ui/           # app.py (demo), eval_dashboard.py
+ui/           # app.py (Streamlit demo), eval_dashboard.py
 .env.example  # Example env vars template
 ```
+
+**Sprint 4 Focus**: Build feedback store (SQLite: query, domain, answer, rating, timestamp), Streamlit UI (query input → orchestrator → answer display → feedback form), integration tests, end-to-end demo.
 
 ## Hard rules (do not violate)
 
@@ -264,5 +265,5 @@ LANGCHAIN_PROJECT=equipmentiq
     - Query 3 (support complaint): 5 chunks at both thresholds ✓
     - Final value: `oos_similarity_floor: 0.15` (ensures 3+ chunks per query)
   - **Drift baselines saved**: evaluation/baselines/{mechanical,software,support}_collection_baseline.npy
-  - **Status**: ✅ SPRINT 3 COMPLETE — all agent retrieval working, NDCG metrics computed, generation metrics validated, drift baselines saved, threshold tuned to 0.15, 91 unit tests passing
-- **Phase 6 — Feedback/UI**: ⬜ next (SQLite feedback store, Streamlit demo)
+  - **Status**: ✅ SPRINT 3 COMPLETE — all 30 retrieval queries passing with NDCG=1.00 across all collections (mechanical, software, support), intent routing fixed with improved prompt examples, golden set verified, 85/97 unit tests passing (12 failures are API integration tests expecting disabled Claude API), commit 3e68c7e
+- **Phase 6 — Feedback/UI**: 🔵 in progress — Feedback Store (SQLite) and Streamlit UI
