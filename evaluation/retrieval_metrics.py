@@ -22,6 +22,8 @@ from dotenv import load_dotenv
 import chromadb
 from langchain_openai import OpenAIEmbeddings
 
+from ingestion.config import load_config
+
 load_dotenv()
 
 
@@ -88,7 +90,8 @@ def ndcg_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 5) -
         collection = client.get_collection(name=collection_name)
         
         # Embed query using LangChain (same as ingestion)
-        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        cfg = load_config()
+        embedder = OpenAIEmbeddings(model=cfg['embeddings']['model'])
         query_embedding = embedder.embed_query(query)
         
         # Query the collection
@@ -145,7 +148,8 @@ def hit_rate_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 
         collection = client.get_collection(name=collection_name)
         
         # Embed query using LangChain (same as ingestion)
-        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        cfg = load_config()
+        embedder = OpenAIEmbeddings(model=cfg['embeddings']['model'])
         query_embedding = embedder.embed_query(query)
         
         # Query the collection
@@ -191,7 +195,8 @@ def mean_reciprocal_rank(query: str, expected_doc_ids: list[str], agent: str) ->
         collection = client.get_collection(name=collection_name)
         
         # Embed query using LangChain (same as ingestion)
-        embedder = OpenAIEmbeddings(model='text-embedding-3-small')
+        cfg = load_config()
+        embedder = OpenAIEmbeddings(model=cfg['embeddings']['model'])
         query_embedding = embedder.embed_query(query)
         
         # Query the collection (get more results to find MRR rank)
