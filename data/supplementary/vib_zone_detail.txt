@@ -1,0 +1,161 @@
+VMC-3000 Vibration Zone Classification Detail
+
+Zone A: 0 to 2.3 mm/s RMS
+- New machine reference condition
+- Optimal performance, no wear detected
+- Unrestricted long-term operation
+- Expected baseline for healthy spindle and drives
+
+Zone B: 2.3 to 4.5 mm/s RMS
+- Acceptable for long-term operation
+- Normal production conditions
+- Trends should be monitored
+- May indicate early tool wear or minor looseness
+- Continue operation but schedule inspection within 2 weeks
+
+Zone B Upper: 4.5 to 7.1 mm/s RMS
+- Elevated but not critical condition
+- Reduces acceptable operating duration
+- Indicates moderate tool wear or fixture issues
+- Triggers error code VIB-SR-001 (SERIOUS severity)
+- Action: Inspect and replace tool, check fixture clamping
+- Reduce spindle load, monitor for escalation
+- Schedule maintenance within 4 hours
+
+Zone C: 7.1 to 11.2 mm/s RMS
+- Unsatisfactory condition
+- Short-term operation only
+- Indicates significant bearing degradation or severe tool wear
+- Triggers error codes VIB-MJ-001 (Vibration Major) and SPN-MJ-002 (Spindle Bearing Vibration Major)
+- Action: Plan maintenance within 4 hours
+- Reduce cutting loads immediately
+- Increase inspection frequency to every cycle
+
+Zone D: Above 11.2 mm/s RMS
+- Dangerous condition
+- Machine damage risk
+- Emergency stop required
+- Indicates imminent bearing failure or severe resonance
+- Triggers error code VIB-CR-001 (CRITICAL severity)
+- Action: IMMEDIATE emergency stop
+- Prevent further operation until root cause identified
+- Bearing replacement required
+
+ISO 10816-3 Vibration Standards Classification
+
+The VMC-3000 Vertical Machining Centre belongs to ISO 10816-3 Group 2 (Medium machines, 15-75 kW, mounted on rigid foundations).
+The vibration zones above are based on ISO 10816-3 severity classification for continuous operation machines.
+
+Statistical Features for Vibration Analysis
+
+Eight (8) statistical features are extracted per axis per operation cycle:
+
+1. RMS (Root Mean Square)
+   - Represents overall vibration magnitude
+   - Primary indicator for ISO zone classification
+   - Units: mm/s
+   - Formula: RMS = sqrt(1/N * sum(x_i^2))
+
+2. Peak
+   - Maximum absolute displacement within cycle
+   - Units: mm/s
+   - Used in peak/RMS ratio calculation
+
+3. Crest Factor
+   - Ratio of peak to RMS
+   - Formula: Crest Factor = x_peak / x_rms
+   - High values indicate impulsive events
+   - Early indicator of bearing defects (kurtosis rises before RMS)
+   - Normal range: 3-4 for sinusoidal, 6-8 for bearing wear
+
+4. Kurtosis (Peakedness)
+   - Fourth-order statistical moment
+   - Early-fault indicator (best predictor for bearing degradation)
+   - Formula: Kurt = (1/N * sum((x_i - mean)^4)) / (sigma^4)
+   - Normal range: 2.5 to 5.0 (healthy bearing)
+   - Warning threshold: 5.0 (elevated kurtosis)
+   - Alarm threshold: 8.0 (imminent failure risk)
+   - Escalates system from Warning to Alarm severity
+
+5. Skewness
+   - Asymmetry of waveform distribution
+   - Indicates directional bias in vibration profile
+   - Range: -5 to +5 for manufacturing machines
+
+6. Standard Deviation (Sigma)
+   - Spread of vibration around mean
+   - Related to RMS; helps identify drift
+
+7. Mean
+   - DC offset of vibration signal
+   - Indicates static load component
+   - Used as cross-check for bearing axial preload
+   - Should be near 0 for unidirectional sensors
+
+8. Variance
+   - Square of standard deviation
+   - Measures energy distribution in signal
+
+Fault Category Signatures by Vibration Profile
+
+Tool Wear Faults (34 of 70 fault events in Bosch dataset)
+- Signature: Gradual increase in RMS over multiple cycles
+- Affected operations: OP01, OP02, OP07 (high-speed finishing)
+- Indicators: Steady rise in RMS; kurtosis remains <5.0
+- Timeline: Hours to days before replacement
+
+Spindle Bearing Faults (20 of 70 fault events)
+- Signature: Rapid spike in crest factor and kurtosis
+- Indicators: Kurtosis >8.0, crest factor >10, periodic impulses
+- Frequency: High-frequency acceleration peaks
+- Timeline: Hours to minutes before failure
+
+Actuator/Servo Faults (8 of 70 fault events)
+- Signature: Following error exceeding 0.5 mm, oscillation in axis position
+- Indicators: Elevated servo loop vibration, resonance peaks
+- Associated error: AXS-CR-001 (Axis Following Error Emergency Stop)
+- Timeline: Minutes to hours depending on load
+
+Chatter Vibration Faults (7 of 70 fault events)
+- Signature: Periodic peaks at tooth-pass frequency
+- Indicators: High crest factor, modulation pattern visible
+- Frequency: Spindle RPM / number of flutes
+- Related operations: Aluminum milling, thin-wall cavities
+
+Process Anomaly Faults (1 of 70 fault events)
+- Signature: 50+ RPM spindle speed deviation from programmed
+- Indicators: Unexpected frequency content shift
+- Caused by: Hydraulic pressure loss, servo override
+
+Bosch CNC Machining Dataset Reference
+
+Total Recordings: 1,702 HDF5 files (CC-BY-4.0 Licensed)
+Collection Period: February 2019 to August 2021
+Machines: M01, M02, M03 (identical VMC-3000 units)
+Operations: 15 different milling operations
+Sampling Rate: 10 kHz per axis (X, Y, Z)
+File Format: HDF5 with numpy arrays
+
+Normal vs Fault Samples Breakdown:
+- Normal samples: 1,632 (95.9%)
+- Fault samples: 70 (4.1%)
+
+Fault Distribution:
+- tool_wear: 34 samples (48.6%)
+- spindle_bearing_fault: 20 samples (28.6%)
+- actuator_fault: 8 samples (11.4%)
+- chatter_vibration: 7 samples (10.0%)
+- process_anomaly: 1 sample (1.4%)
+
+Sensor Specification: Bosch CISS (Compact Integrated Sensor System)
+
+Sensor Type: Triaxial MEMS (Micro-Electro-Mechanical Systems) accelerometer
+Manufacturer: Bosch Sensortec
+Model: BMX160 (CISS variant)
+Measurement Axes: X (table), Y (saddle), Z (spindle axis)
+Sensitivity: 16-bit resolution, ±8g range
+Frequency Response: DC to 5000 Hz (suitable for spindle/bearing diagnostics)
+Sampling Rate: 10 kHz per axis (oversampled, post-processed to 1 kHz)
+Calibration: Factory-calibrated; periodic verification via known shaker table
+Mounting: Epoxy-bonded directly to spindle housing and axis bearing blocks
+Temperature Compensation: Integrated; 0–60°C operational range

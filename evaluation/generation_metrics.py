@@ -306,6 +306,12 @@ def sample_and_evaluate(golden_path: str, sample_rate: float = 0.12) -> list[dic
             # Extract context chunks from merged_context
             context_chunks = []
             if 'merged_context' in result and result['merged_context']:
+                # DEBUG: print context structure before processing
+                print(f"     [DEBUG] merged_context type={type(result['merged_context'])}, len={len(result['merged_context'])}")
+                if result['merged_context']:
+                    first_item = result['merged_context'][0]
+                    print(f"     [DEBUG] first item type={type(first_item)}, keys={list(first_item.keys()) if isinstance(first_item, dict) else 'not a dict'}")
+                
                 context_chunks = [chunk.get('content', '') for chunk in result['merged_context']]
             
             # Evaluate

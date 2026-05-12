@@ -118,6 +118,64 @@ def ingest_pdf(pdf_path: Path, collection, embedder: OpenAIEmbeddings) -> int:
     return len(chunks)
 
 
+def ingest_text_file(txt_path: Path, collection, embedder: OpenAIEmbeddings, subsystem: str = "VIB") -> int:
+    """Ingest supplementary text files (e.g., vib_zone_detail.txt) into mechanical_collection.
+    
+    Args:
+        txt_path: Path to .txt file
+        collection: ChromaDB collection
+        embedder: OpenAI embeddings instance
+        subsystem: Subsystem tag for metadata
+        
+    Returns:
+        Number of chunks ingested
+    """
+    stem = txt_path.stem
+    stem = f"VMC3000_{stem}" if not stem.startswith("VMC3000") else stem
+
+    try:
+        with open(txt_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except Exception as exc:
+        logger.exception("source=%s: Text file load failed (%s) — skipping", stem, exc)
+        return 0
+
+    if not content.strip():
+        logger.warning("source=%s: file is empty — skipping", stem)
+        return 0
+
+    # Create a document-like object from the text file
+    from langchain_core.documents import Document
+    doc = Document(
+        page_content=content,
+        metadata={
+            "source_document": stem,
+            "subsystem": subsystem,
+            "chunk_type": "supplementary",
+            "source": str(txt_path),
+        }
+    )
+
+    chunks = chunk_documents([doc], source_label=stem)
+    if not chunks:
+        logger.warning("source=%s: produced 0 chunks — skipping", stem)
+        return 0
+
+    deleted = _delete_existing(collection, stem)
+    if deleted:
+        logger.info("source=%s: deleted %d prior chunks (DR-007 in-place update)", stem, deleted)
+
+    texts = [c.page_content for c in chunks]
+    metadatas = [_sanitize_metadata(c.metadata) for c in chunks]
+    ids = [c.metadata["chunk_id"] for c in chunks]
+    embeddings = embedder.embed_documents(texts)
+
+    collection.add(ids=ids, documents=texts, metadatas=metadatas, embeddings=embeddings)
+    logger.info("source=%s: ingested %d chunks (subsystem=%s, type=supplementary)",
+                stem, len(chunks), subsystem)
+    return len(chunks)
+
+
 def run() -> None:
     logging.basicConfig(
         level=logging.INFO,
@@ -141,8 +199,17 @@ def run() -> None:
     for pdf in pdfs:
         total += ingest_pdf(pdf, collection, embedder)
 
-    logger.info("Done. mechanical_collection: %d chunks across %d PDFs.",
-                collection.count(), len(pdfs))
+    # Also ingest supplementary text files if they exist
+    supp_dir = PROJECT_ROOT / "data" / "supplementary"
+    txt_count = 0
+    if supp_dir.exists():
+        txt_files = sorted(supp_dir.glob("*.txt"))
+        txt_count = len(txt_files)
+        for txt in txt_files:
+            total += ingest_text_file(txt, collection, embedder, subsystem="VIB")
+
+    logger.info("Done. mechanical_collection: %d chunks across %d PDFs and %d supplementary files.",
+                collection.count(), len(pdfs), txt_count)
 
 
 if __name__ == "__main__":
