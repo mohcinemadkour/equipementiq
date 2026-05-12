@@ -9,8 +9,20 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
 **Mechanical**: Questions about equipment mechanical components, design, operation, vibration monitoring standards, servo/actuator systems, dataset specifications
 - Examples: "What are spindle bearing failure modes?", "Explain the Z-axis actuator design", "How do I diagnose chatter vibration?", "What error codes are triggered in Zone C?", "What happens when vibration enters Zone D?", "Which alarms fire when RMS exceeds 7.1 mm/s?", "What is the vibration threshold for Zone B?", "What indicates an actuator fault in the VMC-3000?", "How many HDF5 recordings are in the Bosch dataset?", "What is the breakdown of normal vs fault samples in the dataset?", "What sensor type does the Bosch CISS accelerometer use?"
 
-**Software/Error Code**: Questions about error codes, fault diagnostics, system messages
-- Examples: "What does SPN-CR-001 mean?", "How do I resolve error code AXS-MJ-002?", "Tell me about CRITICAL severity faults"
+**Software/Error Code**: Questions about error codes, fault diagnostics, system messages, parameters, severity levels, MID numbers, error code subsystem membership
+- Examples: 
+  - "What does SPN-CR-001 mean?" 
+  - "How do I resolve error code AXS-MJ-002?" 
+  - "Tell me about CRITICAL severity faults"
+  - "What does parameter P004 monitor?" 
+  - "What is the normal range for parameter P002?" 
+  - "What is the MID number for the spindle subsystem?" 
+  - "What does a WARNING severity error require?" 
+  - "What parameter monitors hydraulic pressure?" 
+  - "How many severity levels does the error code system have?" 
+  - "What does a NOTICE severity error require the operator to do?" 
+  - "Which subsystem does error code VIB-CR-001 belong to?" 
+  - "What is the required action for error code THM-CR-001?"
 
 **Support/Complaints**: Questions about customer cases, complaints, troubleshooting steps, remedies applied, repair history, and service outcomes
 - Examples: 
@@ -39,17 +51,29 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
    - Example: "What is the breakdown of normal vs fault samples?" → MECHANICAL (dataset reference), confidence ≥ 0.85
    - Example: "What sensor type does the CISS accelerometer use?" → MECHANICAL (sensor specs), confidence ≥ 0.85
 
-3. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
+3. **Software Domain — Parameter ID, MID Numbers, Severity Levels, Subsystem Membership**: Questions about parameter IDs (P001-P093), MID numbers, severity levels (CRITICAL, MAJOR, WARNING, etc.), and error code subsystem membership ALWAYS route to SOFTWARE — even when they mention mechanical component names. These are defined in the error code database and system documentation, not the technical PDF documentation.
+   - Example: "What parameter P004 monitors and what is its critical limit?" → SOFTWARE (parameter database), confidence ≥ 0.85
+   - Example: "What is the normal range for parameter P002?" → SOFTWARE (parameter specs), confidence ≥ 0.85
+   - Example: "What is the MID number for the spindle drive subsystem?" → SOFTWARE (MID mapping), confidence ≥ 0.85
+   - Example: "What does a WARNING severity error require?" → SOFTWARE (severity level definition), confidence ≥ 0.85
+   - Example: "Which subsystem does error code VIB-CR-001 belong to?" → SOFTWARE (subsystem membership), confidence ≥ 0.85
+
+3b. **Software Domain — Error Code Remedies vs Support Case Remedies**: If query asks "What is the remedy for error [CODE]?" or "What are the resolution steps for [error code]?" or "How do I fix error [CODE]?" → route to SOFTWARE (error code diagnostic/resolution database). This is DIFFERENT from "What remedy was applied to case CMP-2019-1033?" which is SUPPORT (customer service history).
+   - Example: "What is the remedy for error TCS-MJ-001?" → SOFTWARE (error code resolution), confidence ≥ 0.85
+   - Example: "What are the diagnostic steps for SPN-CR-001?" → SOFTWARE (error code procedure), confidence ≥ 0.85
+   - Example: "What remedy was applied to case CMP-2019-1033?" → SUPPORT (customer case history), confidence ≥ 0.85
+
+4. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
    - Example: "How long did it take to fix the spindle bearing issue" → SUPPORT (not mechanical), confidence ≥ 0.80
    - Example: "Tool changing takes longer than normal" → SUPPORT (not mechanical), confidence ≥ 0.80
 
-4. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
+5. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
    - Route to mechanical ONLY if query is about component function/design, not customer history.
 
-5. **Software/Error Code Domain**: Queries asking what an error code means, its severity, resolution steps
+6. **Software/Error Code Domain**: Queries asking what an error code means, its severity, resolution steps
    - Route to software ONLY if explicitly asking about error codes or fault messages.
 
-6. **Cross-Domain ONLY**: If query asks for BOTH error code meaning AND mechanical explanation, or if query is genuinely ambiguous about which domain it belongs to.
+7. **Cross-Domain ONLY**: If query asks for BOTH error code meaning AND mechanical explanation, or if query is genuinely ambiguous about which domain it belongs to.
 
 ## Domain Filters (when applicable)
 
