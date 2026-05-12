@@ -66,6 +66,7 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
 4. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
    - Example: "How long did it take to fix the spindle bearing issue" → SUPPORT (not mechanical), confidence ≥ 0.80
    - Example: "Tool changing takes longer than normal" → SUPPORT (not mechanical), confidence ≥ 0.80
+   - Example: "What sensor readings were recorded for spindle bearing fault cases in 2021?" → SUPPORT (customer case history), confidence ≥ 0.80 — even though it mentions "sensor readings", the focus is on customer complaint cases, not mechanical specifications
 
 5. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
    - Route to mechanical ONLY if query is about component function/design, not customer history.
