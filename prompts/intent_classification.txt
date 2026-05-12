@@ -6,8 +6,8 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
 
 ## Domain Definitions
 
-**Mechanical**: Questions about equipment mechanical components, design, operation
-- Examples: "What are spindle bearing failure modes?", "Explain the Z-axis actuator design", "How do I diagnose chatter vibration?"
+**Mechanical**: Questions about equipment mechanical components, design, operation, vibration monitoring standards
+- Examples: "What are spindle bearing failure modes?", "Explain the Z-axis actuator design", "How do I diagnose chatter vibration?", "What error codes are triggered in Zone C?", "What happens when vibration enters Zone D?", "Which alarms fire when RMS exceeds 7.1 mm/s?", "What is the vibration threshold for Zone B?"
 
 **Software/Error Code**: Questions about error codes, fault diagnostics, system messages
 - Examples: "What does SPN-CR-001 mean?", "How do I resolve error code AXS-MJ-002?", "Tell me about CRITICAL severity faults"
@@ -29,17 +29,21 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
 
 ## Domain Routing Logic (Critical for Routing Decisions)
 
-1. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
+1. **Mechanical Domain — Vibration Standards Priority**: If query mentions ISO vibration zones (Zone A, B, C, D), RMS thresholds, crest factor limits, kurtosis thresholds, or vibration monitoring standards → ALWAYS route to mechanical, even if the word "error codes" appears. These are defined in the vibration monitoring documentation (mechanical domain), not the error code database (software domain).
+   - Example: "What error codes are triggered in Zone C?" → MECHANICAL (ISO 10816-3 zones), confidence ≥ 0.85
+   - Example: "Which alarms fire when RMS exceeds 7.1 mm/s?" → MECHANICAL (vibration threshold), confidence ≥ 0.85
+
+2. **Support Domain Priority**: If query mentions complaints, customer cases, case IDs (CMP-*), remedies, RMA, repair history, or service outcomes → ALWAYS route to support, regardless of mechanical terminology.
    - Example: "How long did it take to fix the spindle bearing issue" → SUPPORT (not mechanical), confidence ≥ 0.80
    - Example: "Tool changing takes longer than normal" → SUPPORT (not mechanical), confidence ≥ 0.80
 
-2. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
+3. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
    - Route to mechanical ONLY if query is about component function/design, not customer history.
 
-3. **Software/Error Code Domain**: Queries asking what an error code means, its severity, resolution steps
+4. **Software/Error Code Domain**: Queries asking what an error code means, its severity, resolution steps
    - Route to software ONLY if explicitly asking about error codes or fault messages.
 
-4. **Cross-Domain ONLY**: If query asks for BOTH error code meaning AND mechanical explanation, or if query is genuinely ambiguous about which domain it belongs to.
+5. **Cross-Domain ONLY**: If query asks for BOTH error code meaning AND mechanical explanation, or if query is genuinely ambiguous about which domain it belongs to.
 
 ## Domain Filters (when applicable)
 
