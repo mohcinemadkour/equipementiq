@@ -152,14 +152,17 @@ st.subheader("📝 Your Query")
 # Example buttons in a row
 col1, col2, col3 = st.columns(3)
 with col1:
-    if st.button("❌ Error SPN-CR-001?", use_container_width=True):
+    if st.button("❌ Error SPN-CR-001?", use_container_width=True, key="btn_error"):
         st.session_state.query_input = "What does error SPN-CR-001 mean?"
+        st.rerun()
 with col2:
-    if st.button("⚙️ Spindle bearing?", use_container_width=True):
+    if st.button("⚙️ Spindle bearing?", use_container_width=True, key="btn_bearing"):
         st.session_state.query_input = "What bearing type does the VMC-3000 spindle use?"
+        st.rerun()
 with col3:
-    if st.button("📋 Complaint CMP-2019-1000?", use_container_width=True):
+    if st.button("📋 Complaint CMP-2019-1000?", use_container_width=True, key="btn_complaint"):
         st.session_state.query_input = "Show me complaint case CMP-2019-1000"
+        st.rerun()
 
 # Query text area
 try:
@@ -171,8 +174,8 @@ except NameError:
 query_input = st.text_area(
     "Enter your query:",
     value=st.session_state.get("query_input", demo_default),
-    height=100,
-    key="main_query"
+    height=100
+)
 )
 st.session_state.query_input = query_input
 
