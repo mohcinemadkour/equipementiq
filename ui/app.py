@@ -176,7 +176,6 @@ query_input = st.text_area(
     value=st.session_state.get("query_input", demo_default),
     height=100
 )
-)
 st.session_state.query_input = query_input
 
 # Submit button
@@ -269,7 +268,7 @@ if st.session_state.current_result:
                 with col3:
                     st.text("Similarity")
                     sim = citation.get("similarity_score", 0.0)
-                    st.metric("", f"{sim:.3f}")
+                    st.metric("Score", f"{sim:.3f}", label_visibility="collapsed")
                 st.divider()
         else:
             st.info("No citations available.")
