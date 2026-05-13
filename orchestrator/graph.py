@@ -517,6 +517,9 @@ def run_query(query: str, history: list[dict] | None = None) -> AgentState:
         4. synthesise: LLM synthesis with citations
         5. log_trace: LangSmith logging
     """
+    # Track end-to-end execution time
+    query_start_time = time.time()
+    
     # Initialize state
     initial_state: AgentState = {
         "query": query,
@@ -535,5 +538,8 @@ def run_query(query: str, history: list[dict] | None = None) -> AgentState:
     # Run graph
     graph = _get_graph()
     final_state = graph.invoke(initial_state)
+    
+    # Add end-to-end latency
+    final_state["node_latency"]["total_query"] = time.time() - query_start_time
     
     return final_state

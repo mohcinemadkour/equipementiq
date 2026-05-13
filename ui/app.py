@@ -236,8 +236,8 @@ if st.session_state.current_result:
         st.metric("Agents Used", ", ".join(agents_used) if agents_used else "N/A")
     
     with metric_cols[3]:
-        total_latency = sum(node_latency.values()) if node_latency else 0
-        st.metric("Latency", f"{total_latency:.0f}ms")
+        total_latency = node_latency.get("total_query", 0) if node_latency else 0
+        st.metric("Latency", f"{total_latency:.2f}s")
     
     # Confidence progress bar
     st.progress(min(confidence, 1.0))
@@ -290,6 +290,30 @@ if st.session_state.current_result:
         
         with metrics_cols[2]:
             st.metric("Confidence", f"{confidence:.1%}")
+        
+        # Latency breakdown
+        st.markdown("**⏱️ Latency Breakdown:**")
+        node_latency = result.get("node_latency", {})
+        if node_latency:
+            # Show total
+            total = node_latency.get("total_query", 0)
+            st.caption(f"**Total: {total:.2f}s**")
+            
+            # Show individual nodes in columns
+            latency_cols = st.columns(2)
+            sorted_latencies = sorted(
+                [(k, v) for k, v in node_latency.items() if k != "total_query"],
+                key=lambda x: x[1],
+                reverse=True
+            )
+            
+            for idx, (node_name, latency_ms) in enumerate(sorted_latencies):
+                col = latency_cols[idx % 2]
+                with col:
+                    pct = (latency_ms / total * 100) if total > 0 else 0
+                    st.caption(f"{node_name}: {latency_ms:.2f}s ({pct:.0f}%)")
+        else:
+            st.caption("No latency data available")
     
     # --- SECTION D: Feedback Widget ---
     st.divider()
