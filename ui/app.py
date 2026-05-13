@@ -4,9 +4,13 @@ import streamlit as st
 import os
 import sys
 import json
+import time
 from datetime import datetime
 from typing import Optional
 from dotenv import load_dotenv
+
+# Track page load time
+_PAGE_LOAD_START = time.time()
 
 # Ensure parent directory is in path for module imports
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -384,3 +388,16 @@ if st.session_state.history:
         with st.expander(f"Q: {turn['query'][:60]}..."):
             st.text(f"Timestamp: {turn['timestamp']}")
             st.markdown(turn['result'].get('final_answer', 'N/A'))
+
+# --- Debug Footer: Page Load Time ---
+if "DEBUG_RELOAD_TIMING" in os.environ:
+    page_load_time = time.time() - _PAGE_LOAD_START
+    st.divider()
+    with st.expander("⏱️ Debug: Page Load Timing"):
+        col1, col2 = st.columns(2)
+        with col1:
+            st.metric("Page Reload Time", f"{page_load_time:.3f}s")
+        with col2:
+            st.caption("First reload: slower (imports loaded)\nSecond reload: faster (cached)")
+        st.info("💡 To enable: `export DEBUG_RELOAD_TIMING=1` then restart Streamlit")
+
