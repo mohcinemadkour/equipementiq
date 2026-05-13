@@ -323,33 +323,33 @@ if st.session_state.current_result:
     st.divider()
     st.markdown("### 👍 Was this answer helpful?")
     
+    # Initialize session state for feedback
+    if "last_feedback_query" not in st.session_state:
+        st.session_state.last_feedback_query = None
+    if "feedback_rating" not in st.session_state:
+        st.session_state.feedback_rating = None
+    
     feedback_cols = st.columns(2)
     
-    feedback_given = False
-    feedback_rating = None
-    feedback_comment = ""
-    
     with feedback_cols[0]:
-        if st.button("👍 Yes, helpful!", use_container_width=True):
-            feedback_given = True
-            feedback_rating = "positive"
+        if st.button("👍 Yes, helpful!", use_container_width=True, key="feedback_yes"):
+            st.session_state.feedback_rating = "positive"
+            st.session_state.last_feedback_query = query_input
     
     with feedback_cols[1]:
-        if st.button("👎 No, needs work", use_container_width=True):
-            feedback_given = True
-            feedback_rating = "negative"
+        if st.button("👎 No, needs work", use_container_width=True, key="feedback_no"):
+            st.session_state.feedback_rating = "negative"
+            st.session_state.last_feedback_query = query_input
     
-    # Optional comment if feedback given
-    if feedback_given and feedback_rating:
-        st.session_state.feedback_active = True
-        
+    # Show comment field if feedback was given
+    if st.session_state.feedback_rating and st.session_state.last_feedback_query == query_input:
         feedback_comment = st.text_area(
             "Optional: What could be improved?",
             height=80,
-            key=f"feedback_comment_{len(st.session_state.history)}"
+            key=f"feedback_comment_{query_input[:20]}"
         )
         
-        if st.button("📤 Submit Feedback", use_container_width=True):
+        if st.button("📤 Submit Feedback", use_container_width=True, key="submit_feedback"):
             try:
                 # Import feedback functions
                 init_db, save_feedback, get_stats = get_feedback_functions()
@@ -363,7 +363,7 @@ if st.session_state.current_result:
                         "confidence": confidence,
                         "retrieved_chunk_ids": [c.get("chunk_id", "") for c in citations],
                         "generated_answer": answer,
-                        "rating": feedback_rating,
+                        "rating": st.session_state.feedback_rating,
                         "free_text": feedback_comment if feedback_comment.strip() else None,
                         "faithfulness_score": eval_scores.get("faithfulness_score"),
                         "llm_judge_score": eval_scores.get("llm_judge_score")
@@ -372,12 +372,13 @@ if st.session_state.current_result:
                     feedback_id = save_feedback(record)
                     st.success(f"✅ Thank you for your feedback! (ID: {feedback_id[:8]}...)")
                     
-                    # Clear feedback state
-                    if "feedback_active" in st.session_state:
-                        del st.session_state.feedback_active
+                    # Reset feedback state
+                    st.session_state.feedback_rating = None
+                    st.session_state.last_feedback_query = None
             
             except Exception as e:
                 st.error(f"Failed to save feedback: {e}")
+
 
 # --- Conversation History (Last 5 turns) ---
 if st.session_state.history:
