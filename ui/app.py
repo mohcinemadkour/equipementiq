@@ -21,6 +21,26 @@ st.set_page_config(
     layout="wide"
 )
 
+# ============================================================================
+# OPTIMIZATION 1: Cache expensive resources with st.cache_resource
+# ============================================================================
+
+@st.cache_resource
+def get_orchestrator_run_query():
+    """Get the orchestrator's run_query function (cached)."""
+    from orchestrator.graph import run_query
+    return run_query
+
+
+@st.cache_resource
+def get_chromadb_client():
+    """Get ChromaDB client (cached)."""
+    import chromadb
+    cfg = get_config()
+    persist_dir = cfg.get("paths", {}).get("chroma_persist_dir", "./chroma_db")
+    return chromadb.PersistentClient(path=persist_dir)
+
+
 # Deferred imports - loaded only when needed
 def get_config():
     """Load configuration lazily."""
@@ -48,9 +68,8 @@ with st.sidebar:
     # System status
     st.subheader("System Status")
     try:
-        import chromadb
         config = get_config()
-        client = chromadb.PersistentClient(path=config.get("chroma_persist_dir", "./chroma_db"))
+        client = get_chromadb_client()
         collections = ["mechanical_collection", "software_collection", "support_collection"]
         for coll_name in collections:
             try:
@@ -164,8 +183,8 @@ if submit_button and query_input.strip():
     
     with st.spinner("🔍 Routing and retrieving..."):
         try:
-            # Import here to avoid Streamlit module issues
-            from orchestrator.graph import run_query
+            # Get cached orchestrator run_query function
+            run_query = get_orchestrator_run_query()
             
             # Run orchestrator
             result = run_query(query_input)
@@ -314,7 +333,7 @@ if st.session_state.current_result:
                         "agent_routed": domain,
                         "domain": domain,
                         "confidence": confidence,
-                        "retrieved_chunk_ids": json.dumps([c.get("chunk_id", "") for c in citations]),
+                        "retrieved_chunk_ids": [c.get("chunk_id", "") for c in citations],
                         "generated_answer": answer,
                         "rating": feedback_rating,
                         "free_text": feedback_comment if feedback_comment.strip() else None,

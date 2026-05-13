@@ -4,9 +4,12 @@ Intent classification for orchestrator routing.
 Classifies incoming queries to determine which agent(s) to invoke.
 - Single-agent routing: confidence >= 0.80
 - Cross-domain routing: confidence < 0.80 (invoke all agents in parallel)
+
+Optimization: Rule-based fast-path pre-classifier skips Claude API for common patterns.
 """
 
 import json
+import re
 from functools import lru_cache
 from typing import Literal
 
@@ -46,6 +49,66 @@ def _get_client() -> Anthropic:
     return Anthropic()
 
 
+# ============================================================================
+# Rule-based Pre-Classifier (Fast Path)
+# ============================================================================
+
+def _rule_based_classify(query: str) -> IntentClassification | None:
+    """Apply rule-based pre-classification to skip Claude API on common patterns.
+    
+    Rules (in priority order):
+    1. Query contains "CMP-" + digits → SUPPORT (confidence 0.99)
+    2. Query contains error code pattern (e.g., SPN-CR-001) → SOFTWARE (confidence 0.99)
+    3. Query contains keywords: "complaint", "case", "RMA", "remedy" → SUPPORT (0.90)
+    4. Query contains keywords: "part number", "wiring", "bearing type", "maintenance" → MECHANICAL (0.90)
+    
+    Returns:
+        IntentClassification if a rule matched, else None (fall through to Claude)
+    """
+    query_lower = query.lower()
+    
+    # Rule 1: Case ID pattern CMP-XXXX-XXXX
+    if re.search(r'CMP-\d+', query):
+        return IntentClassification(
+            domain="support",
+            confidence=0.99,
+            reasoning="Query contains complaint case ID (CMP-XXXX pattern)",
+            suggested_filters={}
+        )
+    
+    # Rule 2: Error code pattern XXX-YY-ZZZ (e.g., SPN-CR-001, AXS-MD-002)
+    if re.search(r'\b[A-Z]{3}-[A-Z]{2}-\d{3}\b', query):
+        return IntentClassification(
+            domain="software",
+            confidence=0.99,
+            reasoning="Query contains error code pattern (XXX-YY-ZZZ)",
+            suggested_filters={}
+        )
+    
+    # Rule 3: Support keywords
+    support_keywords = ["complaint", "case", "rma", "remedy", "warranty"]
+    if any(keyword in query_lower for keyword in support_keywords):
+        return IntentClassification(
+            domain="support",
+            confidence=0.90,
+            reasoning="Query contains support-related keyword",
+            suggested_filters={}
+        )
+    
+    # Rule 4: Mechanical keywords
+    mechanical_keywords = ["part number", "wiring", "bearing type", "maintenance schedule", "spindle"]
+    if any(keyword in query_lower for keyword in mechanical_keywords):
+        return IntentClassification(
+            domain="mechanical",
+            confidence=0.90,
+            reasoning="Query contains mechanical-related keyword",
+            suggested_filters={}
+        )
+    
+    # No rule matched
+    return None
+
+
 def classify(query: str, history: list[dict] | None = None) -> IntentClassification:
     """Classify user query to determine routing domain.
     
@@ -57,16 +120,29 @@ def classify(query: str, history: list[dict] | None = None) -> IntentClassificat
         IntentClassification with domain, confidence, reasoning, filters
     
     Process:
-        1. Load prompt template from prompts/intent_classification.txt
-        2. Inject query + history into prompt
-        3. Call Claude API with JSON mode (not JSON schema)
-        4. Parse JSON response into IntentClassification
-        5. If confidence < cfg.orchestrator.intent_confidence_threshold:
+        1. Try rule-based pre-classifier (fast path, skips Claude)
+        2. If no rule matches, call Claude API with JSON mode
+        3. Parse JSON response into IntentClassification
+        4. If confidence < cfg.orchestrator.intent_confidence_threshold:
            override domain to "cross_domain"
-        6. Return validated IntentClassification
+        5. Return validated IntentClassification
     """
     cfg = load_config()
     threshold = cfg["orchestrator"]["intent_confidence_threshold"]
+    
+    # =========================================================================
+    # Step 1: Try rule-based pre-classifier (fast path)
+    # =========================================================================
+    rule_result = _rule_based_classify(query)
+    if rule_result is not None:
+        # Rule matched - return immediately without Claude API call
+        if rule_result.confidence < threshold:
+            rule_result.domain = "cross_domain"
+        return rule_result
+    
+    # =========================================================================
+    # Step 2: Fall through to Claude API (slow path)
+    # =========================================================================
     
     # Load prompt template
     prompt_template = _get_prompt_text()

@@ -98,12 +98,25 @@ def ingest_json(json_path: Path, collection, embedder: OpenAIEmbeddings) -> int:
     subsystem_code = error_code.split("-")[0] if "-" in error_code else error_code[:3]
 
     # Build document content from key fields
+    # Include error code name prominently for better semantic matching
     title = data.get("title", "")
     description = data.get("description", "")
     probable_cause = data.get("probable_cause", "")
     remedy = data.get("remedy", "")
+    required_action = data.get("required_action", "")
     
-    page_content = f"{title}\n\n{description}\n\nProbable Cause: {probable_cause}\n\nRemedy: {remedy}"
+    # Embed error code + severity + title multiple times for better semantic matching on error code queries
+    # Repeat error code name and key fields to boost signal for exact error code queries
+    page_content = (
+        f"Error Code: {error_code}\n"
+        f"{error_code}: {title}\n"
+        f"Severity: {severity_level}\n\n"
+        f"Error Code {error_code} - {title}\n\n"
+        f"{description}\n\n"
+        f"Probable Cause: {probable_cause}\n\n"
+        f"Remedy: {remedy}\n\n"
+        f"Required Action: {required_action}"
+    )
 
     metadata = {
         "source_document": error_code,

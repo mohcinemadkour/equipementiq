@@ -1,0 +1,98 @@
+{
+  "error_code": "SYSTEM-SEVERITY-LEVELS",
+  "title": "Error Code System: Severity Levels Overview",
+  "severity_level": "INFORMATIONAL",
+  "severity_number": 0,
+  "severity_color": "BLUE",
+  "subsystem": "System",
+  "mid": 0,
+  "fault_category": "informational",
+  "description": "The VMC-3000 error code system uses six standardized severity levels to classify system faults and operator-required actions. Understanding these severity levels is essential for proper machine operation and maintenance planning.",
+  "probable_cause": "N/A",
+  "diagnostic_steps": [],
+  "remedy": "N/A",
+  "required_action": "N/A",
+  "severity_details": {
+    "CRITICAL": {
+      "level": 1,
+      "color": "RED",
+      "description": "Critical system failure. Machine stops immediately. Immediate intervention required.",
+      "operator_action": "Stop machine immediately. Do not restart. Contact authorized technician.",
+      "examples": [
+        "Complete loss of power or emergency stop activation",
+        "Catastrophic mechanical failure",
+        "Coolant system failure that could damage tool or workpiece",
+        "Critical collision detection"
+      ]
+    },
+    "MAJOR": {
+      "level": 2,
+      "color": "ORANGE",
+      "description": "Major fault affecting machine operation. Machine stops. Requires technician repair before restart.",
+      "operator_action": "Stop machine operation. Wait for technician repair. Provide error code to maintenance team.",
+      "examples": [
+        "Spindle bearing fault",
+        "Tool wear limit exceeded",
+        "Vibration exceeds critical threshold",
+        "Loss of servo control"
+      ]
+    },
+    "SERIOUS": {
+      "level": 3,
+      "color": "ORANGE-RED",
+      "description": "Serious fault detected. Machine may stop or operate with limitations. Requires technician attention soon.",
+      "operator_action": "Stop current operation. Report to maintenance immediately. Do not start new jobs.",
+      "examples": [
+        "Hydraulic pressure drop",
+        "Coolant temperature high",
+        "Tool change mechanism fault",
+        "Thermal warning"
+      ]
+    },
+    "MINOR": {
+      "level": 4,
+      "color": "YELLOW",
+      "description": "Minor fault detected. Machine operation affected. Maintenance required soon.",
+      "operator_action": "Log error code. Notify maintenance team. May continue with reduced performance.",
+      "examples": [
+        "Door interlock fault",
+        "Spindle imbalance warning",
+        "Lubrication system pressure low",
+        "Coolant flow below optimal"
+      ]
+    },
+    "NOTICE": {
+      "level": 5,
+      "color": "LIGHT BLUE",
+      "description": "Informational notice. System operating normally but with advisory. No immediate action required.",
+      "operator_action": "Acknowledge the notice. No immediate machine stop required unless directed otherwise.",
+      "examples": [
+        "Tool life 75% consumed",
+        "Maintenance interval approaching",
+        "Calibration recommendation",
+        "Software update available"
+      ]
+    },
+    "ADVISORY": {
+      "level": 6,
+      "color": "LIGHT GRAY",
+      "description": "Advisory message. Informational only. No action required.",
+      "operator_action": "Read for information. Proceed with normal operation.",
+      "examples": [
+        "System startup sequence",
+        "Mode change notification",
+        "Feature activation"
+      ]
+    }
+  },
+  "severity_action_requirements": {
+    "CRITICAL": "Immediate machine stop. Do not restart without authorized technician inspection and fault resolution.",
+    "MAJOR": "Stop current operation. Wait for technician repair. Do not restart machine.",
+    "SERIOUS": "Stop current operation. Notify maintenance immediately. Do not start new jobs until resolved.",
+    "MINOR": "Log error code. Notify maintenance team. Machine may continue with reduced performance.",
+    "NOTICE": "Acknowledge the notice. No immediate action required. Proceed with normal operation.",
+    "ADVISORY": "Read for information. Proceed with normal operation."
+  },
+  "max_downtime_min": 0,
+  "parameters": []
+}

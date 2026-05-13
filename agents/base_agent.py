@@ -22,6 +22,25 @@ from sentence_transformers import CrossEncoder
 from ingestion.config import load_config
 
 
+# ============================================================================
+# Module-level cache for CrossEncoder (loads once per Python process)
+# ============================================================================
+_RERANKER_CACHE: CrossEncoder | None = None
+
+
+def _get_cached_reranker() -> CrossEncoder:
+    """Get or initialize the CrossEncoder reranker model.
+    
+    This function ensures the CrossEncoder model loads exactly once
+    per Python process, regardless of how many agent instances are created
+    or how many times Streamlit reruns the app.
+    """
+    global _RERANKER_CACHE
+    if _RERANKER_CACHE is None:
+        _RERANKER_CACHE = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+    return _RERANKER_CACHE
+
+
 @dataclass
 class RetrievalResult:
     """Single retrieved result with metadata and citation."""
@@ -95,8 +114,11 @@ class BaseAgent(ABC):
         return OpenAIEmbeddings(model=cfg["model"])
 
     def _get_reranker(self) -> CrossEncoder:
-        """Get cross-encoder reranker (FR-MECH-007)."""
-        return CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+        """Get cross-encoder reranker (FR-MECH-007).
+        
+        Uses module-level cache to ensure model loads exactly once.
+        """
+        return _get_cached_reranker()
 
     @abstractmethod
     def _build_where_filter(self, **kwargs) -> dict | None:

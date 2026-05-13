@@ -110,7 +110,9 @@ if st.session_state.get("run_eval", False):
                 results = []
                 with open(golden_path) as f:
                     for line in f:
-                        results.append(json.loads(line))
+                        line = line.strip()  # Remove whitespace
+                        if line:  # Skip blank lines
+                            results.append(json.loads(line))
                 
                 # Display results as table
                 df_results = pd.DataFrame(results)

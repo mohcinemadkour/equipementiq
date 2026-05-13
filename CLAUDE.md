@@ -23,6 +23,11 @@ DR-005: **collections are strictly isolated** — no cross-collection retrieval 
 - `AgentState` TypedDict carries: `query, domain, confidence, agent_results, merged_context, final_answer, citations, eval_scores, feedback`.
 - Sliding 5-turn conversation window injected into synthesis prompt.
 
+## Architecture Decisions
+
+**SoftwareAgent Two-Path Retrieval Strategy:**
+SoftwareAgent uses a two-path retrieval strategy: when the query contains an exact error code pattern (uppercase letters, dash, uppercase letters, dash, digits), the agent performs a metadata filter lookup on the `error_code` field first and merges the result at the top of semantic results. All other queries use semantic search only. This prevents exact identifier queries from being outranked by semantically similar but different error codes. Implemented in [agents/software_agent.py](agents/software_agent.py) via `_extract_error_codes()` method. Resolves issue where "What is the probable cause of error SPN-MJ-004?" would fail with INSUFFICIENT_CONTEXT despite the error code being indexed. Rationale: semantic embedding distance alone cannot reliably disambiguate between error code variants (e.g., SPN-MJ-004 vs. SPN-MJ-003); exact matching via metadata is 100% reliable for identifier queries.
+
 ## Tech stack (locked by FRD §2.3)
 
 - **Generation LLM**: `claude-haiku-4-5-20251001` (verified available, temperature=0.0, max_tokens=2048)
