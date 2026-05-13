@@ -57,17 +57,47 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
     """Apply rule-based pre-classification to skip Claude API on common patterns.
     
     Rules (in priority order):
-    1. Query contains "CMP-" + digits → SUPPORT (confidence 0.99)
-    2. Query contains error code pattern (e.g., SPN-CR-001) → SOFTWARE (confidence 0.99)
-    3. Query contains keywords: "complaint", "case", "RMA", "remedy" → SUPPORT (0.90)
-    4. Query contains keywords: "part number", "wiring", "bearing type", "maintenance" → MECHANICAL (0.90)
+    1. Conflict detection: If query contains BOTH software AND mechanical keywords, 
+       skip fast-path rules and return None (defer to Claude)
+    2. Query contains "CMP-" + digits → SUPPORT (confidence 0.99)
+    3. Query contains error code pattern (e.g., SPN-CR-001) → SOFTWARE (confidence 0.99)
+    4. Query contains keywords: "complaint", "case", "RMA", "remedy" → SUPPORT (0.90)
+    5. Query contains keywords: "part number", "wiring", "bearing type", "maintenance" → MECHANICAL (0.90)
     
     Returns:
         IntentClassification if a rule matched, else None (fall through to Claude)
     """
     query_lower = query.lower()
     
-    # Rule 1: Case ID pattern CMP-XXXX-XXXX
+    # =========================================================================
+    # CONFLICT DETECTION GUARD (runs before all domain rules)
+    # =========================================================================
+    # Software keywords: error codes, alarms, subsystems, severity, fault indicators
+    software_keywords = {
+        "error code", "alarm", "spn", "axs", "vib", "tcs", "lub", "hyd", "elc", "thm", "cnc",
+        "severity", "fault code", "fires when", "triggers when", "signal", "diagnostic"
+    }
+    
+    # Mechanical keywords: physical components, specs, maintenance, hydraulics
+    mechanical_keywords = {
+        "bearing", "spindle", "wiring", "pressure", "specification", "coolant", "lubrication",
+        "hydraulic", "part number", "maintenance schedule", "encoder", "motor"
+    }
+    
+    # Check for conflict: both software AND mechanical keywords present
+    has_software = any(kw in query_lower for kw in software_keywords)
+    has_mechanical = any(kw in query_lower for kw in mechanical_keywords)
+    has_conflict = has_software and has_mechanical
+    
+    if has_conflict:
+        # Skip all fast-path rules, defer to Claude for nuanced understanding
+        return None
+    
+    # =========================================================================
+    # DOMAIN-SPECIFIC RULES (only run if no conflict detected)
+    # =========================================================================
+    
+    # Rule 2: Case ID pattern CMP-XXXX-XXXX
     if re.search(r'CMP-\d+', query):
         return IntentClassification(
             domain="support",
@@ -76,7 +106,7 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 2: Error code pattern XXX-YY-ZZZ (e.g., SPN-CR-001, AXS-MD-002)
+    # Rule 3: Error code pattern XXX-YY-ZZZ (e.g., SPN-CR-001, AXS-MD-002)
     if re.search(r'\b[A-Z]{3}-[A-Z]{2}-\d{3}\b', query):
         return IntentClassification(
             domain="software",
@@ -85,7 +115,7 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 3: Support keywords
+    # Rule 4: Support keywords
     support_keywords = ["complaint", "case", "rma", "remedy", "warranty"]
     if any(keyword in query_lower for keyword in support_keywords):
         return IntentClassification(
@@ -95,9 +125,9 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 4: Mechanical keywords
-    mechanical_keywords = ["part number", "wiring", "bearing type", "maintenance schedule", "spindle"]
-    if any(keyword in query_lower for keyword in mechanical_keywords):
+    # Rule 5: Mechanical keywords
+    mech_keywords = ["part number", "wiring", "bearing type", "maintenance schedule", "spindle"]
+    if any(keyword in query_lower for keyword in mech_keywords):
         return IntentClassification(
             domain="mechanical",
             confidence=0.90,
