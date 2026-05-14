@@ -166,8 +166,11 @@ def hit_rate_at_k(query: str, expected_doc_ids: list[str], agent: str, k: int = 
         print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
     
+    # Normalize expected doc IDs (strip __XXXX suffix if present, same as retrieved_ids)
+    normalized_expected = [_extract_source_doc_id(doc_id) for doc_id in expected_doc_ids]
+    
     # Check if any expected doc in top-k
-    for doc_id in expected_doc_ids:
+    for doc_id in normalized_expected:
         if doc_id in retrieved_ids:
             return 1.0
     
@@ -213,9 +216,12 @@ def mean_reciprocal_rank(query: str, expected_doc_ids: list[str], agent: str) ->
         print(f"  [ERROR] Query failed: {str(e)[:80]}")
         return 0.0
     
+    # Normalize expected doc IDs (strip __XXXX suffix if present, same as retrieved_ids)
+    normalized_expected = [_extract_source_doc_id(doc_id) for doc_id in expected_doc_ids]
+    
     # Find rank of first relevant doc (1-indexed)
     for rank, doc_id in enumerate(retrieved_ids, start=1):
-        if doc_id in expected_doc_ids:
+        if doc_id in normalized_expected:
             return 1.0 / rank
     
     return 0.0
@@ -285,7 +291,8 @@ def run_retrieval_eval(golden_path: str) -> dict:
     golden_pairs = []
     with open(golden_path, 'r') as f:
         for line in f:
-            golden_pairs.append(json.loads(line.strip()))
+            if line.strip():  # Skip empty lines
+                golden_pairs.append(json.loads(line.strip()))
     
     print(f"[RETRIEVAL EVALUATION]")
     print(f"Loaded {len(golden_pairs)} Q&A pairs from {golden_path}")
