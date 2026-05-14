@@ -39,7 +39,7 @@ def run_batch_eval(golden_path: str = "evaluation/golden_set.jsonl"):
     
     # Load golden set
     with open(golden_path, encoding="utf-8") as f:
-        golden_pairs = [json.loads(line) for line in f]
+        golden_pairs = [json.loads(line) for line in f if line.strip()]
     
     # Group by agent
     mechanical_pairs = [p for p in golden_pairs if p["agent"] == "mechanical"]

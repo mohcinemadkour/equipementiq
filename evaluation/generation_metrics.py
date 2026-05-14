@@ -280,7 +280,7 @@ def sample_and_evaluate(golden_path: str, sample_rate: float = 0.12) -> list[dic
     """
     # Load golden set
     with open(golden_path, 'r') as f:
-        all_pairs = [json.loads(line) for line in f]
+        all_pairs = [json.loads(line) for line in f if line.strip()]
     
     # Sample
     sample_size = max(3, math.ceil(len(all_pairs) * sample_rate))
