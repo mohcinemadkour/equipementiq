@@ -124,14 +124,18 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
         "trouble", "troubleshoot", "troubleshooting", "stops", "stopped", "taking longer",
         "slower", "intermittent", "error when"
     ]
-    # Rule 4: Support keywords (operational problems, troubleshooting, customer issues)
+    # Rule 4: Support keywords (must be conservative to avoid false positives)
+    # Only use keywords that are specific to customer support context, not generic technical terms
     support_keywords = [
-        "complaint", "case", "rma", "remedy", "warranty",
-        # Operational problem keywords
-        "customer", "operator", "not running", "not spinning", "not working", "failing",
-        "degraded", "degradation", "inconsistent", "inconsistency", "issue", "problem",
-        "trouble", "troubleshoot", "troubleshooting", "stops", "stopped", "taking longer",
-        "slower", "intermittent", "error when"
+        "complaint", "case", "rma", "warranty",
+        # Customer/operator + operational descriptor combinations (specific, not generic)
+        "customer reports", "customer getting", "customer noticed",
+        "operator noticed", "operator reported",
+        # Operational states that clearly indicate customer problems (not generic)
+        "not running", "not spinning", "not working",  # Specific mechanical states
+        "taking longer", "slower", "degraded",  # Specific performance degradations
+        "inconsistent",  # Specific data/measurement issue
+        "intermittent"  # Specific fault behavior
     ]
     if any(keyword in query_lower for keyword in support_keywords):
         return IntentClassification(
