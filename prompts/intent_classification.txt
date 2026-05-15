@@ -24,7 +24,7 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
   - "Which subsystem does error code VIB-CR-001 belong to?" 
   - "What is the required action for error code THM-CR-001?"
 
-**Support/Complaints**: Questions about customer cases, complaints, troubleshooting steps, remedies applied, repair history, and service outcomes
+**Support/Complaints**: Questions about customer cases, complaints, troubleshooting steps, remedies applied, repair history, service outcomes, and operational problems requiring diagnosis or remediation (customer/operator-facing issues)
 - Examples: 
   - "Show me CRITICAL priority cases on M01"
   - "What was the remedy for case #C-00145?"
@@ -34,7 +34,12 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
   - "What was the resolution for the last complaint on M01"
   - "How long did it take to fix the spindle bearing issue"
   - "What remedy was applied to CMP-2019-1033"
-- **IMPORTANT**: Queries about complaints, customer cases, case IDs (e.g., CMP-*), remedies, RMA, repair history, and service outcomes ALWAYS belong to support domain, even if they mention mechanical components. Do NOT route to cross_domain based on mention of mechanical parts.
+  - "Customer reports spindle not spinning up to full speed" (operational problem)
+  - "Machine stops with following error during rapid traverse" (operational problem)
+  - "Spindle cooling fan is not running - spindle temperature rising" (operational symptom)
+  - "Operator noticed excessive spindle vibration and noise" (operational symptom)
+  - "Axis positioning accuracy degraded over time" (operational problem)
+- **IMPORTANT**: Queries describing operational problems, symptoms, or troubleshooting scenarios ALWAYS belong to support domain. Do NOT route to mechanical just because they mention mechanical components. The key distinction: support domain handles "what's wrong?" and "how do I fix?", while mechanical handles "how does X work?" and "what are the specifications?"
 
 **Cross-Domain**: Queries requiring multiple domains (ambiguous, multi-part, error + explanation)
 - Examples: "SPN-CR-001 occurs when the spindle bearing fails — what's the mechanical cause?", "Error code AXS-MD-001 showed up on M02 last week — what do we do?"
@@ -67,6 +72,17 @@ Return a JSON object with domain, confidence, reasoning, and optional filters.
    - Example: "How long did it take to fix the spindle bearing issue" → SUPPORT (not mechanical), confidence ≥ 0.80
    - Example: "Tool changing takes longer than normal" → SUPPORT (not mechanical), confidence ≥ 0.80
    - Example: "What sensor readings were recorded for spindle bearing fault cases in 2021?" → SUPPORT (customer case history), confidence ≥ 0.80 — even though it mentions "sensor readings", the focus is on customer complaint cases, not mechanical specifications
+
+4b. **Support Domain — Operational Problem Queries**: If query describes a symptom or operational problem from a customer/operator perspective (e.g., "Customer reports...", "Machine...", "System..." + problem statement) or asks for troubleshooting/remedy for an operational issue (not asking "how does X work?" but "what's wrong with X?" or "how do I fix X?") → route to SUPPORT.
+   - These are inherently customer-facing scenarios needing troubleshooting, diagnosis, and remediation steps.
+   - Example: "Customer reports spindle not spinning up to full speed" → SUPPORT (operational problem), confidence ≥ 0.85
+   - Example: "Spindle cooling fan is not running - spindle temperature rising" → SUPPORT (operational problem/symptom), confidence ≥ 0.85
+   - Example: "Machine stops with following error during rapid traverse" → SUPPORT (operational problem), confidence ≥ 0.80
+   - Example: "Operator noticed excessive spindle vibration and noise" → SUPPORT (operational symptom/problem), confidence ≥ 0.85
+   - Example: "Axis positioning accuracy degraded over time" → SUPPORT (operational problem), confidence ≥ 0.80
+   - Example: "Tool life counter showing inconsistent values between parts" → SUPPORT (operational problem), confidence ≥ 0.80
+   - Example: "Machine going into alarm when feed override is applied" → SUPPORT (operational problem), confidence ≥ 0.80
+   - **DO NOT** route to MECHANICAL just because the query mentions mechanical components. The distinguishing factor is whether the query describes a problem/symptom (support) vs. asks about component design/function (mechanical).
 
 5. **Mechanical Domain**: Questions about how components work, design, failure modes, operating principles, diagnostics of components themselves (not customer cases)
    - Route to mechanical ONLY if query is about component function/design, not customer history.

@@ -115,13 +115,29 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 4: Support keywords
-    support_keywords = ["complaint", "case", "rma", "remedy", "warranty"]
+    # Rule 4: Support keywords (operational problems, troubleshooting, customer issues)
+    support_keywords = [
+        "complaint", "case", "rma", "remedy", "warranty",
+        # Operational problem keywords
+        "customer", "operator", "not running", "not spinning", "not working", "failing",
+        "degraded", "degradation", "inconsistent", "inconsistency", "issue", "problem",
+        "trouble", "troubleshoot", "troubleshooting", "stops", "stopped", "taking longer",
+        "slower", "intermittent", "error when"
+    ]
+    # Rule 4: Support keywords (operational problems, troubleshooting, customer issues)
+    support_keywords = [
+        "complaint", "case", "rma", "remedy", "warranty",
+        # Operational problem keywords
+        "customer", "operator", "not running", "not spinning", "not working", "failing",
+        "degraded", "degradation", "inconsistent", "inconsistency", "issue", "problem",
+        "trouble", "troubleshoot", "troubleshooting", "stops", "stopped", "taking longer",
+        "slower", "intermittent", "error when"
+    ]
     if any(keyword in query_lower for keyword in support_keywords):
         return IntentClassification(
             domain="support",
-            confidence=0.90,
-            reasoning="Query contains support-related keyword",
+            confidence=0.85,
+            reasoning="Query contains support/operational problem keyword",
             suggested_filters={}
         )
     
