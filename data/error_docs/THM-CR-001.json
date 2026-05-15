@@ -70,5 +70,6 @@
     "ELC-MN-001",
     "CLS-MJ-001"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If THM-CR-001 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: SPN-MJ-001, then AXS-MJ-002, then ELC-MN-001, then CLS-MJ-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

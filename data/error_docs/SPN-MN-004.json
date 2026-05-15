@@ -67,5 +67,6 @@
     "SPN-SR-003",
     "SPN-MJ-002"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If SPN-MN-004 is not addressed (log fault. monitor parameters. schedule inspection at next planned maintenance.), the fault will escalate in this order: SPN-SR-003, then SPN-MJ-002. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

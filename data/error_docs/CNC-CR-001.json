@@ -46,5 +46,6 @@
     "AXS-CR-001",
     "ELC-CR-001"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If CNC-CR-001 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: AXS-CR-001, then ELC-CR-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

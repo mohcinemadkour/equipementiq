@@ -82,5 +82,6 @@
       "primary_param_unit": "%",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If SPN-MD-001 is not addressed (log fault. schedule maintenance within 24 hours. reduce feed rate by 20%.), the fault will escalate in this order: SPN-SR-001, then SPN-WN-004. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

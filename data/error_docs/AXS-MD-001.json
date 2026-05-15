@@ -34,5 +34,6 @@
     "AXS-MJ-001",
     "AXS-SR-002"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If AXS-MD-001 is not addressed (log fault. schedule maintenance within 24 hours. reduce feed rate by 20%.), the fault will escalate in this order: AXS-MJ-001, then AXS-SR-002. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

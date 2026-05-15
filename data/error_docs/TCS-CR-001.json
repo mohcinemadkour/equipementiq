@@ -88,5 +88,6 @@
       "primary_param_unit": "slot",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If TCS-CR-001 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: SPN-CR-003, then TCS-MJ-001, then HYD-MJ-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

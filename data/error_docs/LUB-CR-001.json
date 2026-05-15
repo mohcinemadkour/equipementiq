@@ -84,5 +84,6 @@
       "primary_param_unit": "bar",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If LUB-CR-001 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: LUB-MJ-001, then AXS-SR-002, then LUB-SR-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

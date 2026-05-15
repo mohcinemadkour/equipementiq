@@ -35,5 +35,6 @@
     "CNC-CR-001",
     "CNC-MD-011"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If CNC-SR-001 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: CNC-CR-001, then CNC-MD-011. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

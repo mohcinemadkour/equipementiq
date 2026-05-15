@@ -65,5 +65,6 @@
       "primary_param_unit": "\u00b0C",
       "source": "synthetic_normal"
     }
-  ]
+  ],
+  "escalation_path": "If SPN-NC-002 is not addressed (informational. parameter approaching limit. review during next maintenance window.), the fault will escalate in this order: SPN-WN-002. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

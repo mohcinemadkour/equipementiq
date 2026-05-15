@@ -33,5 +33,6 @@
     "AXS-MJ-002",
     "THM-WN-070"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If AXS-MD-002 is not addressed (log fault. schedule maintenance within 24 hours. reduce feed rate by 20%.), the fault will escalate in this order: AXS-MJ-002, then THM-WN-070. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

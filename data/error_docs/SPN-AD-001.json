@@ -76,5 +76,6 @@
       "primary_param_unit": "RPM",
       "source": "synthetic_normal"
     }
-  ]
+  ],
+  "escalation_path": "If SPN-AD-001 is not addressed (performance advisory only. no maintenance action required.), the fault will escalate in this order: SPN-MD-002. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

@@ -69,5 +69,6 @@
       "primary_param_unit": "V",
       "source": "synthetic_normal"
     }
-  ]
+  ],
+  "escalation_path": "If ELC-WN-001 is not addressed (log event. no immediate action required. review at end of shift.), the fault will escalate in this order: ELC-CR-001, then ELC-MD-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

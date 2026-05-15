@@ -46,5 +46,6 @@
     "CNC-SR-001",
     "CNC-MD-011"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If CNC-MJ-001 is not addressed (stop current operation. machine must be inspected before resuming production.), the fault will escalate in this order: CNC-SR-001, then CNC-MD-011. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

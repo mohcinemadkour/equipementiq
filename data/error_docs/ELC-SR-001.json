@@ -34,5 +34,6 @@
     "ELC-MJ-001",
     "ELC-MD-001"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If ELC-SR-001 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: ELC-MJ-001, then ELC-MD-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

@@ -83,5 +83,6 @@
       "primary_param_unit": "mm/s",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If SPN-SR-003 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: SPN-MJ-002, then SPN-CR-001, then VIB-WN-060. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

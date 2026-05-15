@@ -48,5 +48,6 @@
     "HYD-SR-001",
     "HYD-CR-phantom"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If HYD-MJ-001 is not addressed (stop current operation. machine must be inspected before resuming production.), the fault will escalate in this order: TCS-MJ-001, then HYD-SR-001, then HYD-CR-phantom. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

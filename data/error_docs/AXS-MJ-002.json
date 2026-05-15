@@ -84,5 +84,6 @@
       "primary_param_unit": "A",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If AXS-MJ-002 is not addressed (stop current operation. machine must be inspected before resuming production.), the fault will escalate in this order: THM-MD-001, then AXS-CR-002, then ELC-MJ-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

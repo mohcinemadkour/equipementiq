@@ -48,5 +48,6 @@
     "SPN-MJ-003",
     "CNC-MD-011"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If SPN-CR-003 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: TCS-CR-001, then SPN-MJ-003, then CNC-MD-011. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

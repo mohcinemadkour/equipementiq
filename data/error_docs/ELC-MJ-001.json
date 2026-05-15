@@ -46,5 +46,6 @@
     "ELC-CR-001",
     "ELC-SR-001"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If ELC-MJ-001 is not addressed (stop current operation. machine must be inspected before resuming production.), the fault will escalate in this order: ELC-CR-001, then ELC-SR-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

@@ -58,5 +58,6 @@
     "AXS-MJ-001",
     "AXS-MN-001"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If AXS-SR-002 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: LUB-MD-001, then AXS-MJ-001, then AXS-MN-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

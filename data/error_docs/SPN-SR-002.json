@@ -48,5 +48,6 @@
     "SPN-MJ-002",
     "CNC-MD-011"
   ],
-  "sample_observations": []
+  "sample_observations": [],
+  "escalation_path": "If SPN-SR-002 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: SPN-CR-003, then SPN-MJ-002, then CNC-MD-011. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

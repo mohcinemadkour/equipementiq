@@ -94,5 +94,6 @@
       "primary_param_unit": "mm/s",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If VIB-SR-001 is not addressed (complete current cycle then stop. schedule maintenance within 4 hours.), the fault will escalate in this order: VIB-MJ-001, then SPN-SR-003, then AXS-SR-001. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }

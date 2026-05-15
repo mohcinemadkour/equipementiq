@@ -92,5 +92,6 @@
       "primary_param_unit": "RPM",
       "source": "bosch_real_fault"
     }
-  ]
+  ],
+  "escalation_path": "If SPN-CR-001 is not addressed (immediate machine stop. do not restart without authorised technician inspection.), the fault will escalate in this order: SPN-MJ-002, then VIB-WN-060, then VIB-MN-061. Each subsequent code represents a more severe fault state requiring more urgent intervention. Query each related code for its specific thresholds and required actions."
 }
