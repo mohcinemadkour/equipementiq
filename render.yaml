@@ -1,0 +1,52 @@
+services:
+  - type: web
+    name: equipmentiq-main
+    plan: free
+    runtime: python-3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run ui/app.py --server.port=$PORT --server.address=0.0.0.0 --server.enableXsrfProtection=false --logger.level=info
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: true
+      - key: STREAMLIT_SERVER_FILEWATCHERTYPE
+        value: none
+      - key: STREAMLIT_LOGGER_LEVEL
+        value: info
+      - key: ANTHROPIC_API_KEY
+        scope: secret
+      - key: OPENAI_API_KEY
+        scope: secret
+      - key: LANGCHAIN_API_KEY
+        scope: secret
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_PROJECT
+        value: equipmentiq
+
+  - type: web
+    name: equipmentiq-eval
+    plan: free
+    runtime: python-3.11
+    buildCommand: pip install -r requirements.txt
+    startCommand: streamlit run ui/eval_dashboard.py --server.port=$PORT --server.address=0.0.0.0 --server.enableXsrfProtection=false --logger.level=info
+    envVars:
+      - key: PYTHONUNBUFFERED
+        value: 1
+      - key: STREAMLIT_SERVER_HEADLESS
+        value: true
+      - key: STREAMLIT_SERVER_FILEWATCHERTYPE
+        value: none
+      - key: STREAMLIT_LOGGER_LEVEL
+        value: info
+      - key: ANTHROPIC_API_KEY
+        scope: secret
+      - key: OPENAI_API_KEY
+        scope: secret
+      - key: LANGCHAIN_API_KEY
+        scope: secret
+      - key: LANGCHAIN_TRACING_V2
+        value: "true"
+      - key: LANGCHAIN_PROJECT
+        value: equipmentiq
