@@ -32,6 +32,11 @@ def faithfulness_score(query: str, context_chunks: list[str], answer: str) -> fl
     
     Returns: float in [0.0, 1.0]
     """
+    # DEBUG: Check if context is being passed through
+    print(f"[DEBUG faithfulness_score] context_chunks type: {type(context_chunks)}, length: {len(context_chunks) if context_chunks else 0}")
+    if context_chunks:
+        print(f"[DEBUG faithfulness_score] First chunk preview: {str(context_chunks[0])[:100]}")
+    
     if RAGAS_AVAILABLE:
         try:
             faithfulness = Faithfulness()
@@ -312,7 +317,8 @@ def sample_and_evaluate(golden_path: str, sample_rate: float = 0.12) -> list[dic
                     first_item = result['merged_context'][0]
                     print(f"     [DEBUG] first item type={type(first_item)}, keys={list(first_item.keys()) if isinstance(first_item, dict) else 'not a dict'}")
                 
-                context_chunks = [chunk.get('content', '') for chunk in result['merged_context']]
+                # FIX: Use 'text' key, not 'content'
+                context_chunks = [chunk.get('text', '') for chunk in result['merged_context']]
             
             # Evaluate
             faithfulness = faithfulness_score(query, context_chunks, answer)
