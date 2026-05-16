@@ -416,6 +416,9 @@ def log_trace(state: AgentState) -> AgentState:
     # Log via LangSmith (traceable decorator will capture this)
     print(f"[TRACE] {json.dumps(trace_data, indent=2)}")
     
+    # Store agents_used in state for UI display
+    state["agents_used"] = trace_data["agents_used"]
+    
     state["node_latency"]["log_trace"] = time.time() - start_time
     
     return state
