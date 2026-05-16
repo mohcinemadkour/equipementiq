@@ -60,9 +60,10 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
     1. Conflict detection: If query contains BOTH software AND mechanical keywords, 
        skip fast-path rules and return None (defer to Claude)
     2. Query contains "CMP-" + digits → SUPPORT (confidence 0.99)
-    3. Query contains error code pattern (e.g., SPN-CR-001) → SOFTWARE (confidence 0.99)
-    4. Query contains keywords: "complaint", "case", "RMA", "remedy" → SUPPORT (0.90)
-    5. Query contains keywords: "part number", "wiring", "bearing type", "maintenance" → MECHANICAL (0.90)
+    3. Query contains error code pattern AND support keyword → CROSS_DOMAIN (confidence 0.85)
+    4. Query contains error code pattern only → SOFTWARE (confidence 0.99)
+    5. Query contains support keywords only → SUPPORT (confidence 0.85)
+    6. Query contains mechanical keywords only → MECHANICAL (confidence 0.90)
     
     Returns:
         IntentClassification if a rule matched, else None (fall through to Claude)
@@ -106,8 +107,28 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 3: Error code pattern XXX-YY-ZZZ (e.g., SPN-CR-001, AXS-MD-002)
-    if re.search(r'\b[A-Z]{3}-[A-Z]{2}-\d{3}\b', query):
+    # Rule 3: Error code pattern AND support keyword → CROSS_DOMAIN
+    # This rule MUST run BEFORE error code only, to catch queries asking about complaint records
+    # that reference a specific error code (e.g., "what are all complaints related to AXS-SR-001?")
+    error_code_pattern = r'\b[A-Z]{3}-[A-Z]{2}-\d{3}\b'
+    support_keywords_for_cross_domain = [
+        "complaint", "complaints", "case", "reported", "history", "past cases", 
+        "field reports", "customer"
+    ]
+    
+    has_error_code = re.search(error_code_pattern, query)
+    has_cross_domain_keyword = any(kw in query_lower for kw in support_keywords_for_cross_domain)
+    
+    if has_error_code and has_cross_domain_keyword:
+        return IntentClassification(
+            domain="cross_domain",
+            confidence=0.85,
+            reasoning="Query asks about complaints/cases related to a specific error code (requires both software context + support records)",
+            suggested_filters={}
+        )
+    
+    # Rule 4: Error code pattern only → SOFTWARE
+    if has_error_code:
         return IntentClassification(
             domain="software",
             confidence=0.99,
@@ -115,18 +136,8 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 4: Support keywords (operational problems, troubleshooting, customer issues)
-    support_keywords = [
-        "complaint", "case", "rma", "remedy", "warranty",
-        # Operational problem keywords
-        "customer", "operator", "not running", "not spinning", "not working", "failing",
-        "degraded", "degradation", "inconsistent", "inconsistency", "issue", "problem",
-        "trouble", "troubleshoot", "troubleshooting", "stops", "stopped", "taking longer",
-        "slower", "intermittent", "error when"
-    ]
-    # Rule 4: Support keywords (must be conservative to avoid false positives)
-    # Only use keywords that are specific to customer support context, not generic technical terms
-    support_keywords = [
+    # Rule 5: Support keywords only → SUPPORT
+    support_keywords_only = [
         "complaint", "case", "rma", "warranty",
         # Customer/operator + operational descriptor combinations (specific, not generic)
         "customer reports", "customer getting", "customer noticed",
@@ -137,7 +148,7 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
         "inconsistent",  # Specific data/measurement issue
         "intermittent"  # Specific fault behavior
     ]
-    if any(keyword in query_lower for keyword in support_keywords):
+    if any(keyword in query_lower for keyword in support_keywords_only):
         return IntentClassification(
             domain="support",
             confidence=0.85,
@@ -145,7 +156,7 @@ def _rule_based_classify(query: str) -> IntentClassification | None:
             suggested_filters={}
         )
     
-    # Rule 5: Mechanical keywords
+    # Rule 6: Mechanical keywords only → MECHANICAL
     mech_keywords = ["part number", "wiring", "bearing type", "maintenance schedule", "spindle"]
     if any(keyword in query_lower for keyword in mech_keywords):
         return IntentClassification(
