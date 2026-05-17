@@ -529,6 +529,7 @@ def run_query(query: str, history: list[dict] | None = None) -> AgentState:
         "domain": "cross_domain",  # Will be overridden by classify_intent
         "confidence": 0.0,
         "agent_results": {},
+        "agents_used": [],  # Will be populated by log_trace
         "merged_context": [],
         "final_answer": "",
         "citations": [],

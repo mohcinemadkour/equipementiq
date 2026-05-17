@@ -42,6 +42,7 @@ class AgentState(TypedDict, total=False):
             - mechanical_agent: AgentResult
             - software_agent: AgentResult
             - support_agent: AgentResult
+        agents_used: List of agents that returned chunks (for UI display)
         merged_context: Unified context chunks from selected agent(s)
         final_answer: Synthesized LLM response to query
         citations: Merged citation list (source_document, chunk_id, cosine_sim)
@@ -54,6 +55,7 @@ class AgentState(TypedDict, total=False):
     domain: Literal["mechanical", "software", "support", "cross_domain"]
     confidence: float
     agent_results: dict[str, AgentResult]
+    agents_used: list[str]
     merged_context: list[dict]
     final_answer: str
     citations: list[dict]
