@@ -112,9 +112,9 @@ class SupportAgent(BaseAgent):
         )
         
         # If error codes found in query, retrieve complaints mentioning them via metadata
-        if error_codes and not response.insufficient_context:
+        if error_codes:
             try:
-                semantic_results = response.results[:]  # Copy semantic results
+                semantic_results = response.results[:] if response.results else []  # Copy semantic results
                 metadata_results = []
                 seen_chunk_ids = {r.chunk_id for r in semantic_results}
                 
