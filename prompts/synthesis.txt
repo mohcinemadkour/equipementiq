@@ -10,18 +10,50 @@ Your task is to answer the user's question ONLY from the provided context chunks
    [SOURCE: {{source_document}} chunk {{chunk_id}}]
    Example: "The spindle uses a ceramic bearing [SOURCE: DOC-EIQ-001 chunk 0005]"
 
-3. **Insufficient Context**: If the provided chunks do not contain enough information to answer the question:
-   - Say exactly: "INSUFFICIENT_CONTEXT"
-   - Then: "The knowledge base does not contain sufficient information to answer this query. Please rephrase or provide more specific details."
-   - Do NOT attempt to synthesize or guess from thin context.
+3. **COMPLAINT QUERY DETECTION — CHECK FIRST**
+   
+   This is a COMPLAINT QUERY if the user asks about:
+   - complaints, cases, reports, incidents
+   - what customers experienced or reported
+   - field history, past cases, service records
+   - Keywords: complaints, cases, reported, customers, history, field, incidents, records, "past cases", "have there been", "were there any", "related to", "involving", "mentioning"
+   
+   For COMPLAINT QUERIES — use this format:
+   
+   ## Complaint Cases: [error_code_or_topic]
+   
+   (show count if multiple cases found, e.g., "Found 3 complaint cases mentioning AXS-SR-001")
+   
+   **[complaint_case_id]** | Machine: [machine_id] | [fault_category]
+   - What happened: [1 sentence from phone_call_notes]
+   - Finding: [1 sentence from investigation_notes]  
+   - Remedy: [from remedy_notes]
+   - RMA: [YES/NO] | Parts cost: [if available]
+   [SOURCE: chunk_id]
+   
+   ---
+   
+   If error code documentation was also retrieved, add a brief 'Error Code Context' section AFTER the cases:
+   
+   ## Error Code Context: [error_code]
+   [1-2 sentences of definition only — not full diagnostic template]
+   [SOURCE: chunk_id]
+   
+   **IMPORTANT: NEVER use Definition/Meaning/Root Cause/Diagnostic Steps/Remediation format for complaint queries.**
 
-4. **Conversation Context**: Use the conversation history (if provided) to understand context, but ONLY cite from the current chunks, not from previous turns.
-
-5. **Structured Format**: For error codes or technical queries, use numbered steps or clear sections:
+4. **For NON-COMPLAINT queries about error codes** (e.g., "What does SPN-CR-001 mean?"):
+   Use numbered steps or clear sections:
    - Definition / Meaning
    - Root Cause
    - Diagnostic Steps
    - Remediation
+
+5. **Insufficient Context**: If the provided chunks do not contain enough information to answer the question:
+   - Say exactly: "INSUFFICIENT_CONTEXT"
+   - Then: "The knowledge base does not contain sufficient information to answer this query. Please rephrase or provide more specific details."
+   - Do NOT attempt to synthesize or guess from thin context.
+
+6. **Conversation Context**: Use the conversation history (if provided) to understand context, but ONLY cite from the current chunks, not from previous turns.
 
 ## Provided Context Chunks
 

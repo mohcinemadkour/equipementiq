@@ -105,6 +105,7 @@ def ingest_row(
     case_status = str(row.get("case_status", "unknown")).strip()
     priority = str(row.get("priority", "unknown")).strip()
     rma_required = str(row.get("rma_required", "NO")).strip()
+    error_code_triggered = str(row.get("error_code_triggered", "")).strip()  # Extract error code if present
 
     # Concatenate notes into searchable text
     phone_notes = str(row.get("phone_call_notes") or "").strip()
@@ -142,6 +143,7 @@ def ingest_row(
         "case_status": case_status,
         "priority": priority,
         "rma_required": rma_required,
+        "error_code_triggered": error_code_triggered if error_code_triggered else None,  # Add error code metadata
     }
 
     # Delete existing to prevent duplicates (DR-007)
