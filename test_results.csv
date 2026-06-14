@@ -1,0 +1,25 @@
+question,domain,confidence,answer_preview
+what are all complaints related to AXS-SR-001?,cross_domain,0.85,## Complaint Cases: AXS-SR-001  Found 3 complaint cases mentioning AXS-SR-001  ---  **CMP-2021-1012*
+what complaints have been reported for SPN-MJ-004?,cross_domain,0.85,## Complaint Cases: SPN-MJ-004  Found 4 complaint cases mentioning SPN-MJ-004  ---  **CMP-2019-1003*
+show me all cases involving error code VIB-WN-002,cross_domain,0.85,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+have customers reported CLS-MD-005?,cross_domain,0.85,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+were there any incidents with TCS-CR-001?,software,0.99,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+what is the history of error code HYD-SR-003?,cross_domain,0.85,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+what does SPN-CR-001 mean?,software,0.99,# Error Code: SPN-CR-001  ## Definition / Meaning  SPN-CR-001 indicates **Spindle Bearing Catastroph
+explain error code AXS-SR-001,software,0.99,# Error Code: AXS-SR-001  ## Definition / Meaning AXS-SR-001 indicates that axis vibration with a re
+define the error VIB-MJ-001,software,0.99,# Error Code: VIB-MJ-001  **Definition / Meaning**  VIB-MJ-001 is a Vibration — ISO Zone C — Major A
+what is HYD-MD-002?,software,0.99,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+tell me about error ELC-WN-004,software,0.99,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+have customers reported issues with AXS-SR-001 on M02?,cross_domain,0.85,## Complaint Cases: AXS-SR-001  Found 2 complaint cases mentioning AXS-SR-001 on M02:  ---  **CMP-SY
+what complaints involved spindle bearing faults on M01?,support,0.85,## Complaint Cases: SPN-CR-001 (Spindle Bearing Faults on M01)  Found 5 complaint cases mentioning s
+show me tool wear issues reported on M03,support,0.90,## Complaint Cases: Tool Wear on M03  Found 2 complaint cases mentioning tool wear on M03.  ---  **C
+were there any critical severity errors on machine M02?,software,0.85,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+list all complaints about vibration on M01,support,0.85,## Complaint Cases: Vibration on M01  Found 4 complaint cases mentioning vibration issues on M01.  -
+"I'm getting error SPN-CR-001, what should I do?",software,0.99,# Error Code: SPN-CR-001  ## Definition / Meaning SPN-CR-001 indicates **Spindle Bearing Catastrophi
+has anyone else experienced error AXS-SR-001?,software,0.99,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+CLS-MD-005 keeps appearing—what does it mean and have others seen it?,software,0.99,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+are there any known issues with actuators?,cross_domain,0.65,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+what are all complaints?,support,0.85,INSUFFICIENT_CONTEXT  The knowledge base does not contain sufficient information to answer this quer
+anything related to tool wear?,cross_domain,0.65,## Complaint Cases: Tool Wear  Found 5 complaint cases mentioning tool wear.  ---  **CMP-SYN-2023** 
+which errors are critical?,software,0.90,"Based on the provided knowledge base, the following errors are classified as **CRITICAL** severity: "
+what's been happening on our machines?,cross_domain,0.45,"I need more specific information to help you. Your question ""what's been happening on our machines?"""
